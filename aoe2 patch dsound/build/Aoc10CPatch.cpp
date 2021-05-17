@@ -2724,6 +2724,8 @@ void  __declspec(naked)  minimapColorhook6()
 	}
 }
 DWORD Aoc10C_005E2240 =0x05E2240;
+DWORD Aoc10C_7CC0C0[]{0xFF,0x23,0xFF,0xFF,0xFF,0xFF,0x0B,0x53,0xFF,0xFF,0xFF,0xFF,0xFF,0x84,0xFF,0xFF,0xFF,0x22,0xFF,0xFF,0xFF,0x73,0xFF,0x53,0xFF,0xFF,0xFF,0xFF,0xFF,0x84,0xFF,0xFF
+,0x8B,0x96,0xF8};
 void  __declspec(naked)  minimapColorhook7()
 {
 	__asm
@@ -2737,7 +2739,8 @@ void  __declspec(naked)  minimapColorhook7()
 		SBB EDX, EDX
 		AND EDX, 10h
 		ADD EDX, ECX
-		MOV AL, BYTE PTR DS : [EDX + 7CC0C0h]//??? maybe we need remove this hook
+		//MOV AL, BYTE PTR DS : [EDX + 7CC0C0h]//??? maybe we need remove this hook
+		MOV AL, BYTE PTR DS : [EDX + Aoc10C_7CC0C0]
 		CMP AL, 0FFh
 		JE _005E2240
 		MOV BYTE PTR DS : [ESI + 20h] , AL
@@ -2792,7 +2795,7 @@ void miniMapColor()
 	writeData(0x04324B1, __004324B1, 36);
 	InjectHook(0x0432C69, minimapColorhook8, PATCH_JUMP);
 	InjectHook(0x05A3C5F, minimapColorhook9, PATCH_JUMP);
-	Patch(0x0432C87+1, (BYTE)0x06);
+	Patch(0x0432C86+1, (BYTE)0x06);
 	Patch(0x0432BB2+1, (BYTE)0x03);
 	BYTE __004328B5[8]{0x8A,0x86,0x7C,0x01,0x00,0x00,0x84,0xC0};
 	//same byte for the 4 address
