@@ -1,0 +1,9 @@
+﻿  dsound.cpp
+  Aoc10CPatch.cpp
+C:\Users\m\Desktop\aoe2 patch dsound\build\Aoc10CPatch.cpp(2008,1): warning C4102: '_007BF99A' : étiquette non référencée
+     Création de la bibliothèque ..\bin\Release\dsound.lib et de l'objet ..\bin\Release\dsound.exp
+  Génération de code en cours
+  Previous IPDB not found, fall back to full compilation.
+  All 28 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Fin de la génération du code
+  dsound.vcxproj -> C:\Users\m\Desktop\aoe2 patch dsound\bin\Release\dsound.dll
