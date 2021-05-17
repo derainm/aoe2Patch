@@ -2607,15 +2607,210 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 		BYTE push[5]{0x68,0x68,0x23,0x52,0x00};
 		writeData((DWORD)0x0522351, push,5);
 		InjectHook(0x0522356, ResizeslpInterface, PATCH_JUMP);
-		
-
-
 	}
+}
+void noStartup()
+{
+	Patch(0x00586F5E + 1, (BYTE)0xAC);
+}
+
+void windowedMod(bool iswindowed)
+{
+	if (iswindowed)
+	{
+		Patch(0x5a1232, (BYTE)0x03);
+		writeByte(0x5e752a, 0x66);
+		Nop(0x5e752b, 1);
+		writeByte(0x41ffe8, 0x66);
+		Nop(0x41ffe9, 1);
+		writeByte(0x57703d, 0x66);
+		Nop(0x57703e, 1);
+		LoadLibraryA("wndmode.dll");
+	}
+}
+DWORD Aoc10C_005A3B87 = 0x05A3B87;
+void  __declspec(naked)  minimapColorhook1()
+{
+	__asm
+	{
+		DEC EBP
+		DEC EDI
+		MOV EAX, DWORD PTR DS : [ECX + 8h]
+		TEST EAX, EAX
+		JMP Aoc10C_005A3B87
+	}
+}
+DWORD Aoc10C_005A3BA1 = 0x05A3BA1;
+void  __declspec(naked)  minimapColorhook2()
+{
+	__asm
+	{
+		MOV EDX, DWORD PTR DS : [ECX + 30h]
+		SUB EDX, 2h
+		CMP EDI, EDX
+		JMP Aoc10C_005A3BA1
+	}
+}
+DWORD Aoc10C_005A3BAE = 0x05A3BAE;
+void  __declspec(naked)  minimapColorhook3()
+{
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [ECX + 30h]
+		SUB EAX, 2h
+		CMP EBP, EAX
+		JMP Aoc10C_005A3BAE
+	}
+}
+char minimapColor[]= "Mini-map Colors";
+DWORD Aoc10C_00542850 = 0x0542850;
+DWORD Aoc10C_00543B70 = 0x0543B70;
+DWORD Aoc10C_0040A7BB = 0x040A7BB;
+DWORD Aoc10C_007A5204;
+void  __declspec(naked)  minimapColorhook4()
+{
+	__asm
+	{
+		CALL Aoc10C_00542850
+		XOR EAX, EAX
+		MOV ECX, DWORD PTR DS : [7911E8h]
+		MOV DWORD PTR DS : [Aoc10C_007A5204] , EAX
+		PUSH offset minimapColor; ASCII "Mini-map Colors"
+		PUSH 1h
+		CALL Aoc10C_00543B70
+		CMP EAX, -1h
+		JNZ short _007CC06F
+		MOV ECX, DWORD PTR DS : [7911E8h]
+		PUSH offset minimapColor; ASCII "Mini-map Colors"
+		PUSH 0
+		CALL Aoc10C_00543B70
+		CMP EAX, -1h
+		JE __0040A7BB
+		_007CC06F:
+		MOV DWORD PTR DS : [Aoc10C_007A5204] , EAX
+		JMP Aoc10C_0040A7BB
+		__0040A7BB:
+		JMP Aoc10C_0040A7BB
+	}
+}
+DWORD Aoc10C_00432BB2 = 0x0432BB2B;
+void  __declspec(naked)  minimapColorhook5()
+{
+	__asm
+	{
+		MOV EDX, DWORD PTR DS : [ESI + 0F8h]
+		MOV ECX, DWORD PTR DS : [EDX + 4Ch]
+		MOV EDX, DWORD PTR SS : [ESP + 30h]
+		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
+		MOV EDX, DWORD PTR DS : [ESI + 0FCh]
+		MOV ECX, DWORD PTR DS : [ECX + 9Ch]
+		CMP ECX, DWORD PTR DS : [EDX + 9Ch]
+		JNZ _00432BD2
+		FLD DWORD PTR DS : [EDI + 1E8h]
+		_00432BD2:
+		JMP Aoc10C_00432BB2
+	}
+}
+DWORD Aoc10C_00468D07 = 0x0468D07;
+void  __declspec(naked)  minimapColorhook6()
+{
+	__asm
+	{
+		MOV CL, BYTE PTR SS : [EBP + 1Ch]
+		MOV BYTE PTR DS : [EDI + 30h] , CL
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		MOV EDX, DWORD PTR DS : [ECX + 4h]
+		JMP Aoc10C_00468D07
+	}
+}
+DWORD Aoc10C_005E2240 =0x05E2240;
+void  __declspec(naked)  minimapColorhook7()
+{
+	__asm
+	{
+		CALL Aoc10C_00542850
+		MOVZX ECX, BYTE PTR DS : [ESI + 4h]
+		MOV EDX, 1h
+		SHL EDX, CL
+		AND EDX, DWORD PTR DS : [Aoc10C_007A5204]
+		NEG EDX
+		SBB EDX, EDX
+		AND EDX, 10h
+		ADD EDX, ECX
+		MOV AL, BYTE PTR DS : [EDX + 7CC0C0h]//??? maybe we need remove this hook
+		CMP AL, 0FFh
+		JE _005E2240
+		MOV BYTE PTR DS : [ESI + 20h] , AL
+		_005E2240:
+		JMP Aoc10C_005E2240
+	}
+}
+DWORD Aoc10C_00432C7C = 0x0432C7C;
+DWORD Aoc10C_00432C83 = 0x0432C83;
+void  __declspec(naked)  minimapColorhook8()
+{
+	__asm
+	{
+		MOV EAX,DWORD PTR DS:[ESI+17Ch]
+		TEST AL,AL
+		JE _007CC140
+		SHR EAX,8h
+		TEST AL,AL
+		JMP Aoc10C_00432C7C
+		_007CC140:
+		MOVSX ECX,BYTE PTR DS:[EDI+30h]
+		MOV EAX,DWORD PTR DS:[ESI+0F8h]
+		MOV EAX,DWORD PTR DS:[EAX+4Ch]
+		MOV ECX,DWORD PTR DS:[EAX+ECX*4h]
+		MOV EDX,DWORD PTR DS:[ECX+160h]
+		MOV EAX,DWORD PTR DS:[EDX+20h]
+		JMP Aoc10C_00432C83
+	}
+}
+DWORD Aoc10C_005A3C6F = 0x05A3C6F;
+DWORD Aoc10C_07A51B0 ;
+void  __declspec(naked)  minimapColorhook9()
+{
+	__asm
+	{
+		MOV ECX, DWORD PTR DS : [Aoc10C_07A51B0]
+		ADD ECX, 3h
+		MOV DWORD PTR SS : [ESP + 1Ch] , ECX
+		JMP Aoc10C_005A3C6F
+	}
+}
+void miniMapColor()
+{
+	InjectHook(0x05A3B82, minimapColorhook1, PATCH_JUMP);
+	InjectHook(0x05A3B9C, minimapColorhook2, PATCH_JUMP);
+	InjectHook(0x05A3BA9, minimapColorhook3, PATCH_JUMP);
+	InjectHook(0x040A7B6, minimapColorhook4, PATCH_JUMP);
+	InjectHook(0x0432BAC, minimapColorhook5, PATCH_JUMP);
+	InjectHook(0x0468d00, minimapColorhook6, PATCH_JUMP);
+	InjectHook(0x05e223b, minimapColorhook7, PATCH_JUMP);
+	BYTE __004324B1[36]{0x81,0xF9,0xA6,0x00,0x00,0x00,0x72,0x19,0x8D,0x8E,0x7C,0x01,0x00,0x00,0x89,0x41,0xFC,0x31,0xC0,0x38,0x01,0x0F,0x94,0x01,0x74,0x07,0x38,0x41,0x01,0x0F,0x94,0x41,0x01,0x8B,0x4E,0x20};
+	writeData(0x04324B1, __004324B1, 36);
+	InjectHook(0x0432C69, minimapColorhook8, PATCH_JUMP);
+	InjectHook(0x05A3C5F, minimapColorhook9, PATCH_JUMP);
+	Patch(0x0432C87+1, (BYTE)0x06);
+	Patch(0x0432BB2+1, (BYTE)0x03);
+	BYTE __004328B5[8]{0x8A,0x86,0x7C,0x01,0x00,0x00,0x84,0xC0};
+	//same byte for the 4 address
+	writeData(0x04328B5, __004328B5, 8);
+	writeData(0x0432913, __004328B5, 8);
+	writeData(0x0432EBD, __004328B5, 8);
+	writeData(0x0432EF7, __004328B5, 8);
+	BYTE _00433606[] = {0x8A,0x87,0x7C,0x01,0x00,0x00,0x6A,0x00,0x84,0xC0};
+	writeData(0x0433606 , __004328B5, 8);
+	writeData(0x0433649, __004328B5, 8);
+
 
 }
- 
-void Aoc10CPatchHook(bool wideScreenCentred)
+void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
 	nocd();
+	noStartup();//no video 
 	Aoc10CWidescreen(wideScreenCentred);
+	windowedMod(windowed);//todo force to read interface.drs (purple bug with other wide screen..)
+	miniMapColor();
 }

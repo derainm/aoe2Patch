@@ -2,4 +2,4 @@
 
 #include <Windows.h>
 
-void Aoc10CPatchHook(bool wideScreenCentred);
+void Aoc10CPatchHook(bool wideScreenCentred, bool windowed);
