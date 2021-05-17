@@ -2408,6 +2408,155 @@ void __declspec(naked) ResizeslpInterface()
 	}
 }
 
+
+DWORD Aoc10C_007C1D90 = (DWORD)f_Aoc10C_007C1EF0;//Aoc10C_007C1D90;// 0x07C1D90;
+void __declspec(naked) ResizeslpInterfaceCentered()
+{
+	__asm
+	{
+		PUSH ESI
+		PUSH EDI
+		PUSH EBX
+		PUSH EBP
+		SUB ESP, 8h
+		MOV EDI, DWORD PTR DS : [ESI + 20h]
+		MOV ECX, DWORD PTR DS : [ESI + 100Ch]
+		MOV EDX, DWORD PTR DS : [EDI + 0C0h]
+		MOV EBX, DWORD PTR DS : [EDI + 0D0h]
+		MOV DWORD PTR DS : [795000h] , EDX
+		MOV EAX, DWORD PTR DS : [EBX + 3Ch]
+		MOV EDX, DWORD PTR DS : [EBX + 40h]
+		MOV DWORD PTR DS : [795004h] , EAX
+		MOV DWORD PTR DS : [795008h] , EDX
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		MOV EBX, DWORD PTR DS : [ESI + 18h]
+		MOV EBP, DWORD PTR DS : [ECX + 0Ch]
+		LEA EAX, DWORD PTR DS : [EBX - 1h]
+		LEA EDX, DWORD PTR DS : [EDI - 1h]
+		MOV DWORD PTR DS : [795080h] , 0h
+		MOV DWORD PTR DS : [795084h] , EAX
+		MOV DWORD PTR DS : [795088h] , 0h
+		MOV DWORD PTR DS : [79508Ch] , EDX
+		MOV DWORD PTR DS : [795038h] , 0h
+		CMP EDI, 320h
+		JE short _007C1C35
+		CMP EDI, 400h
+		JNZ short _007C1C78
+		CMP EBX, 300h
+		JL short _007C1C78
+		_007C1C35:
+		MOV EDX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		PUSH 0h
+		PUSH EDX
+		PUSH EAX
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH 0h
+		PUSH EBP
+		CALL Aoc10C_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		MOV EAX, EBX
+		MOV DWORD PTR DS : [795038h] , 1C7h
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		CALL Aoc10C_007C1D90
+		ADD ESP, 28h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+
+
+		_007C1C78:
+		MOV ESI, EDI
+		MOV ECX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 0h
+		PUSH ECX
+		PUSH EAX
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH ESI
+		PUSH EBP
+		CMP EDX, 400h
+		JE short _007C1CA8
+		CMP EDX, 500h
+		JE short _007C1CB2
+		MOV DWORD PTR SS : [ESP + 20h] , 0D6h
+		JMP short _007C1CC2
+		_007C1CA8:
+		MOV DWORD PTR SS : [ESP + 20h] , 116h
+		JMP short _007C1CC2
+		_007C1CB2:
+		MOV DWORD PTR SS : [ESP + 10h] , 20h
+		MOV DWORD PTR SS : [ESP + 20h] , 158h
+		_007C1CC2:
+		SUB ESI, EDX
+		AND ESI, ESI
+		JL _007C1D7C
+		_007C1CCC:
+		MOV DWORD PTR SS : [ESP + 4h] , ESI
+		CALL Aoc10C_007C1D90
+		MOV DWORD PTR DS : [795038h] , 0h
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		SUB ESI, EDX
+		ADD ESI, 190h
+		AND ESI, ESI
+		JG short _007C1CCC
+		MOV DWORD PTR SS : [ESP + 4h] , 0h
+		CALL Aoc10C_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		MOV EAX, EDI
+		SUB EAX, EDX
+		SHR EAX, 1
+		SUB EAX, EDX
+		MOV ESI, EAX
+		MOV EAX, EBX
+		LEA EBX, DWORD PTR DS : [EDX + ESI]
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [795038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , EBX
+		CALL Aoc10C_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		ADD EBX, EDX
+		_007C1D3A:
+		MOV DWORD PTR SS : [ESP + 1Ch] , 2h
+		MOV DWORD PTR DS : [795038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , ESI
+		CALL Aoc10C_007C1D90
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [795038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , EBX
+		CALL Aoc10C_007C1D90
+		MOV EAX, DWORD PTR SS : [ESP + 20h]
+		SUB ESI, EAX
+		ADD EBX, EAX
+		CMP EBX, EDI
+		JL short _007C1D3A
+		_007C1D7C:
+		ADD ESP, 28h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+
+
+	}
+}
+
+
 void nocd()
 {
 	Nop(0x05101F5, 8);
@@ -2423,6 +2572,21 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 	{
 		//0051A3B7
 		InjectHook(0x051A3B7, Aoc10CWidescreenResizeScreenCentered, PATCH_JUMP);
+		//liste screen controle on game 
+		writeByte(0x5bb3e1, 0x6E);
+		writeByte(0x5bb410, 0x4B);
+		writeByte(0x5bc31e, 0x66);
+		Nop(0x5bc31f, 1);
+		//005BB8CA
+		InjectHook(0x05BB8CA, addWidescreenControl1, PATCH_JUMP);
+		//005BC29F
+		InjectHook(0x05BC29F, addWidescreenControl2, PATCH_JUMP);
+		//resize slp interface
+		//00522356 
+		//00522351   . 68 68235200    PUSH age2_x1_.00522368
+		BYTE push[5]{ 0x68,0x68,0x23,0x52,0x00 };
+		writeData((DWORD)0x0522351, push, 5);
+		InjectHook(0x0522356, ResizeslpInterfaceCentered, PATCH_JUMP);
 	}
 	else
 	{
