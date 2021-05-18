@@ -2612,6 +2612,11 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 	//0066EE98  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
 	BYTE  Aoc10CinterfacDrs[13]{0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00};
 	writeData((DWORD)0x066EE98, Aoc10CinterfacDrs, 13);
+	//hide conqueror logo
+	BYTE aoclogoconqueror[5] =  {0x6A,0x00,0x90,0x90,0x90};
+	writeData(0x05172EE, aoclogoconqueror, 5);
+ 
+
 
 	if (wideScreenCentred)
 	{
@@ -2670,7 +2675,7 @@ void windowedMod(bool iswindowed)
 		Nop(0x41ffe9, 1);
 		writeByte(0x57703d, 0x66);
 		Nop(0x57703e, 1);
-		LoadLibraryA("wndmode.dll");
+		LoadLibraryA("windmode.dll");
 	}
 }
 DWORD Aoc10C_005A3B87 = 0x05A3B87;
@@ -2857,9 +2862,16 @@ void miniMapColor()
 }
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
-	nocd();
-	noStartup();//no video 
-	Aoc10CWidescreen(wideScreenCentred);
-	windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
-	miniMapColor();
+	//check if is not 1.0e
+	//MOV CL, BYTE PTR DS : [680A18]
+	int AoC10e = (*(int*)0x0680A18 == 0x7);
+	//no work because dsound is loaded before age.dll :(
+	if (!AoC10e)
+	{
+		nocd();
+		noStartup();//no video 
+		Aoc10CWidescreen(wideScreenCentred);
+		windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
+		miniMapColor();
+	}
 }

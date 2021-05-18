@@ -2085,9 +2085,6 @@ void  __declspec(naked) AOC10_addWidescreenControl1()
 
 		__005BBCFA :
 		JMP Aoc10_005BBCFA
-
-
-
 	}
 }
 
@@ -2106,19 +2103,505 @@ void __declspec(naked)  Aoc10_addWidescreenControl2()
 		JMP Aoc10_005BC2EE
 	}
 }
+
+DWORD Aoc10_00632C48 = 0x0631C48 ;
+void __declspec(naked) f_Aoc10_007C1EF0()
+{
+	__asm
+	{
+		PUSH EBP
+		MOV EBP, ESP
+		PUSH EBX
+		PUSH ESI
+		PUSH EDI
+		XOR EDX, EDX
+		MOV ECX, DWORD PTR SS : [EBP + 0Ch]
+		MOV EAX, DWORD PTR SS : [EBP + 14h]
+		MOV DWORD PTR DS : [794024h] , ECX
+		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
+		MOV DWORD PTR DS : [794028h] , ECX
+		JMP Aoc10_00632C48
+	}
+}
+DWORD Aoc10_7A5500;
+void __declspec(naked) f_Aoc10_007C1F20()
+{
+	__asm
+	{
+		PUSH EBP
+		MOV EBP, ESP
+		PUSH EBX
+		PUSH ESI
+		PUSH EDI
+		MOV EBX, DWORD PTR DS : [Aoc10_7A5500]
+		XOR EDX, EDX
+		AND EBX, EBX
+		JE short _007C1F4A
+		MOV DWORD PTR DS : [794004h] , EBX
+		MOV DWORD PTR DS : [794008h] , EBX
+		MOV ECX, DWORD PTR SS : [EBP + 30h]
+		MOV EAX, DWORD PTR SS : [EBP + 34h]
+		MOV DWORD PTR DS : [EBX + 8h] , ECX
+		MOV DWORD PTR DS : [EBX + 0Ch] , EAX
+		_007C1F4A :
+		MOV ECX, DWORD PTR SS : [EBP + 0Ch]
+		MOV EAX, DWORD PTR SS : [EBP + 14h]
+		MOV DWORD PTR DS : [794024h] , ECX
+		LEA ECX, DWORD PTR DS : [EAX + ECX - 1h]
+		MOV DWORD PTR DS : [794028h] , ECX
+		JMP Aoc10_00632C48
+	}
+}
+
+DWORD Aoc10_007C1EF0 = (DWORD)f_Aoc10_007C1EF0;// 0x07C1EF0;
+DWORD Aoc10_007C1F20 = (DWORD)f_Aoc10_007C1F20;// 007C1F20;
+DWORD Aoc10_006139B4 = 0x0613327;
+DWORD Aoc10_006137C9 = 0x06132AA ;
+
+void __declspec(naked) f_Aoc10_007C1C38()
+{
+	__asm
+	{
+		MOV ESI, EDI
+		MOV ECX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 0h
+		PUSH ECX
+		PUSH EAX
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH ESI
+		PUSH EBP
+		CMP EDX, 400h
+		JGE short _007C1C60
+		MOV DWORD PTR SS : [ESP + 20h] , 0D6h
+		JMP short _007C1C68
+		_007C1C60 :
+		MOV DWORD PTR SS : [ESP + 20h] , 116h
+		_007C1C68 :
+		SUB ESI, EDX
+		AND ESI, ESI
+		JL _007C1EE3
+		_007C1C72 :
+		MOV DWORD PTR SS : [ESP + 4h] , ESI
+		CALL Aoc10_007C1EF0
+		MOV DWORD PTR DS : [794038h] , 0h
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		SUB ESI, EDX
+		ADD ESI, 190h
+		AND ESI, ESI
+		JG short _007C1C72
+		MOV DWORD PTR SS : [ESP + 4h] , 0h
+		CALL Aoc10_007C1EF0
+		MOV ECX, DWORD PTR DS : [794004h]
+		MOV EAX, DWORD PTR SS : [EBP + 30h]
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		MOV DWORD PTR SS : [ESP + 38h] , ECX
+		MOV DWORD PTR SS : [ESP + 3Ch] , EAX
+		MOV DWORD PTR SS : [ESP + 40h] , EDX
+		MOV DWORD PTR SS : [ESP + 44h] , EDI
+		MOV DWORD PTR SS : [ESP + 48h] , EBX
+		MOV ESI, EBX
+		MOV EAX, DWORD PTR DS : [Aoc10_7A5500]
+		TEST EAX, EAX
+		JE short _007C1CDA
+		CMP DWORD PTR DS : [EAX + 10h] , ESI
+		JGE short _007C1D0D
+		PUSH EAX
+		CALL Aoc10_006139B4
+		ADD ESP, 4h
+		_007C1CDA :
+		SHL ESI, 2h
+		ADD ESI, 14h
+		PUSH ESI
+		PUSH 1h
+		CALL Aoc10_006137C9
+		ADD ESP, 8h
+		MOV DWORD PTR DS : [Aoc10_7A5500] , EAX
+		TEST EAX, EAX
+		JE _007C1EE3
+		LEA ECX, DWORD PTR DS : [ESI - 14h]
+		LEA EDI, DWORD PTR DS : [EAX + 14h]
+		MOV EDX, ECX
+		SHR ECX, 2h
+		REP STOS DWORD PTR ES : [EDI]
+		MOV EDI, DWORD PTR SS : [ESP + 44h]
+		MOV DWORD PTR DS : [EAX + 10h] , EBX
+		_007C1D0D :
+		MOV EDX, DWORD PTR SS : [ESP + 3Ch]
+		MOV EAX, EDI
+		SUB EAX, EDX
+		SHR EAX, 1
+		SUB EAX, EDX
+		MOV ESI, EAX
+		MOV EAX, EBX
+		LEA EBX, DWORD PTR DS : [EDX + ESI]
+		MOV EDX, DWORD PTR SS : [ESP + 40h]
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		MOV ECX, DWORD PTR SS : [ESP + 38h]
+		MOV EDX, DWORD PTR SS : [ESP + 48h]
+		LEA ESI, DWORD PTR DS : [ECX + EDX * 4h - 1B8h]
+		CMP DWORD PTR DS : [ESI] , 0h
+		JNZ short _007C1D56
+		ADD ESI, 78h
+		CMP DWORD PTR DS : [ESI] , 0h
+		JNZ short _007C1D56
+		ADD ESI, 78h
+		CMP DWORD PTR DS : [ESI] , 0h
+		JE _007C1EE3
+		_007C1D56 :
+		MOV EAX, DWORD PTR DS : [ESI]
+		MOV EDX, DWORD PTR SS : [ESP + 3Ch]
+		MOV DWORD PTR SS : [ESP + 24h] , EAX
+		MOV EAX, EDI
+		SUB EAX, EDX
+		LEA ECX, DWORD PTR DS : [EDI - 198h]
+		LEA EDX, DWORD PTR DS : [EDI - 1h]
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EDX
+		MOV DWORD PTR SS : [ESP + 28h] , ECX
+		MOV DWORD PTR SS : [ESP + 4h] , EAX
+		CALL Aoc10_007C1EF0
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		MOV EDX, DWORD PTR SS : [ESP + 3Ch]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		CMP DWORD PTR SS : [ESP + 20h] , 116h
+		JE short _007C1DBD
+		MOV ESI, 0DAh
+		LEA EBX, DWORD PTR DS : [EDI - 128h]
+		MOV EDI, -26h
+		LEA EBP, DWORD PTR DS : [EDX - 434h]
+		JMP short _007C1DD3
+		_007C1DBD :
+		MOV ESI, 119h
+		LEA EBX, DWORD PTR DS : [EDI - 160h]
+		MOV EDI, -2Ah
+		LEA EBP, DWORD PTR DS : [EDX - 576h]
+		_007C1DD3 :
+		XOR EDX, EDX
+		LEA EAX, DWORD PTR DS : [ESI - 1h]
+		MOV DWORD PTR SS : [ESP + 1Ch] , EDX
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EAX
+		MOV DWORD PTR SS : [ESP + 28h] , EDX
+		MOV DWORD PTR SS : [ESP + 4h] , EDX
+		MOV EDX, DWORD PTR SS : [ESP + 44h]
+		LEA EAX, DWORD PTR DS : [EBX + 40h]
+		DEC EDX
+		CMP ECX, EAX
+		JL short _007C1E09
+		CMP ECX, EDX
+		JNZ short _007C1E18
+		CALL Aoc10_007C1F20
+		JMP short _007C1E18
+		_007C1E09 :
+		MOV ECX, DWORD PTR SS : [ESP + 38h]
+		MOV DWORD PTR DS : [794004h] , ECX
+		CALL Aoc10_007C1EF0
+		_007C1E18 :
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		CMP DWORD PTR DS : [EAX + 0Ch] , ESI
+		JL _007C1EE3
+		CMP DWORD PTR DS : [EAX + 8h] , EBX
+		JG _007C1EE3
+		LEA EDX, DWORD PTR DS : [ESI + 30h]
+		_007C1E31 :
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EDX
+		MOV DWORD PTR SS : [ESP + 28h] , ESI
+		MOV DWORD PTR SS : [ESP + 4h] , EDI
+		CALL Aoc10_007C1F20
+		ADD EDI, 30h
+		ADD ESI, 30h
+		ADD EBP, 30h
+		LEA EDX, DWORD PTR DS : [ESI + 30h]
+		CMP EDX, EBX
+		JGE short _007C1EBE
+		MOV DWORD PTR SS : [ESP + 1Ch] , 2h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EDX
+		MOV DWORD PTR SS : [ESP + 28h] , ESI
+		MOV DWORD PTR SS : [ESP + 4h] , EBP
+		CALL Aoc10_007C1F20
+		ADD EDI, 30h
+		ADD ESI, 30h
+		ADD EBP, 30h
+		LEA EDX, DWORD PTR DS : [ESI + 30h]
+		CMP EDX, EBX
+		JLE short _007C1E31
+		MOV EDX, EBX
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EDX
+		MOV DWORD PTR SS : [ESP + 28h] , ESI
+		MOV DWORD PTR SS : [ESP + 4h] , EDI
+		CALL Aoc10_007C1F20
+		JMP short _007C1EE3
+		_007C1EBE :
+		MOV EDX, EBX
+		MOV DWORD PTR SS : [ESP + 1Ch] , 2h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 2Ch] , EDX
+		MOV DWORD PTR SS : [ESP + 28h] , ESI
+		MOV DWORD PTR SS : [ESP + 4h] , EBP
+		CALL Aoc10_007C1F20
+		_007C1EE3 :
+		ADD ESP, 50h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+	}
+}
+DWORD Aoc10_007C1C38 = (DWORD)f_Aoc10_007C1C38;// 0x07C1C38;
+
+void __declspec(naked) Aoc10_ResizeslpInterface()
+{
+	__asm
+	{
+		PUSH ESI
+		PUSH EDI
+		PUSH EBX
+		PUSH EBP
+		SUB ESP, 30h
+		MOV EDI, DWORD PTR DS : [ESI + 20h]
+		MOV ECX, DWORD PTR DS : [ESI + 100Ch]
+		MOV EDX, DWORD PTR DS : [EDI + 0C0h]
+		MOV EBX, DWORD PTR DS : [EDI + 0D0h]
+		MOV DWORD PTR DS : [794000h] , EDX
+		MOV EAX, DWORD PTR DS : [EBX + 3Ch]
+		MOV EDX, DWORD PTR DS : [EBX + 40h]
+		MOV DWORD PTR DS : [794004h] , EAX
+		MOV DWORD PTR DS : [794008h] , EDX
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		MOV EBX, DWORD PTR DS : [ESI + 18h]
+		MOV EBP, DWORD PTR DS : [ECX + 0Ch]
+		LEA EAX, DWORD PTR DS : [EBX - 1h]
+		LEA EDX, DWORD PTR DS : [EDI - 1h]
+		MOV DWORD PTR DS : [794080h] , 0h
+		MOV DWORD PTR DS : [794084h] , EAX
+		MOV DWORD PTR DS : [794088h] , 0h
+		MOV DWORD PTR DS : [79408Ch] , EDX
+		MOV DWORD PTR DS : [794038h] , 0h
+		CMP EDI, 320h
+		JE short _007C1BF5
+		CMP EDI, 400
+		JNZ short __007C1C38//age2_x1_.007C1C38
+		CMP EBX, 300
+		JL short __007C1C38//age2_x1_.007C1C38
+		_007C1BF5 :
+		MOV EDX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		PUSH 0h
+		PUSH EDX
+		PUSH EAX
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH 0h
+		PUSH EBP
+		CALL Aoc10_007C1EF0//Aoc10_007C1EF0
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		MOV EAX, EBX
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		CALL Aoc10_007C1EF0//Aoc10_007C1EF0
+		ADD ESP, 50h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+		__007C1C38 :
+		JMP[Aoc10_007C1C38]
+
+	}
+}
+
+DWORD Aoc10_007C1D90 = (DWORD)f_Aoc10_007C1EF0;//Aoc10_007C1D90;// 0x07C1D90;
+void __declspec(naked)  Aoc10_ResizeslpInterfaceCentered()
+{
+	__asm
+	{
+		PUSH ESI
+		PUSH EDI
+		PUSH EBX
+		PUSH EBP
+		SUB ESP, 8h
+		MOV EDI, DWORD PTR DS : [ESI + 20h]
+		MOV ECX, DWORD PTR DS : [ESI + 100Ch]
+		MOV EDX, DWORD PTR DS : [EDI + 0C0h]
+		MOV EBX, DWORD PTR DS : [EDI + 0D0h]
+		MOV DWORD PTR DS : [794000h] , EDX
+		MOV EAX, DWORD PTR DS : [EBX + 3Ch]
+		MOV EDX, DWORD PTR DS : [EBX + 40h]
+		MOV DWORD PTR DS : [794004h] , EAX
+		MOV DWORD PTR DS : [794008h] , EDX
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		MOV EBX, DWORD PTR DS : [ESI + 18h]
+		MOV EBP, DWORD PTR DS : [ECX + 0Ch]
+		LEA EAX, DWORD PTR DS : [EBX - 1h]
+		LEA EDX, DWORD PTR DS : [EDI - 1h]
+		MOV DWORD PTR DS : [794080h] , 0h
+		MOV DWORD PTR DS : [794084h] , EAX
+		MOV DWORD PTR DS : [794088h] , 0h
+		MOV DWORD PTR DS : [79408Ch] , EDX
+		MOV DWORD PTR DS : [794038h] , 0h
+		CMP EDI, 320h
+		JE short _007C1C35
+		CMP EDI, 400h
+		JNZ short _007C1C78
+		CMP EBX, 300h
+		JL short _007C1C78
+		_007C1C35 :
+		MOV EDX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		PUSH 0h
+		PUSH EDX
+		PUSH EAX
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH 0h
+		PUSH EBP
+		CALL Aoc10_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		MOV EAX, EBX
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		CALL Aoc10_007C1D90
+		ADD ESP, 28h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+
+
+		_007C1C78 :
+		MOV ESI, EDI
+		MOV ECX, DWORD PTR SS : [EBP + 24h]
+		MOV EAX, DWORD PTR SS : [EBP + 20h]
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		PUSH 0h
+		PUSH ECX
+		PUSH EAX
+		PUSH 19h
+		PUSH EDX
+		PUSH 0h
+		PUSH ESI
+		PUSH EBP
+		CMP EDX, 400h
+		JE short _007C1CA8
+		CMP EDX, 500h
+		JE short _007C1CB2
+		MOV DWORD PTR SS : [ESP + 20h] , 0D6h
+		JMP short _007C1CC2
+		_007C1CA8 :
+		MOV DWORD PTR SS : [ESP + 20h] , 116h
+		JMP short _007C1CC2
+		_007C1CB2 :
+		MOV DWORD PTR SS : [ESP + 10h] , 20h
+		MOV DWORD PTR SS : [ESP + 20h] , 158h
+		_007C1CC2 :
+		SUB ESI, EDX
+		AND ESI, ESI
+		JL _007C1D7C
+		_007C1CCC :
+		MOV DWORD PTR SS : [ESP + 4h] , ESI
+		CALL Aoc10_007C1D90
+		MOV DWORD PTR DS : [794038h] , 0h
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		SUB ESI, EDX
+		ADD ESI, 190h
+		AND ESI, ESI
+		JG short _007C1CCC
+		MOV DWORD PTR SS : [ESP + 4h] , 0h
+		CALL Aoc10_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		MOV EAX, EDI
+		SUB EAX, EDX
+		SHR EAX, 1
+		SUB EAX, EDX
+		MOV ESI, EAX
+		MOV EAX, EBX
+		LEA EBX, DWORD PTR DS : [EDX + ESI]
+		MOV EDX, DWORD PTR SS : [EBP + 34h]
+		SUB EAX, EDX
+		MOV DWORD PTR SS : [ESP + 10h] , EDX
+		MOV DWORD PTR SS : [ESP + 8h] , EAX
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , EBX
+		CALL Aoc10_007C1D90
+		MOV EDX, DWORD PTR SS : [EBP + 30h]
+		ADD EBX, EDX
+		_007C1D3A :
+		MOV DWORD PTR SS : [ESP + 1Ch] , 2h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , ESI
+		CALL Aoc10_007C1D90
+		MOV DWORD PTR SS : [ESP + 1Ch] , 0h
+		MOV DWORD PTR DS : [794038h] , 1C7h
+		MOV DWORD PTR SS : [ESP + 4h] , EBX
+		CALL Aoc10_007C1D90
+		MOV EAX, DWORD PTR SS : [ESP + 20h]
+		SUB ESI, EAX
+		ADD EBX, EAX
+		CMP EBX, EDI
+		JL short _007C1D3A
+		_007C1D7C :
+		ADD ESP, 28h
+		POP EBP
+		POP EBX
+		POP EDI
+		POP ESI
+		RETN
+
+
+	}
+}
+
 void Aoc10Widescreen(bool wideScreenCentred)
 {
 	//force to user interface drs instead of .ws 
 	//0067BE90  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
 	BYTE  Aoc10interfacDrs[13]{ 0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00 };
 	writeData((DWORD)0x067BE90, Aoc10interfacDrs, 13);
+	BYTE aoclogoconqueror[5] = { 0x6A,0x00,0x90,0x90,0x90 };
+	writeData(0x04DF85E, aoclogoconqueror, 5);
 
 	if (wideScreenCentred)
 	{
 		//0051A3B7
 		InjectHook(0x04E2927, Aoc10WidescreenResizeScreenCentered, PATCH_JUMP);
-
-
+		//liste screen controle on game 
+		//0044C5B0  |. 6A 69             |PUSH 69                                 ; |Arg4 = 00000069
+		writeByte(0x044C5B1, 0x6E);
+		writeByte(0x044C5E0, 0x4B);
+		writeByte(0x044D4EE, 0x66);
+		Nop(0x044D4EF, 1);
+		//0044CA9A 
+		InjectHook(0x044CA9A, AOC10_addWidescreenControl1, PATCH_JUMP);
+		//0044D46F 
+		InjectHook(0x044D46F, Aoc10_addWidescreenControl2, PATCH_JUMP);
+		//004EA871   . 8B46 20           MOV EAX,DWORD PTR DS:[ESI+20]
+		BYTE push004EA871[5]{ 0x68,0x88,0xA8,0x4E,0x00 };
+		writeData((DWORD)0x04EA871, push004EA871, 5);
+		InjectHook(0x04EA876, Aoc10_ResizeslpInterfaceCentered, PATCH_JUMP);
 	}
 	else
 	{
@@ -2134,11 +2617,42 @@ void Aoc10Widescreen(bool wideScreenCentred)
 		InjectHook(0x044CA9A, AOC10_addWidescreenControl1, PATCH_JUMP);
 		//0044D46F 
 		InjectHook(0x044D46F, Aoc10_addWidescreenControl2, PATCH_JUMP);
+		//004EA871   . 8B46 20           MOV EAX,DWORD PTR DS:[ESI+20]
+		BYTE push004EA871[5]{0x68,0x88,0xA8,0x4E,0x00};
+		writeData((DWORD)0x04EA871, push004EA871, 5);
+		InjectHook(0x04EA876, Aoc10_ResizeslpInterface, PATCH_JUMP);
 	}
+}
+
+
+void AOC10_windowedMod(bool iswindowed)
+{
+	if (iswindowed)
+	{
+		Patch(0x0464581  +1, (BYTE)0x03);
+		writeByte(0x042093A, 0x66);
+		Nop(0x042093B, 1);
+		writeByte(0x05F23C8 , 0x66);
+		Nop(0x05F23C9, 1);
+		writeByte(0x04915FD , 0x66);
+		Nop(0x04915FE, 1);
+		LoadLibraryA("windmode.dll");
+	}
+}
+
+
+void AOC10_nocd()
+{
+	Nop(0x05101F5, 8);
+	//004FF1E4
+	writeByte(0x04FFA68 , 0xEB);
+	//0050A448
+	writeByte(0x04FFA68, 0xEB);
 }
 
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
-	LoadLibraryA("wndmode.dll");
 	Aoc10Widescreen(wideScreenCentred);
+	AOC10_windowedMod(windowed);
+	AOC10_nocd();
 }
