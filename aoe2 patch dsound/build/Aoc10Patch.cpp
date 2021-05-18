@@ -2650,9 +2650,173 @@ void AOC10_nocd()
 	writeByte(0x04FFA68, 0xEB);
 }
 
+DWORD Aoc10_005A3B87 = 0x0466ED7 ;
+void  __declspec(naked)  AOC10_minimapColorhook1()
+{
+	__asm
+	{
+		DEC EBP
+		DEC EDI
+		MOV EAX, DWORD PTR DS : [ECX + 8h]
+		TEST EAX, EAX
+		JMP Aoc10_005A3B87
+	}
+}
+DWORD Aoc10_005A3BA1 = 0x0466EF1;
+void  __declspec(naked)  AOC10_minimapColorhook2()
+{
+	__asm
+	{
+		MOV EDX, DWORD PTR DS : [ECX + 30h]
+		SUB EDX, 2h
+		CMP EDI, EDX
+		JMP Aoc10_005A3BA1
+	}
+}
+DWORD Aoc10_005A3BAE = 0x0466EFE ;
+void  __declspec(naked)  AOC10_minimapColorhook3()
+{
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [ECX + 30h]
+		SUB EAX, 2h
+		CMP EBP, EAX
+		JMP Aoc10_005A3BAE
+	}
+}
+char AOC10_minimapColor[] = "Mini-map Colors";
+DWORD Aoc10_00542850 = 0x04C5A20;
+DWORD Aoc10_00543B70 = 0x04C5120;
+DWORD Aoc10_0040A7BB = 0x05FD2BB;
+DWORD Aoc10_007A5204;
+void  __declspec(naked)  AOC10_minimapColorhook4()
+{
+	__asm
+	{
+		CALL Aoc10_00542850
+		XOR EAX, EAX
+		MOV ECX, DWORD PTR DS : [7911E8h]
+		MOV DWORD PTR DS : [Aoc10_007A5204] , EAX
+		PUSH offset AOC10_minimapColor; ASCII "Mini-map Colors"
+		PUSH 1h
+		CALL Aoc10_00543B70
+		CMP EAX, -1h
+		JNZ short _007CC06F
+		MOV ECX, DWORD PTR DS : [7911E8h]
+		PUSH offset AOC10_minimapColor; ASCII "Mini-map Colors"
+		PUSH 0
+		CALL Aoc10_00543B70
+		CMP EAX, -1h
+		JE __0040A7BB
+		_007CC06F :
+		MOV DWORD PTR DS : [Aoc10_007A5204] , EAX
+		JMP Aoc10_0040A7BB
+		__0040A7BB :
+		JMP Aoc10_0040A7BB
+	}
+}
+
+DWORD Aoc10_00432BB2 = 0x05DAEA9 ;
+void  __declspec(naked)  AOC10_minimapColorhook5()
+{
+	__asm
+	{
+		MOV EDX, DWORD PTR DS : [ESI + 0F8h]
+		MOV ECX, DWORD PTR DS : [EDX + 4Ch]
+		MOV EDX, DWORD PTR SS : [ESP + 30h]
+		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
+		MOV EDX, DWORD PTR DS : [ESI + 0FCh]
+		MOV ECX, DWORD PTR DS : [ECX + 9Ch]
+		CMP ECX, DWORD PTR DS : [EDX + 9Ch]
+		JNZ _00432BD2
+		//FLD DWORD PTR DS : [EDI + 1E8h]
+		//005DAEA3   . D987 0C020000  FLD DWORD PTR DS:[EDI+20C]
+		FLD DWORD PTR DS : [EDI + 20Ch]
+		_00432BD2 :
+		JMP Aoc10_00432BB2
+	}
+}
+
+DWORD Aoc10_00468D07 = 0x05A0537;
+void  __declspec(naked)  AOC10_minimapColorhook6()
+{
+	__asm
+	{
+		MOV CL, BYTE PTR SS : [EBP + 1Ch]
+		MOV BYTE PTR DS : [EDI + 30h] , CL
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		MOV EDX, DWORD PTR DS : [ECX + 4h]
+		JMP Aoc10_00468D07
+	}
+}
+
+DWORD Aoc10_00432C7C = 0x05DAF73;
+DWORD Aoc10_00432C83 = 0x05DAF7A ;
+void  __declspec(naked)  AOC10_minimapColorhook8()
+{
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [ESI + 17Ch]
+		TEST AL, AL
+		JE _007CC140
+		SHR EAX, 8h
+		TEST AL, AL
+		JMP Aoc10_00432C7C
+		_007CC140 :
+		MOVSX ECX, BYTE PTR DS : [EDI + 30h]
+		MOV EAX, DWORD PTR DS : [ESI + 0F8h]
+		MOV EAX, DWORD PTR DS : [EAX + 4Ch]
+		MOV ECX, DWORD PTR DS : [EAX + ECX * 4h]
+		MOV EDX, DWORD PTR DS : [ECX + 160h]
+		MOV EAX, DWORD PTR DS : [EDX + 20h]
+		JMP Aoc10_00432C83
+	}
+}
+DWORD Aoc10_005A3C6F = 0x0466FBF ;
+DWORD Aoc10_07A51B0;
+void  __declspec(naked)  AOC10_minimapColorhook9()
+{
+	__asm
+	{
+		MOV ECX, DWORD PTR DS : [Aoc10_07A51B0]
+		ADD ECX, 3h
+		MOV DWORD PTR SS : [ESP + 1Ch] , ECX
+		JMP Aoc10_005A3C6F
+	}
+}
+void AOC10_miniMapColor()
+{
+	InjectHook(0x0466ED2, AOC10_minimapColorhook1, PATCH_JUMP);
+	InjectHook(0x0466EEC, AOC10_minimapColorhook2, PATCH_JUMP);
+	InjectHook(0x0466EF9, AOC10_minimapColorhook3, PATCH_JUMP);
+	InjectHook(0x05FD2B6, AOC10_minimapColorhook4, PATCH_JUMP);
+	InjectHook(0x05DAEA3, AOC10_minimapColorhook5, PATCH_JUMP);
+	Nop(0x05DAEA8 , 1);
+	InjectHook(0x05A0530, AOC10_minimapColorhook6, PATCH_JUMP);
+	Nop(0x05A0535 , 2);
+	 
+	BYTE AOC10__004324B1[36]{ 0x81,0xF9,0xA6,0x00,0x00,0x00,0x72,0x19,0x8D,0x8E,0x7C,0x01,0x00,0x00,0x89,0x41,0xFC,0x31,0xC0,0x38,0x01,0x0F,0x94,0x01,0x74,0x07,0x38,0x41,0x01,0x0F,0x94,0x41,0x01,0x8B,0x4E,0x20 };
+	writeData(0x05DA821, AOC10__004324B1, 36);
+	InjectHook(0x05DAF60 , AOC10_minimapColorhook8, PATCH_JUMP);
+	InjectHook(0x0466FAF , AOC10_minimapColorhook9, PATCH_JUMP);
+	Nop(0x0466FB4 , 1);
+	Patch(0x05DAF7D + 1, (BYTE)0x06);
+	Patch(0x05DAEA9 + 1, (BYTE)0x03);
+	BYTE AOC10__004328B5[]{ 0x8A,0x86,0x7C,0x01,0x00,0x00,0x84,0xC0 };
+	//same byte for the 4 address
+	writeData(0x05DABB5, AOC10__004328B5, 8);
+	writeData(0x05DAC13, AOC10__004328B5, 8);
+	writeData(0x05DB1B0, AOC10__004328B5, 8);
+	writeData(0x05DB1EA, AOC10__004328B5, 8);
+	BYTE AOC10__00433606[10] = { 0x8A,0x87,0x7C,0x01,0x00,0x00,0x6A,0x00,0x84,0xC0 };
+	writeData(0x05DB8B6, AOC10__00433606, 10);
+	writeData(0x05DB8F9, AOC10__00433606, 10);
+}
+
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
 	Aoc10Widescreen(wideScreenCentred);
 	AOC10_windowedMod(windowed);
 	AOC10_nocd();
+	AOC10_miniMapColor();
 }
