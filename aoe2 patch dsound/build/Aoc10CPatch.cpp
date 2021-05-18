@@ -2,6 +2,30 @@
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
 
+DWORD Aoc10C_H;
+DWORD Aoc10C_V;
+void interfaceId()
+{
+
+	Nop(0x051F9A9, 6);
+	Nop(0x051F9CC, 6);
+	/*
+	//change interfaace id
+	if (Aoc10C_H < 1024 && Aoc10C_V < 768)
+	{
+		BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
+		writeData(0x051FC90, _004DF5B2_BACK, 6);
+		//0051FC90     81C7 9CC70000  ADD EDI,0C79C
+	}
+	else
+	{
+		BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
+		writeData(0x051FC90, _004DF5B2, 6);
+	}
+	*/
+}
+DWORD Aoc10C_setinterfaceId = (DWORD)interfaceId;
+
 DWORD Aoc10C_005BF1E0 = 0x05BF1E0;
 DWORD Aoc10C_00453CE0 = 0x0453CE0;
 DWORD Aoc10C_00551350 = 0x0551350;
@@ -10,7 +34,11 @@ void __declspec(naked) Aoc10CWidescreenResizeScreenCentered()
 {
 	__asm {
 
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		MOV Aoc10C_H, EDI
 		MOV EDI, DWORD PTR DS : [ESI + 18h]
+		MOV Aoc10C_V, EDI
+		call Aoc10C_setinterfaceId
 		CMP EDI, 400h
 		JLE _007C0E3A
 		MOV EDI, DWORD PTR DS : [ESI + 14h]
@@ -977,11 +1005,19 @@ void __declspec(naked) Aoc10CWidescreenResizeScreenCentered()
 
 	}
 }
+
+
+
 void __declspec(naked) Aoc10CWidescreenResizeScreenUserPatch()
 {
 	__asm
 	{
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		MOV Aoc10C_H, EDI
 		MOV EDI, DWORD PTR DS : [ESI + 18h]
+		MOV Aoc10C_V,EDI
+		call Aoc10C_setinterfaceId
+
 		CMP EDI, 400h
 		JMP _007C0E1F
 		MOV EDI, DWORD PTR DS : [ESI + 14h]
@@ -2566,8 +2602,17 @@ void nocd()
 	writeByte(0x050A448, 0xEB);
 }
 
+
+
+
 void Aoc10CWidescreen(bool wideScreenCentred)
 {
+
+	//force to user interface drs instead of .ws 
+	//0066EE98  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
+	BYTE  Aoc10CinterfacDrs[13]{0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00};
+	writeData((DWORD)0x066EE98, Aoc10CinterfacDrs, 13);
+
 	if (wideScreenCentred)
 	{
 		//0051A3B7
@@ -2693,7 +2738,7 @@ void  __declspec(naked)  minimapColorhook4()
 		JMP Aoc10C_0040A7BB
 	}
 }
-DWORD Aoc10C_00432BB2 = 0x0432BB2B;
+DWORD Aoc10C_00432BB2 = 0x0432BB2;
 void  __declspec(naked)  minimapColorhook5()
 {
 	__asm
@@ -2789,31 +2834,32 @@ void miniMapColor()
 	InjectHook(0x05A3BA9, minimapColorhook3, PATCH_JUMP);
 	InjectHook(0x040A7B6, minimapColorhook4, PATCH_JUMP);
 	InjectHook(0x0432BAC, minimapColorhook5, PATCH_JUMP);
+	Nop(0x0432BB1,1);
 	InjectHook(0x0468d00, minimapColorhook6, PATCH_JUMP);
-	InjectHook(0x05e223b, minimapColorhook7, PATCH_JUMP);
+	Nop(0x0468D05, 2);
+	//InjectHook(0x05e223b, minimapColorhook7, PATCH_JUMP);//mini map color ???
 	BYTE __004324B1[36]{0x81,0xF9,0xA6,0x00,0x00,0x00,0x72,0x19,0x8D,0x8E,0x7C,0x01,0x00,0x00,0x89,0x41,0xFC,0x31,0xC0,0x38,0x01,0x0F,0x94,0x01,0x74,0x07,0x38,0x41,0x01,0x0F,0x94,0x41,0x01,0x8B,0x4E,0x20};
 	writeData(0x04324B1, __004324B1, 36);
 	InjectHook(0x0432C69, minimapColorhook8, PATCH_JUMP);
 	InjectHook(0x05A3C5F, minimapColorhook9, PATCH_JUMP);
+	Nop(0x05A3C64, 1);
 	Patch(0x0432C86+1, (BYTE)0x06);
 	Patch(0x0432BB2+1, (BYTE)0x03);
-	BYTE __004328B5[8]{0x8A,0x86,0x7C,0x01,0x00,0x00,0x84,0xC0};
+	BYTE __004328B5[]{0x8A,0x86,0x7C,0x01,0x00,0x00,0x84,0xC0};
 	//same byte for the 4 address
 	writeData(0x04328B5, __004328B5, 8);
 	writeData(0x0432913, __004328B5, 8);
 	writeData(0x0432EBD, __004328B5, 8);
 	writeData(0x0432EF7, __004328B5, 8);
-	BYTE _00433606[] = {0x8A,0x87,0x7C,0x01,0x00,0x00,0x6A,0x00,0x84,0xC0};
-	writeData(0x0433606 , __004328B5, 8);
-	writeData(0x0433649, __004328B5, 8);
-
-
+	BYTE _00433606[10] = {0x8A,0x87,0x7C,0x01,0x00,0x00,0x6A,0x00,0x84,0xC0};
+	writeData(0x0433606 , _00433606, 10);
+	writeData(0x0433649, _00433606, 10);
 }
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
 	nocd();
 	noStartup();//no video 
 	Aoc10CWidescreen(wideScreenCentred);
-	windowedMod(windowed);//todo force to read interface.drs (purple bug with other wide screen..)
+	windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
 	miniMapColor();
 }
