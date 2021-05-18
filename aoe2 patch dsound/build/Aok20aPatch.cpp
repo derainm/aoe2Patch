@@ -16,7 +16,7 @@ void nocdAOK20A()
 }
 //0x0448EE8
 WORD Aok20a_u_7A5608;
-DWORD Aok20a_u_7912A0;
+DWORD Aok20a_u_7912A0= 0x06633D4;
 DWORD Aok20a_u_004BD5A0 = 0x04BDA30 ;
 DWORD Aok20a_u_00448F37 = 0x0449037;
 void __declspec(naked)  Aok20a_u_AddWideScreenPanel0448EE8()
@@ -119,7 +119,7 @@ void __declspec(naked)  AOK20au_AddWideScreenPanel007BF980()
 		_007BF99A :
 		MOV ECX, Aok20a_u_7912A0
 		MOV ECX, DWORD PTR DS : [ECX]
-		MOV EDX, DWORD PTR DS : [ECX + 68h]//[ECX + 6Ch]
+		MOV EDX, DWORD PTR DS : [ECX + 6Ch]//[ECX + 68h]
 		MOV ECX, DWORD PTR SS : [ESP + 4h]
 		MOV EAX, DWORD PTR DS : [EDX + 18h]
 		PUSH Aok20a_u_007BF9D0//age2_x1.007BF9D0
@@ -196,7 +196,7 @@ void AOK20a_UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	writeByte(0x0448166+1, 0x6E);
 	//00448095  |. 6A 46          |PUSH 0x46                               ; |Arg3 = 00000046
 	//00448195  |. 6A 46          |PUSH 46                                 ; |Arg3 = 00000046
-	writeByte(0x0448195, 0x4B);
+	writeByte(0x0448195+1, 0x4B);
 	//00448F6B   . 74 26          JE SHORT empires2.00448F93
 	//0044906B   . 74 26          JE SHORT empires2.00449093
 	writeByte(0x044906B, 0x66);
