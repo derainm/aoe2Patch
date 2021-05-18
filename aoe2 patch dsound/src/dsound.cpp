@@ -10,6 +10,7 @@ typedef uintptr_t addr;
 #include <sys/stat.h>
 #include <string>
 #include <fstream>
+#include "../build/Aok20Patch.h"
 
 struct dsound_dll
 {
@@ -80,11 +81,15 @@ void init()
 	
 	if (AoC10Ce && !UserPatch)
 	{
-		Aoc10CPatchHook(false,true);
+		Aoc10CPatchHook(true,true);
 	}
 	if (AoC10)
 	{
-		Aoc10PatchHook(false, true);
+		Aoc10PatchHook(true, true);
+	}
+	if (AoK20)
+	{
+		Aoc20PatchHook(false,true);
 	}
 }
 
