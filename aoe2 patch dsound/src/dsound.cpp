@@ -11,6 +11,7 @@ typedef uintptr_t addr;
 #include <string>
 #include <fstream>
 #include "../build/Aok20Patch.h"
+#include "../build/Aok20aPatch.h"
 
 struct dsound_dll
 {
@@ -69,8 +70,6 @@ int AoK20ab, AoK20, AoC10Ce, AoC10, UserPatch;//(user patch version aofe + 1.5 +
 
 void init()
 {
-	
-
 	AoK20ab = (*(int*)0x005FB0D3 == 0x042474FF);
 	AoK20 = (*(int*)0x005FB0D3 ==   0x0C24548D);
 	AoC10Ce = (*(int*)0x006146F0 == 0x042474FF);
@@ -90,6 +89,10 @@ void init()
 	if (AoK20)
 	{
 		Aoc20PatchHook(false,true);
+	}	
+	if (AoK20ab)
+	{
+		Aoc20aPatchHook(false,true);
 	}
 }
 
