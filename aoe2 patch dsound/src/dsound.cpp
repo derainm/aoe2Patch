@@ -6,7 +6,10 @@ typedef uintptr_t addr;
 #include "MemoryMgr.h"
 #include "../build/Aoc10CPatch.h"
 #include "../build/Aoc10Patch.h"
- 
+//files check for 1.0e
+#include <sys/stat.h>
+#include <string>
+#include <fstream>
 
 struct dsound_dll
 {
@@ -65,6 +68,8 @@ int AoK20ab, AoK20, AoC10Ce, AoC10, UserPatch;//(user patch version aofe + 1.5 +
 
 void init()
 {
+	
+
 	AoK20ab = (*(int*)0x005FB0D3 == 0x042474FF);
 	AoK20 = (*(int*)0x005FB0D3 ==   0x0C24548D);
 	AoC10Ce = (*(int*)0x006146F0 == 0x042474FF);
@@ -85,14 +90,22 @@ void init()
 
 
 
+inline bool exists_test3(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
 
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH)
 	{
+		//int AoC10e = (*(int*)0x0680A18 == 0x7);
 		init_dsound(hInst);
+		if ( !exists_test3("on.ini"))// !AoC10e&&
+		{
+			init();
+		}
 
-		init();
 	}
 
 	if (reason == DLL_PROCESS_DETACH)
