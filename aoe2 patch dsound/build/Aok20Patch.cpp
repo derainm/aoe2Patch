@@ -8254,6 +8254,13 @@ void antiDeleteHookAOK20()
 	setHookCall((void*)0x04DE7F6, (void*)_antiDelete004E2CD0);
 
 }
+void gamedata20c()
+{
+	//0065D400  67 61 6D 65 64 61 74 61 32 30 63 2E 64 72 73 00  gamedata20c.drs.
+	BYTE __0065D400[16] = {0x67,0x61,0x6D,0x65,0x64,0x61,0x74,0x61,0x32,0x30,0x63,0x2E,0x64,0x72,0x73,0x00};
+	writeData(0x065D400, __0065D400,16);
+
+}
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 {
 	widescreenAOk20(wideScreenCentred);
@@ -8271,5 +8278,5 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	aok20AddAColor();
 	FixRecordRestoredGameBugHookAOK20();
 	antiDeleteHookAOK20();
-
+	gamedata20c();
 }

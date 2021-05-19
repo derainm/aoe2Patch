@@ -1015,10 +1015,235 @@ void Aok20a_minimapColor()
 	BYTE Aok2a_46140F[16]{0xB9,0x00,0x00,0x00,0x00,0x90,0x83,0xC1,0x04,0x89,0x4C,0x24,0x1C,0x66,0x66,0x90};
 	writeData(0x46140F, Aok2a_46140F, 16);
 }
+DWORD Aok20ah_EAX;
+DWORD Aok20ah_ECX;
+DWORD Aok20ah_EDX;
+DWORD Aok20ah_EBX;
+DWORD Aok20ah_ESP;
+DWORD Aok20ah_EBP;
+DWORD Aok20ah_ESI;
+DWORD Aok20ah_EDI;
+
+
+
+DWORD Aok20acolors[8];
+//DWORD cpt = 0;
+//DWORD cpt = 0;
+
+DWORD Aok20apos;
+
+
+DWORD  Aok20ac_EAX;
+DWORD  Aok20ac_ECX;
+DWORD  Aok20ac_EDX;
+DWORD  Aok20ac_EBX;
+DWORD  Aok20ac_ESP;
+DWORD  Aok20ac_EBP;
+DWORD  Aok20ac_ESI;
+DWORD  Aok20ac_EDI;
+DWORD Aok20aplayer_position;
+//DWORD _0041F840 = 0x041F840;
+//DWORD* nameAdr;
+//char* name;
+DWORD Aok20a_004DCACA = 0x04DCFDA;
+
+
+//004DCAC1 | . 8D4C24 34      LEA ECX, DWORD PTR SS : [ESP + 34] ; |
+//004DCAC5     68 F1000000    PUSH 0F1
+
+//DWORD basePlayersAdress;
+BYTE Aok20acolor;
+void __declspec(naked)   Aok20achatColor004DCAC1()
+{
+	__asm
+	{
+		//save register
+		MOV  Aok20ac_EAX, EAX
+		MOV  Aok20ac_ECX, ECX
+		MOV  Aok20ac_EDX, EDX
+		MOV  Aok20ac_EBX, EBX
+		MOV  Aok20ac_ESP, ESP
+		MOV  Aok20ac_EBP, EBP
+		MOV  Aok20ac_ESI, ESI
+		MOV  Aok20ac_EDI, EDI
+
+
+		//CMP flagCreated, 1h
+		//JE white
+
+		//MOV EDX, DWORD PTR DS : [6645C4h]
+		MOV EDX, DWORD PTR DS : [6633D4h]
+		//MOV ECX, DWORD PTR DS : [EDX + 41Ch]
+		MOV ECX, DWORD PTR DS : [EDX + 420h]
+		MOV EDX, DWORD PTR DS : [ECX + 4Ch]
+		MOV EAX, Aok20aplayer_position
+		MOV ECX, DWORD PTR DS : [EDX + 4 * EAX]
+
+		ADD ECX, 158h
+		MOV ECX, DWORD PTR DS : [ECX]
+		ADD ECX, 10h
+		MOV EAX, 0h
+		MOV al, BYTE PTR DS : [ECX]
+		MOV Aok20acolor, al
+		//restaure register
+		MOV  EAX,  Aok20ac_EAX
+		MOV  ECX,  Aok20ac_ECX
+		MOV  EDX,  Aok20ac_EDX
+		MOV  EBX,  Aok20ac_EBX
+		MOV  ESP,  Aok20ac_ESP
+		MOV  EBP,  Aok20ac_EBP
+		MOV  ESI,  Aok20ac_ESI
+		MOV  EDI,  Aok20ac_EDI
+		REP MOVS BYTE PTR ES : [EDI] , BYTE PTR DS : [ESI]
+		MOV EAX, 0h
+		MOV  EAX, Aok20aplayer_position
+		MOV Aok20aplayer_position, 0h
+		ADD  AL, 30h
+		MOV ECX,ESI
+		SUB ECX,EDX
+
+		MOV BYTE PTR DS : [ECX +1] , AL
+		MOV  EAX, Aok20ac_EAX
+		PUSH 0h
+		PUSH 0h
+
+
+		LEA ECX, DWORD PTR SS : [ESP + 34h]
+		CMP Aok20acolor, 0F2h
+		JNZ  standartColor
+		MOV Aok20acolor, 15h
+		standartColor :
+		push Aok20acolor
+		JMP Aok20a_004DCACA
+	}
+}
+DWORD Aok20a_004DCA40 = 0x04DCF50 ;
+void __declspec(naked)  Aok20achatColor004DCA37()
+{
+	__asm {
+			LEA ECX, DWORD PTR SS : [ESP + 34h]
+
+			//save register
+			MOV Aok20ah_EAX, EAX
+			MOV Aok20ah_ECX, ECX
+			MOV Aok20ah_EDX, EDX
+			MOV Aok20ah_EBX, EBX
+			//MOV h_ESP, ESP
+			MOV Aok20ah_EBP, EBP
+			MOV Aok20ah_ESI, ESI
+			MOV Aok20ah_EDI, EDI
+
+			
+			//MOV EDX, DWORD PTR DS : [ESI]
+		/*	MOV DL, BYTE PTR DS : [ESI - 6h]
+			SUB EDX,30h*/
+			MOV EDX,ESI
+			SUB EDX, EAX
+			MOV EAX,EDX
+			MOV EDX, 0h
+			MOV DL, BYTE PTR DS : [EAX +1]
+ 
+
+
+			CMP EDX, 8h
+			JG norm
+			MOV Aok20apos, EDX
+
+			//MOV EDX, DWORD PTR DS : [6645C4h]
+			MOV EDX, DWORD PTR DS : [6633D4h]
+			//MOV ECX, DWORD PTR DS : [EDX + 41Ch]
+			MOV ECX, DWORD PTR DS : [EDX + 420h]
+			MOV EDX, DWORD PTR DS : [ECX + 4Ch]
+			MOV EAX, Aok20apos
+			MOV ECX, DWORD PTR DS : [EDX + 4 * EAX]
+
+			ADD ECX, 158h
+			MOV ECX, DWORD PTR DS : [ECX]
+			ADD ECX, 10h
+			MOV EAX, 0h
+			MOV al, BYTE PTR DS : [ECX]
+
+			CMP EAX, 0F2h
+			JNZ  standartColor
+			MOV EAX, 15h
+			standartColor :
+
+			PUSH EAX//color
+
+			//restaure register
+			MOV  EAX, Aok20ah_EAX
+			MOV  ECX, Aok20ah_ECX
+			MOV  EDX, Aok20ah_EDX
+			MOV  EBX, Aok20ah_EBX
+			//MOV  ESP, h_ESP
+			MOV  EBP, Aok20ah_EBP
+			MOV  ESI, Aok20ah_ESI
+			MOV  EDI, Aok20ah_EDI
+
+			JMP Aok20a_004DCA40
+
+			norm :
+			push 0FFh
+			//restaure register
+			MOV EAX, Aok20ah_EAX
+			MOV ECX, Aok20ah_ECX
+			MOV EDX, Aok20ah_EDX
+			MOV EBX, Aok20ah_EBX
+			//MOV  ESP, h_ESP
+			MOV EBP, Aok20ah_EBP
+			MOV ESI, Aok20ah_ESI
+			MOV EDI, Aok20ah_EDI
+
+			JMP Aok20a_004DCA40
+	}
+}
+
+DWORD Aok20a_0042A867 = 0x042A917 ;
+void __declspec(naked) Aok20agetplayerPosition0042A860()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 128h]
+		MOV Aok20aplayer_position, ECX
+		JMP Aok20a_0042A867
+	}
+}
+DWORD Aok20a_0042879C = 0x042885C ;
+void __declspec(naked)  Aok20agetplayerPosition00428791()
+{
+	__asm {
+		//MOV EDX, DWORD PTR DS : [ESI + 12C8h]
+		// | . 8B96 CC120000  MOV EDX, DWORD PTR DS : [ESI + 12CC]
+		MOV EDX, DWORD PTR DS : [ESI + 12CCh]
+		XOR ECX, ECX
+		MOV CL, BYTE PTR SS : [EBP]
+		MOV Aok20aplayer_position, ECX
+		JMP Aok20a_0042879C
+
+	}
+}
+DWORD Aok20a_0042A7FF = 0x042A8AF;
+void __declspec(naked)  Aok20agetplayerPosition0042A7F8()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 128h]
+		MOV Aok20aplayer_position, ECX
+		JMP Aok20a_0042A7FF
+	}
+}
+void aok20aCHatColor()
+{
+	//direct message color
+	InjectHook((void*)0x04DCFCB , Aok20achatColor004DCAC1, PATCH_JUMP);
+	InjectHook((void*)0x04DCF47 , Aok20achatColor004DCA37, PATCH_JUMP);
+	InjectHook((void*)0x042A910, Aok20agetplayerPosition0042A860, PATCH_JUMP);
+	InjectHook((void*)0x0428851, Aok20agetplayerPosition00428791, PATCH_JUMP);
+	InjectHook((void*)0x042A8A8 , Aok20agetplayerPosition0042A7F8, PATCH_JUMP);
+}
 void Aoc20aPatchHook(bool wideScreenCentred, bool windowed) 
 {
 	nocdAOK20A();
 	AoK20AWidescreen();
 	windowedModAok20a(windowed);
 	Aok20a_minimapColor();
+	//aok20aCHatColor();
 }

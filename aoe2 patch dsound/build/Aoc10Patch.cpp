@@ -3616,6 +3616,8 @@ void  __declspec(naked)  AOC10_minimapColorhook5()
 		MOV EDX, DWORD PTR SS : [ESP + 30h]
 		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
 		MOV EDX, DWORD PTR DS : [ESI + 0FCh]
+		TEST ECX, ECX
+		JE _00432BD2
 		MOV ECX, DWORD PTR DS : [ECX + 9Ch]
 		CMP ECX, DWORD PTR DS : [EDX + 9Ch]
 		JNZ _00432BD2
