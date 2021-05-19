@@ -905,9 +905,120 @@ void windowedModAok20a(bool windowed)
 
 	}
 }
+//0060EF1D   .^E9 65F0F7FF    JMP empires2.0058DF87
+DWORD Aok20a_0060EF1D = 0x060EF1D;
+void __declspec(naked)   minimapColorHook058DF80()
+{
+	__asm
+	{
+		MOV CL, BYTE PTR SS : [EBP + 1Ch]
+		MOV BYTE PTR DS : [EDI + 30h] , CL
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		MOV EDX, DWORD PTR DS : [ECX + 4h]
+		JMP Aok20a_0060EF1D
+	}
+}
+ 
+DWORD Aok20a_0058DF87 = 0x058DF87;
+
+void __declspec(naked)   minimapColorHook0060EF10 ()
+{
+	__asm
+	{
+		MOV CL, BYTE PTR SS : [EBP + 1Ch]
+		MOV BYTE PTR DS : [EDI + 30h] , CL
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		MOV EDX, DWORD PTR DS : [ECX + 4h]
+		JMP Aok20a_0058DF87
+	}
+}
+DWORD Aok20a_005C5236 = 0x05C5236;
+void __declspec(naked)   minimapColorHook060EF24()
+{
+	__asm
+	{
+		MOVSX ECX,BYTE PTR DS:[EDI+30h]
+		MOV EAX,DWORD PTR DS:[ESI+0F8h]
+		MOV EAX,DWORD PTR DS:[EAX+4Ch]
+		MOV ECX,DWORD PTR DS:[EAX+ECX*4h]
+		MOV EDX,DWORD PTR DS:[ECX+158h]
+		MOV EAX,DWORD PTR DS:[EDX+10h]
+		JMP Aok20a_005C5236
+	}
+}
+DWORD Aok20a_00461337 = 0x0461337;
+void __declspec(naked)   minimapColorHook0060EF44()
+{
+	__asm
+	{
+		DEC EBP
+		DEC EDI
+		MOV EAX,DWORD PTR DS:[ECX+8h]
+		TEST EAX,EAX
+		JMP Aok20a_00461337
+	}
+}
+//0045C592     E98D291B00    JMP empires2.0060EF24
+
+
+DWORD Aok20a_00461351 = 0x0461351;
+void __declspec(naked)   minimapColorHook0060EF52()
+{
+	__asm
+	{
+		MOV EDX,DWORD PTR DS:[ECX+30h]
+		SUB EDX,2h
+		CMP EDI,EDX
+		JMP Aok20a_00461351
+	}
+}
+DWORD Aok20a_0046135E = 0x046135E;
+void __declspec(naked)   minimapColorHook0060EF61()
+{
+	__asm
+	{
+		MOV EAX,DWORD PTR DS:[ECX+30h]
+		SUB EAX,2h
+		CMP EBP,EAX
+		JMP Aok20a_0046135E
+	}
+}
+
+//005C521C   . 8B86 7C010000  MOV EAX,DWORD PTR DS:[ESI+17C]
+DWORD AOk20a_060EF24 = (DWORD)minimapColorHook060EF24;
+DWORD AOk20a_005C522F = 0x05C522F;
+void __declspec(naked)   minimapColorHook5C5222()
+{
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [ESI + 17Ch]
+		TEST AL, AL
+		JE __AOk20a_060EF24
+		SHR EAX, 8h
+		TEST AL, AL
+		JMP AOk20a_005C522F
+		__AOk20a_060EF24:
+		JMP AOk20a_060EF24
+	}
+}
+
+
+void Aok20a_minimapColor()
+{
+	InjectHook((void*)0x5C5222, minimapColorHook5C5222, PATCH_JUMP);
+	InjectHook((void*)0x058DF80, minimapColorHook0060EF10, PATCH_JUMP);
+	InjectHook((void*)0x0461332, minimapColorHook0060EF44, PATCH_JUMP);
+	InjectHook((void*)0x046134C, minimapColorHook0060EF52, PATCH_JUMP);
+	InjectHook((void*)0x0461359, minimapColorHook0060EF61, PATCH_JUMP);
+	BYTE Aok2a_5C4B41[33]{0x81,0xF9,0xA6,0x00,0x00,0x00,0x72,0x19,0x8D,0x8E,0x7C,0x01,0x00,0x00,0x89,0x41,0xFC,0x33,0xC0,0x38,0x01,0x0F,0x94,0x01,0x74,0x07,0x38,0x41,0x01,0x0F,0x94,0x41,0x01};
+	writeData(0x5C4B41, Aok2a_5C4B41,33);
+	BYTE Aok2a_46140F[16]{0xB9,0x00,0x00,0x00,0x00,0x90,0x83,0xC1,0x04,0x89,0x4C,0x24,0x1C,0x66,0x66,0x90};
+	writeData(0x46140F, Aok2a_46140F, 16);
+}
 void Aoc20aPatchHook(bool wideScreenCentred, bool windowed) 
 {
 	nocdAOK20A();
 	AoK20AWidescreen();
 	windowedModAok20a(windowed);
+	Aok20a_minimapColor();
 }
