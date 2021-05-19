@@ -768,17 +768,21 @@ void  AOK20a_wide()
 	V = (int)Aok20a_u_Cord_Y;
 	H = (int)Aok20a_u_Cord_X;
 
-	//change interfaace id 
-	if (H < 1024 && V < 768)
-	{
-		BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
-		writeData(0x04DF5B2, _004DF5B2_BACK, 6);
-	}
-	else
-	{
-		BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
-		writeData(0x04DF5B2, _004DF5B2, 6);
-	}
+	////change interfaace id 
+	//if (H < 1024 && V < 768)
+	//{
+	//	BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
+	//	writeData(0x04DF5B2, _004DF5B2_BACK, 6);
+	//}
+	//else
+	//{
+	//	BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
+	//	writeData(0x04DF5B2, _004DF5B2, 6);
+	//}
+	//004DF7E5  |. 0F84 A5030000  JE empires2.004DFB90
+
+	Nop(0x04DF7E3  ,8);
+	Nop(0x04DF806 ,8);
 
 	Aok20a_u_patchEXE(H, V);
 }
