@@ -73,7 +73,8 @@ DWORD Aok20a_u_006139B4 = 0x05FABE7 ;//(DWORD)u_UserPatchResolution_006139B4;
 //DWORD uu_006137C9 = 0x05F8FF0;
 DWORD Aok20a_uu_007C1EF0 = (DWORD)Aok20a_u_UserPatchResolution007C1EF0;
 DWORD Aok20a_uu_007C1F20 = (DWORD)Aok20a_u_UserPatchResolution007C1F20;
-DWORD Aok20a__005F8FF0 = 0x05FAB6B;//005FAB6B  |. 56             PUSH ESI
+DWORD Aok20a__005F8FF0 = 0x05FAB6A;//005FAB6B  |. 56             PUSH ESI
+//005FAB6A  /$ 53             PUSH EBX
 //DWORD ___005FCE14 = 0x05FAEF4;
 void __declspec(naked) Aok20a_u_UserPatchResolution07C1C38()
 {
@@ -102,7 +103,7 @@ void __declspec(naked) Aok20a_u_UserPatchResolution07C1C38()
 			JL uu_007C1EE3
 			uu_007C1C72 :
 			MOV DWORD PTR SS : [ESP + 4h] , ESI
-			CALL Aok20a_uu_007C1EF0
+			CALL Aok20a_uu_007C1EF0 
 			//MOV DWORD PTR DS : [795038] , 0h
 			MOV DWORD PTR DS : [773038h] , 0h
 			MOV EDX, DWORD PTR SS : [EBP + 30h]
@@ -111,7 +112,7 @@ void __declspec(naked) Aok20a_u_UserPatchResolution07C1C38()
 			AND ESI, ESI
 			JG short uu_007C1C72
 			MOV DWORD PTR SS : [ESP + 4h] , 0h
-			CALL Aok20a_uu_007C1EF0
+			CALL Aok20a_uu_007C1EF0  
 			//MOV ECX, DWORD PTR DS : [795004]
 			MOV ECX, DWORD PTR DS : [773004h]
 			MOV EAX, DWORD PTR SS : [EBP + 30h]
@@ -137,7 +138,7 @@ void __declspec(naked) Aok20a_u_UserPatchResolution07C1C38()
 			PUSH ESI
 			PUSH 1h
 			//CALL uu_006137C9
-			CALL Aok20a__005F8FF0 // age2_x1.006137C9 heap alloc 
+			CALL Aok20a__005F8FF0 //bug there ?? // age2_x1.006137C9 heap alloc 
 			ADD ESP, 8h
 			MOV DWORD PTR DS : [Aok20a_u_7A5500] , EAX
 			TEST EAX, EAX
@@ -318,8 +319,8 @@ void __declspec(naked) Aok20a_u_UserPatchResolution007C1B70()
 			PUSH EBP
 			SUB ESP, 30h
 			MOV EDI, DWORD PTR DS : [ESI + 20h]
-			//MOV ECX, DWORD PTR DS : [ESI + 1008h]
-			MOV ECX, DWORD PTR DS : [ESI + 100Ch]
+			MOV ECX, DWORD PTR DS : [ESI + 1008h]
+			//MOV ECX, DWORD PTR DS : [ESI + 100Ch]
 			MOV EDX, DWORD PTR DS : [EDI + 0C0h]
 			MOV EBX, DWORD PTR DS : [EDI + 0D0h]
 			MOV DWORD PTR DS : [773000h] , EDX //00774000  =795000
@@ -602,7 +603,7 @@ void AOK20a_UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
  
 #pragma endregion resize  screen 
  
-
+ 
 	//user patch ress
 	InjectHook((void*)0x04E211E, Aok20a_u_UserPatchResolution, PATCH_JUMP);
 	Nop(0x04E2123, 1);
@@ -611,17 +612,125 @@ void AOK20a_UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	writeByte(0x04E1C13, 0x90);
 
 	//004DF521  |. 7C 2D          JL SHORT empires2.004DF550
-	writeByte(0x04DF521, 0xEB);
+	//004DFA31  |. 7C 2D          JL SHORT empires2.004DFA60
+	writeByte(0x04DFA31, 0xEB);
  
 	//fix bug  1280 force to jum 1024x768
 	//004DA6F5     E9 52030000    JMP 004DAA4C
-	BYTE _004DAA4C[] = { 0xE9,0x52,0x03,0x00,0x00,0x90 };
-	writeData(0x04DA6F5, _004DAA4C, 6);
+	BYTE _004DABF5[] = {0xE9,0x52,0x03,0x00,0x00,0x90};
+	writeData(0x04DABF5, _004DABF5, 6);
  
 
 }
+//004D9E8A  |. 8BCE           MOV ECX,ESI                              ; |
+DWORD Aok20a_004D998C = 0x04D9E8A;
+DWORD Aok20a_Res__X = (DWORD)GetSystemMetrics(SM_CXSCREEN);
+DWORD Aok20a_Res__Y = (DWORD)GetSystemMetrics(SM_CYSCREEN);
+//0041BCC5     B9 00040000                  MOV ECX, 400
+//0041BD3B  |> 8B8B D8010000  MOV ECX,DWORD PTR DS:[EBX+1D8]
+DWORD Aok20a_0041BD2B = 0x041BD3B;
+DWORD Aok20a_getscreenEax = 0x041BD3B; //0x041BD2B;
+void __declspec(naked)  AOK20a_setScreenRes()
+{
+	__asm {
+		/*	MOV ECX, Aok20a_Res__Y
+			MOV EDX, Aok20a_Res__X
+			MOV EDX, DWORD PTR DS : [6645C4]
+			MOV EAX, DWORD PTR DS : [EDX + 24]
+			MOV EAX, DWORD PTR DS : [EAX + 8F4]
+			CMP EAX, 320*/
+
+			//MOV ECX, _u_Cord_X
+			//MOV EDX, _u_Cord_Y
+			//MOV u_screenSaveEDX, EDX
+			//MOV EDX, DWORD PTR DS : [6645C4h]
+			//MOV EAX, DWORD PTR DS : [EDX + 24h]
+			//MOV EDX, _u_Cord_X
+			//MOV  DWORD PTR DS : [EAX + 8F4h] , EDX
+			//MOV EAX, _u_Cord_Y
+			//MOV  DWORD PTR DS : [EAX + 8F8h] , EDX
 
 
+		MOV EAX, DWORD PTR DS : [EBX + 28h]////+24h
+		MOV ECX, Aok20a_Res__X
+		MOV DWORD PTR DS : [EAX + 8F4h] , ECX // 320h
+		MOV ECX, DWORD PTR DS : [EBX + 28h]//+24h
+		MOV Aok20a_getscreenEax, EAX
+		MOV EAX, Aok20a_Res__Y
+		MOV DWORD PTR DS : [ECX + 8FCh] , EAX//258
+		MOV  Aok20a_Res__Y, EAX
+		JMP Aok20a_0041BD2B
+
+
+
+	}
+}
+
+//void Aok20a_getxy()
+//{
+//#pragma region resize interface slp
+//
+//	//457ED0
+//	u_0045FD90 = 0x045FD90;
+//	//0x4580A4
+//	u_004580A9 = 0x04580A9;
+//	u_004580A4 = 0x04580A4;
+//	u_004DB740 = 0x04DB740;
+//	u_004580BD = 0x04580BD;
+//	u_0051EFF0 = 0x051EFF0;
+//	//7C08C0
+//	u_6645C4 = 0x06645C4;//7912A0
+//	u_0051EFF0 = 0x051EFF0;
+//	u_004580A9 = 0x04580A9;
+//	u_004A23E0 = 0x004A23E0;
+//	//_AddWideScreenPanel7C08C0 = (DWORD) u_AddWideScreenPanel7C08C0;
+//	//setHook((void*)0x457ED0, AddWideScreenPanel457ED0);
+//	//// call 7C08C0
+//	//setHook((void*)0x4580A4, AddWideScreenPanel4580A4);
+//	////4E1C38
+//	u_005223C2 = 0x04E1C45;
+//	//setHook((void*)0x04E1C38, AddWideScreenPanel004E1C38);
+//
+//	////007C1D90
+//	u_007C1C78 = (DWORD)u_AddWideScreenPanel007C1C78;
+//	u_00619C48 = 0x0619C48;
+//	u_007C1D90 = (DWORD)u_AddWideScreenPanel007C1D90;
+//
+//	u_00619BC0 = 0x0619BC0;
+//	//writeByte(0x41f80A,0x9066);
+//	////004E1C0E     90             NOP
+//	//setHook((void*)0x04E1C0E, AddWideScreenPanel004E1C0E);
+//	////to do ajouter la partie manquante
+//	////004E1C12 
+//	//writeByte(0x04E1C13, 0x90);
+//	//BYTE _04E1C14[] =
+//	//{
+//	//	0x68,0x20,0x1C,0x4E,0x00
+//	//};
+//	//writeData(0x04E1C09, _04E1C14, 5);
+//	////004E1C2A     8B46 18        MOV EAX,DWORD PTR DS:[ESI+0x18]
+//	//writeByte(0x04E1C2C, 0x18);
+//	////004E1C2F   . 3D 00050000    CMP EAX,0x500
+//	//writeByte(0x04E1C31, 0x04);
+//
+//
+//
+//	u_004DA6EA = 0x04DA6EA;
+//	u_4DA6CC = 0x04DA6CC;
+//	//004DA6E7  |. 8B46 14        MOV EAX,DWORD PTR DS:[ESI+0x14]   -> X 
+//	InjectHook((void*)0x04DA6E5, u_AddWideScreenPanelreadXY, PATCH_JUMP);
+//
+//	//004E1C0E     90             NOP
+//	/*setHook((void*)0x04E1C0E, u_AddWideScreenPanelSLP);
+//	BYTE u_PUSH_4E1C20[] = { 0x68,0x20,0x1C,0x4E,0x00 };
+//	writeData(0x04E1C09, u_PUSH_4E1C20, 5);
+//	writeByte(0x04E1C13, 0x90);*/
+//
+//
+//
+//
+//#pragma endregion resize interface slp
+//}
 void AoK20AWidescreen()
 {
 
@@ -633,8 +742,9 @@ void AoK20AWidescreen()
 	//BYTE aoclogoconqueror[5] = { 0x6A,0x00,0x90,0x90,0x90 };
 	//writeData(0x05172EE, aoclogoconqueror, 5);
 	AOK20a_UserPatchWideScreen();
- 
- 
+	//	//0041BCD5  |. B9 00040000    MOV ECX,400
+	//	InjectHook((void*)0x041BCD5, AOK20a_setScreenRes, PATCH_JUMP);
+	//	Aok20a_getxy();
 }
 
 void windowedModAok20a(bool windowed)

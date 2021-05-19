@@ -3706,7 +3706,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 
 
 
-
+	/**/
 
 	//user patch ress
 	InjectHook((void*)0x04E1C0E, u_UserPatchResolution, PATCH_JUMP);
@@ -3715,10 +3715,10 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	writeByte(0x04E1C13, 0x90);
 	//004DF521  |. 7C 2D          JL SHORT empires2.004DF550
 	writeByte(0x04DF521, 0xEB);
-	/* good luck if we do this ...
-	//resize
-	setHook((void*)0x04DA6EA, u_patchExe);
-	*/
+	//  good luck if we do this ...
+	////resize
+	//setHook((void*)0x04DA6EA, u_patchExe);
+ 
 	//fix bug  1280 force to jum 1024x768
 	//004DA6F5     E9 52030000    JMP 004DAA4C
 	BYTE _004DAA4C[] = { 0xE9,0x52,0x03,0x00,0x00,0x90 };
@@ -3736,7 +3736,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	//	//	BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
 	//	//	writeData(0x04DF5B2, _004DF5B2_BACK, 6);
 	//	//}
-
+	
 }
  
 
