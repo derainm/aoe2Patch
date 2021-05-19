@@ -622,6 +622,197 @@ void AOK20a_UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
  
 
 }
+DWORD Aok20a_u_Cord_X;
+DWORD Aok20a_u_Cord_Y;
+ 
+ 
+DWORD Aok20a_u_refwidth = 0x500;
+DWORD Aok20a_u_refheight = 0x90;
+// V = Y
+// H = X
+
+void Aok20a_u_patchEXE(int H, int V)
+{
+	////000E2CDE	V	-200
+	//writeDwordF1(0x00DAF85, V - 200);//1280
+		writeDwordF1(0x001BCD6,H + 0	  );
+		writeDwordF1(0x001BD1C,V + 0	  );
+		writeDwordF1(0x001BD23,H + 1	  );
+		writeDwordF1(0x001D395,H + 0	  );
+		writeDwordF1(0x001D3AF,V + 0	  );
+		writeDwordF1(0x001D3D2,H + 1	  );
+		writeDwordF1(0x001D98C,H + 0	  );
+		writeDwordF1(0x001D9BB,V + 0	  );
+		writeDwordF1(0x001D9C5,H + 1	  );
+		writeDwordF1(0x0048710,H + 0	  );
+		writeDwordF1(0x0048717,H + 1	  );
+		writeDwordF1(0x004875C,H + 0	  );
+		writeDwordF1(0x0048780,H + 1	  );
+		writeDwordF1(0x0049007,H + 0	  );
+		writeDwordF1(0x004900C,V + 0	  );
+		writeDwordF1(0x0049022,H + 1	  );
+		writeDwordF1(0x0049027,V + 1	  );
+		writeDwordF1(0x0049067,H + 2	  );
+		writeDwordF1(0x0050C58,V + 0	  );
+		writeDwordF1(0x0050D30,V + 1	  );
+		writeDwordF1(0x0050ED3,V + 2	  );
+		writeDwordF1(0x00511E3,V + 0	  );
+		writeDwordF1(0x00511FD,V + 1	  );
+		writeDwordF1(0x005E09B,H + 0	  );
+		writeDwordF1(0x005E0A6,H + 1	  );
+		writeDwordF1(0x005E150,H + 0	  );
+		writeDwordF1(0x005E159,V + 0	  );
+		writeDwordF1(0x005E16B,H + 1	  );
+		writeDwordF1(0x005E174,V + 1	  );
+		writeDwordF1(0x005E186,H + 2	  );
+		writeDwordF1(0x005E18F,V + 2	  );
+		writeDwordF1(0x005E225,H + 0	  );
+		writeDwordF1(0x005E22E,V + 0	  );
+		writeDwordF1(0x005E2CD,H + 0	  );
+		writeDwordF1(0x005E2D6,V + 0	  );
+		writeDwordF1(0x005E37B,H + 0	  );
+		writeDwordF1(0x005E384,V + 0	  );
+		writeDwordF1(0x005E3EE,H + 0	  );
+		writeDwordF1(0x005E444,H + 1	  );
+		writeDwordF1(0x005E44B,H + 2	  );
+		writeDwordF1(0x005E4B4,H + 0	  );
+		writeDwordF1(0x005E4BB,H + 2	  );
+		writeDwordF1(0x005E536,H + 0	  );
+		writeDwordF1(0x005E53D,H + 2	  );
+		writeDwordF1(0x005E5B0,H + 0	  );
+		writeDwordF1(0x005E5B7,H + 2	  );
+		writeDwordF1(0x00DABEB,H + 1	  );
+		writeDwordF1(0x00DAC07,H + 1	  );
+		writeDwordF1(0x00DAC1C,V - 279	  );
+		writeDwordF1(0x00DAC2E,V - 249	  );
+		writeDwordF1(0x00DAC33,H + 1	  );
+		writeDwordF1(0x00DAC67,V - 206	  );
+		writeDwordF1(0x00DACCA,V - 196	  );
+		writeDwordF1(0x00DACD9,V - 178	  );
+		writeDwordF1(0x00DAD11,V - 55	  );
+		writeDwordF1(0x00DAE18,H - 301	  );
+		writeDwordF1(0x00DAE2E,H - 241	  );
+		writeDwordF1(0x00DAE44,H - 181	  );
+		writeDwordF1(0x00DAE5A,H - 121	  );
+		writeDwordF1(0x00DAE70,H - 62	  );
+		writeDwordF1(0x00DAE82,V - 194	  );
+		writeDwordF1(0x00DAE9B,V - 67	  );
+		writeDwordF1(0x00DAEB4,V - 197	  );
+		writeDwordF1(0x00DAECD,V - 197	  );
+		writeDwordF1(0x00DAEE6,V - 167	  );
+		writeDwordF1(0x00DAEFF,V - 77	  );
+		writeDwordF1(0x00DAF18,V - 48	  );
+		writeDwordF1(0x00DAF31,V - 44	  );
+		writeDwordF1(0x00DAF42,H + 0	  );
+		writeDwordF1(0x00DAF5E,H + 0	  );
+		writeDwordF1(0x00DAF73,V - 230	  );
+		writeDwordF1(0x00DAF85,V - 200	  );
+		writeDwordF1(0x00DAF8A,H + 0	  );
+		writeDwordF1(0x00DAFBE,V - 169	  );
+		writeDwordF1(0x00DAFC5,H - 336	  );
+		writeDwordF1(0x00DAFF3,H / 2 - 112);
+		writeDwordF1(0x00DB01C,H - 649	  );
+		writeDwordF1(0x00DB021,V - 152	  );
+		writeDwordF1(0x00DB030,V - 144	  );
+		writeDwordF1(0x00DB068,V - 21	  );
+		writeDwordF1(0x00DB16F,H - 303	  );
+		writeDwordF1(0x00DB185,H - 243	  );
+		writeDwordF1(0x00DB19B,H - 183	  );
+		writeDwordF1(0x00DB1B1,H - 123	  );
+		writeDwordF1(0x00DB1C7,H - 64	  );
+		writeDwordF1(0x00DB1D9,V - 154	  );
+		writeDwordF1(0x00DB1E0,H - 308	  );
+		writeDwordF1(0x00DB1F2,V - 49	  );
+		writeDwordF1(0x00DB1F9,H - 309	  );
+		writeDwordF1(0x00DB20B,V - 156	  );
+		writeDwordF1(0x00DB212,H - 96	  );
+		writeDwordF1(0x00DB224,V - 162	  );
+		writeDwordF1(0x00DB22B,H - 69	  );
+		writeDwordF1(0x00DB23D,V - 137	  );
+		writeDwordF1(0x00DB244,H - 60	  );
+		writeDwordF1(0x00DB256,V - 59	  );
+		writeDwordF1(0x00DB25D,H - 61	  );
+		writeDwordF1(0x00DB26F,V - 35	  );
+		writeDwordF1(0x00DB276,H - 74	  );
+		writeDwordF1(0x00DB288,V - 39	  );
+		writeDwordF1(0x00DB28F,H - 102	  );
+		writeDwordF1(0x00DF9F6,H + 2	  );
+		writeDwordF1(0x00DF9FF,V + 2	  );
+		writeDwordF1(0x00DFA24,H + 1	  );
+		writeDwordF1(0x00DFA2D,V + 1	  );
+		writeDwordF1(0x00DFA61,H + 0	  );
+		writeDwordF1(0x00DFA6A,V + 0	  );
+		writeDwordF1(0x00E2140,H + 1	  );
+		writeDwordF1(0x00E4CAA,H + 1	  );
+		writeDwordF1(0x00E4DD1,H + 0	  );
+		writeDwordF1(0x00ED6A7,H + 0	  );
+		writeDwordF1(0x00ED6CE,H + 1	  );
+		writeDwordF1(0x00EF034,H + 0	  );
+		writeDwordF1(0x00EF039,V + 0	  );
+		writeDwordF1(0x00EF04F,H + 1	  );
+		writeDwordF1(0x00EF054,V + 1	  );
+		writeDwordF1(0x01A7C25,H + 1	  );
+}
+//int preX = 800;
+//int PreY = 600;
+//int ppreX = 1024;
+//int pPreY = 768;
+void  AOK20a_wide()
+{
+
+	int V = 0;
+	int H = 0;
+
+	int cpt = 0;
+
+	V = (int)Aok20a_u_Cord_Y;
+	H = (int)Aok20a_u_Cord_X;
+
+	//change interfaace id 
+	if (H < 1024 && V < 768)
+	{
+		BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
+		writeData(0x04DF5B2, _004DF5B2_BACK, 6);
+	}
+	else
+	{
+		BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
+		writeData(0x04DF5B2, _004DF5B2, 6);
+	}
+
+	Aok20a_u_patchEXE(H, V);
+}
+
+DWORD _AOK20a_wide = (DWORD)AOK20a_wide;
+DWORD AOK20a_EAX_wide;
+DWORD AOK20a_ECX_wide;
+DWORD Aok20a_u_004DA6EA = 0x04DABEA ;
+DWORD Aok20a_u_4DA6CC = 0x04DABCC;
+void __declspec(naked)  Aok20a_u_AddWideScreenPanelreadXY()
+{
+	__asm {
+		JNZ _u_4DA6CC
+		MOV EAX, DWORD PTR DS : [ESI + 18h]//Y            
+		MOV Aok20a_u_Cord_Y, EAX
+		MOV EAX, DWORD PTR DS : [ESI + 14h]//X
+		MOV Aok20a_u_Cord_X, EAX
+		MOV AOK20a_EAX_wide, EAX
+		MOV AOK20a_ECX_wide, ECX
+		call _AOK20a_wide
+		MOV EAX, AOK20a_EAX_wide
+		MOV ECX, AOK20a_ECX_wide
+ 
+		JMP Aok20a_u_004DA6EA
+		_u_4DA6CC :
+		JMP  Aok20a_u_4DA6CC
+	};
+}
+
+
+
+
+
+
 //004D9E8A  |. 8BCE           MOV ECX,ESI                              ; |
 DWORD Aok20a_004D998C = 0x04D9E8A;
 DWORD Aok20a_Res__X = (DWORD)GetSystemMetrics(SM_CXSCREEN);
@@ -640,14 +831,14 @@ void __declspec(naked)  AOK20a_setScreenRes()
 			MOV EAX, DWORD PTR DS : [EAX + 8F4]
 			CMP EAX, 320*/
 
-			//MOV ECX, _u_Cord_X
-			//MOV EDX, _u_Cord_Y
+			//MOV ECX, _Aok20a_u_Cord_X
+			//MOV EDX, _Aok20a_u_Cord_Y
 			//MOV u_screenSaveEDX, EDX
 			//MOV EDX, DWORD PTR DS : [6645C4h]
 			//MOV EAX, DWORD PTR DS : [EDX + 24h]
-			//MOV EDX, _u_Cord_X
+			//MOV EDX, _Aok20a_u_Cord_X
 			//MOV  DWORD PTR DS : [EAX + 8F4h] , EDX
-			//MOV EAX, _u_Cord_Y
+			//MOV EAX, _Aok20a_u_Cord_Y
 			//MOV  DWORD PTR DS : [EAX + 8F8h] , EDX
 
 
@@ -666,71 +857,12 @@ void __declspec(naked)  AOK20a_setScreenRes()
 	}
 }
 
-//void Aok20a_getxy()
-//{
-//#pragma region resize interface slp
-//
-//	//457ED0
-//	u_0045FD90 = 0x045FD90;
-//	//0x4580A4
-//	u_004580A9 = 0x04580A9;
-//	u_004580A4 = 0x04580A4;
-//	u_004DB740 = 0x04DB740;
-//	u_004580BD = 0x04580BD;
-//	u_0051EFF0 = 0x051EFF0;
-//	//7C08C0
-//	u_6645C4 = 0x06645C4;//7912A0
-//	u_0051EFF0 = 0x051EFF0;
-//	u_004580A9 = 0x04580A9;
-//	u_004A23E0 = 0x004A23E0;
-//	//_AddWideScreenPanel7C08C0 = (DWORD) u_AddWideScreenPanel7C08C0;
-//	//setHook((void*)0x457ED0, AddWideScreenPanel457ED0);
-//	//// call 7C08C0
-//	//setHook((void*)0x4580A4, AddWideScreenPanel4580A4);
-//	////4E1C38
-//	u_005223C2 = 0x04E1C45;
-//	//setHook((void*)0x04E1C38, AddWideScreenPanel004E1C38);
-//
-//	////007C1D90
-//	u_007C1C78 = (DWORD)u_AddWideScreenPanel007C1C78;
-//	u_00619C48 = 0x0619C48;
-//	u_007C1D90 = (DWORD)u_AddWideScreenPanel007C1D90;
-//
-//	u_00619BC0 = 0x0619BC0;
-//	//writeByte(0x41f80A,0x9066);
-//	////004E1C0E     90             NOP
-//	//setHook((void*)0x04E1C0E, AddWideScreenPanel004E1C0E);
-//	////to do ajouter la partie manquante
-//	////004E1C12 
-//	//writeByte(0x04E1C13, 0x90);
-//	//BYTE _04E1C14[] =
-//	//{
-//	//	0x68,0x20,0x1C,0x4E,0x00
-//	//};
-//	//writeData(0x04E1C09, _04E1C14, 5);
-//	////004E1C2A     8B46 18        MOV EAX,DWORD PTR DS:[ESI+0x18]
-//	//writeByte(0x04E1C2C, 0x18);
-//	////004E1C2F   . 3D 00050000    CMP EAX,0x500
-//	//writeByte(0x04E1C31, 0x04);
-//
-//
-//
-//	u_004DA6EA = 0x04DA6EA;
-//	u_4DA6CC = 0x04DA6CC;
-//	//004DA6E7  |. 8B46 14        MOV EAX,DWORD PTR DS:[ESI+0x14]   -> X 
-//	InjectHook((void*)0x04DA6E5, u_AddWideScreenPanelreadXY, PATCH_JUMP);
-//
-//	//004E1C0E     90             NOP
-//	/*setHook((void*)0x04E1C0E, u_AddWideScreenPanelSLP);
-//	BYTE u_PUSH_4E1C20[] = { 0x68,0x20,0x1C,0x4E,0x00 };
-//	writeData(0x04E1C09, u_PUSH_4E1C20, 5);
-//	writeByte(0x04E1C13, 0x90);*/
-//
-//
-//
-//
-//#pragma endregion resize interface slp
-//}
+
+void Aok20a_getxy()
+{
+	//004DABE5  |.^75 E5          \JNZ SHORT empires2.004DABCC
+	InjectHook((void*)0x04DABE5, Aok20a_u_AddWideScreenPanelreadXY, PATCH_JUMP);
+}
 void AoK20AWidescreen()
 {
 
@@ -742,9 +874,9 @@ void AoK20AWidescreen()
 	//BYTE aoclogoconqueror[5] = { 0x6A,0x00,0x90,0x90,0x90 };
 	//writeData(0x05172EE, aoclogoconqueror, 5);
 	AOK20a_UserPatchWideScreen();
-	//	//0041BCD5  |. B9 00040000    MOV ECX,400
-	//	InjectHook((void*)0x041BCD5, AOK20a_setScreenRes, PATCH_JUMP);
-	//	Aok20a_getxy();
+	//0041BCD5  |. B9 00040000    MOV ECX,400
+	InjectHook((void*)0x041BCD5, AOK20a_setScreenRes, PATCH_JUMP);
+	Aok20a_getxy();
 }
 
 void windowedModAok20a(bool windowed)
