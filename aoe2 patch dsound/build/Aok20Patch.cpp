@@ -367,7 +367,11 @@ void patchEXE(int H, int V)
 	//004DF5B2  |. 81C7 9CC70000  ADD EDI,0C79C
 	//0C79C  =  51100
 
-
+	//004E1C36   . 75 17          JNZ SHORT empires2.004E1C4F
+	//Patch(0x04E1C36, (BYTE)0xEB);
+	//0052237E     EB 0A          JMP SHORT age2_x1.0052238A
+	Patch(0x04E1C36 , (BYTE)0xEB);
+	Patch(0x04E1C36 + 1, (BYTE)0x17);
 
 	//writeDwordF(0x001D354, H + 0);//1024
 	//writeDwordF(0x001D369, V + 0);//768

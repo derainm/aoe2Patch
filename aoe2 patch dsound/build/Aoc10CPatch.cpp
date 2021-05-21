@@ -1,8 +1,8 @@
 #include "Aoc10CPatch.h"
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
-
-
+#include <assert.h>
+ 
 
 DWORD Aoc10C_H;
 DWORD Aoc10C_V;
@@ -13,21 +13,38 @@ void interfaceId()
 
 	Nop(0x051F9A9, 6);
 	Nop(0x051F9CC, 6);
+	//fix overlay
  
-	/*
-	//change interfaace id
-	if (Aoc10C_H < 1024 && Aoc10C_V < 768)
-	{
-		BYTE _004DF5B2_BACK[] = { 0x81,0xC7,0x9C,0xC7,0x00,0x00 };
-		writeData(0x051FC90, _004DF5B2_BACK, 6);
-		//0051FC90     81C7 9CC70000  ADD EDI,0C79C
-	}
-	else
-	{
-		BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
-		writeData(0x051FC90, _004DF5B2, 6);
-	}
-	*/
+	//
+
+	//550 -340= 
+	//300 -2DC= 
+	//writeDwordF1(0x01223DB, Aoc10C_H - 452);
+	Patch(0x05223F7+1, (BYTE)0x02);
+	writeDwordF1(0x01223FA, Aoc10C_V - 36);
+	if(Aoc10C_V >=768)
+		writeDwordF1(0x01223FF, Aoc10C_H - 500);
+	if (Aoc10C_V >= 600 && Aoc10C_V < 768)
+		writeDwordF1(0x01223FF, Aoc10C_H - 450);
+	//Nop(0x05223D5, 31);
+	//005223B0     EB 42          JMP SHORT age2_x1.005223F4
+	Patch(0x05223B0 , (BYTE)0xEB);
+	Patch(0x05223B0 + 1, (BYTE)0x42);
+	//004527C4   . 3D 00050000    CMP EAX, 500
+	//004527C9     EB 11          JMP SHORT age2_x1.004527DC
+	Patch(0x04527C9  , (BYTE)0xEB);
+	//0052237E     EB 0A          JMP SHORT age2_x1.0052238A
+	Patch(0x052237E, (BYTE)0xEB);
+
+
+	//writeDwordF1(0x01223DB, Aoc10C_V - 36);
+	//writeDwordF1(0x01223C0, Aoc10C_H - 528);
+	//005223D8   . 6A 01          PUSH 1
+	//	005223DA   . 68 DD020000    PUSH 2DD
+	//	005223DF   . 68 09020000    PUSH 209
+	//	005223E4   . 50             PUSH EAX
+
+ 
 }
 DWORD Aoc10C_setinterfaceId = (DWORD)interfaceId;
 
@@ -3497,9 +3514,9 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 	//0066EE98  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
 	BYTE  Aoc10CinterfacDrs[13]{0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00};
 	writeData((DWORD)0x066EE98, Aoc10CinterfacDrs, 13);
-	//hide conqueror logo
-	BYTE aoclogoconqueror[5] =  {0x6A,0x00,0x90,0x90,0x90};
-	writeData(0x05172EE, aoclogoconqueror, 5);
+	////hide conqueror logo
+	//BYTE aoclogoconqueror[5] =  {0x6A,0x00,0x90,0x90,0x90};
+	//writeData(0x05172EE, aoclogoconqueror, 5);
  
 
 
@@ -3750,8 +3767,267 @@ void miniMapColor()
 	writeData(0x0433606 , _00433606, 10);
 	writeData(0x0433649, _00433606, 10);
 }
+
+
+typedef unsigned char uchar;
+typedef unsigned short ushort;
+typedef unsigned int uint;
+
+struct SlpHeader
+{
+	char version[4];
+	int numFrames;
+	char comment[24];
+};
+
+struct SlpFrame
+{
+	int cmdTableOffset;
+	int outlineTableOffset;
+	int paletteOffset;
+	int properties;
+	int width;
+	int height;
+	int centerX;
+	int centerY;
+};
+
+struct TShape
+{
+	int alloctype;
+	int size;
+	int* frametbl;
+	SlpHeader* slp;
+	SlpFrame* frames;
+	char isLoaded;
+	int numFrames;
+
+	TShape* ctor(char* name, int id);
+	void dtor(void);
+	TShape* btnctor(char* name, int id);
+	void copy(void);
+	inline short* getOutlineTable(int n) { return (short*)((char*)this->slp + this->frames[n].outlineTableOffset); }
+	inline int* getCmdTable(int n) { return (int*)((char*)this->slp + this->frames[n].cmdTableOffset); }
+	inline uchar* getCmd(int off) { return (uchar*)this->slp + off; }
+};
+
+WRAPPER TShape* TShape::ctor(char* name, int id) { EAXJMP(0x004DAE00); }
+WRAPPER void TShape::dtor(void) { EAXJMP(0x004DB110); }
+WRAPPER void* aoemalloc(int n) { EAXJMP(0x006146C3); }
+
+uchar colmap[256];
+
+void
+ShapeForallPixels(TShape* slp, uchar(*colmap)[256])
+{
+	short* outline;
+	int* cmdtable;
+	uchar* cmd;
+	uchar c;
+	int npx;
+	int y;
+	SlpFrame* frame;
+	int n;
+
+	int gCurPlayerColor = 1;
+
+	for (n = 0; n < slp->numFrames; n++) {
+		frame = &slp->frames[n];
+		outline = slp->getOutlineTable(n);
+		cmdtable = slp->getCmdTable(n);
+		cmd = slp->getCmd(*cmdtable);
+
+		for (y = 0; y < frame->height; y++) {
+			for (;;) {
+				switch (*cmd & 0x003) {
+				case 0x000:	/* small block */
+					npx = *cmd++ >> 2;
+					while (npx--) {
+						*cmd = (*colmap)[*cmd];
+						cmd++;
+					}
+					break;
+				case 0x001:	/* small skip */
+					npx = *cmd++ >> 2;
+					break;
+				default:
+					switch (*cmd & 0x00F) {
+					case 0x002:	/* block */
+						npx = (int)(*cmd++ & 0x00F0) << 4;
+						npx |= *cmd++;
+						while (npx--) {
+							*cmd = (*colmap)[*cmd];
+							cmd++;
+						}
+						break;
+					case 0x003:	/* skip */
+						npx = (int)(*cmd++ & 0x00F0) << 4;
+						npx |= *cmd++;
+						break;
+					case 0x006:	/* player block */
+						npx = *cmd++ >> 4;
+						if (npx == 0) npx = *cmd++;
+						while (npx--) {
+							cmd++;
+						}
+						break;
+					case 0x007:	/* fill */
+						npx = *cmd++ >> 4;
+						if (npx == 0) npx = *cmd++;
+						*cmd = (*colmap)[*cmd];
+						cmd++;
+						break;
+					case 0x00A:	/* player fill */
+						npx = *cmd++ >> 4;
+						if (npx == 0) npx = *cmd++;
+						c = *cmd++ + (gCurPlayerColor << 4);
+						break;
+					case 0x00B:	/* shadow fill ?? */
+						npx = *cmd++ >> 4;
+						if (npx == 0) npx = *cmd++;
+						cmd++;
+						break;
+					case 0x00F:	/* end of line */
+						cmd++;
+						goto endofline;
+					case 0x00E:	/* extended */
+						switch (*cmd++ >> 4) {
+						case 0x000:	/* next only if not flipped */
+							break;
+						case 0x001:	/* next only if flipped */
+							break;
+						case 0x002:	/* set normal color transform */
+							break;
+						case 0x003:	/* set alternate color transform */
+							break;
+						case 0x004:	/* one outline player */
+							break;
+						case 0x005:	/* outline player */
+							cmd++;
+							break;
+						case 0x006:	/* one outline black */
+							break;
+						case 0x007:	/* outline black */
+							cmd++;
+							break;
+						}
+					}
+					break;
+				}
+			}
+		endofline:;
+			outline += 2;
+		}
+	}
+}
+
+void
+TShape::copy(void)
+{
+	uchar* data;
+	int size;
+	size = this->size;
+	data = (uchar*)aoemalloc(size);
+	assert(data);
+	memcpy(data, this->slp, size);
+	this->dtor();
+	this->slp = (SlpHeader*)data;
+	this->alloctype = 1;
+	this->size = size;
+
+	this->frames = (SlpFrame*)(this->slp + 1);
+	this->numFrames = this->slp->numFrames;
+	this->isLoaded = 1;
+}
+
+TShape*
+TShape::btnctor(char* name, int id)
+{
+	int i, n;
+	TShape* shp;
+
+	// fix color palette
+	for (i = 0; i < 256; i++) {
+		switch (i) {
+		case 8:
+			n = 5;
+			break;
+		case 12:
+			n = 129;
+			break;
+		case 111:
+			n = 106;
+			break;
+		case 142:
+			n = 140;
+			break;
+		case 192:
+			n = 249;
+			break;
+		case 212:
+			n = 0;
+			break;
+		case 229:
+			n = 23;
+			break;
+		case 248:
+			n = 229;
+			break;
+		default:
+			n = i;
+		}
+
+		colmap[i] = n;
+	}
+
+	shp = ctor(name, id);
+	shp->copy(); // crashes otherwise
+	ShapeForallPixels(shp, &colmap);
+
+	return shp;
+}
+void slplogo()
+{
+	InjectHook(0x05172FA, &TShape::btnctor);
+	//Patch(0x00517062 + 1, 50753); // aok button slp
+	//
+	//InjectHook(0x0051706E, &TShape::btnctor);
+
+	//InjectHook(0x0516EC0, &TShape::btnctor);
+	//InjectHook(0x0418B28, &TShape::btnctor);
+	//InjectHook(0x044934C, &TShape::btnctor);
+	//InjectHook(0x04494A7, &TShape::btnctor);
+	//InjectHook(0x04494DF, &TShape::btnctor);
+	//InjectHook(0x044960C, &TShape::btnctor);
+	//InjectHook(0x0449787, &TShape::btnctor);
+	//InjectHook(0x04497BF, &TShape::btnctor);
+	//InjectHook(0x044D6A0, &TShape::btnctor);
+	//InjectHook(0x044D6F7, &TShape::btnctor);
+	//InjectHook(0x044D74E, &TShape::btnctor);
+	//InjectHook(0x044D7A5, &TShape::btnctor);
+	//InjectHook(0x04525D8, &TShape::btnctor);
+	//InjectHook(0x045262F, &TShape::btnctor);
+	//InjectHook(0x0465775, &TShape::btnctor);
+	////InjectHook(0x04D4A60, &TShape::btnctor);
+	//InjectHook(0x04D4FBD, &TShape::btnctor);
+	//InjectHook(0x04D50B6, &TShape::btnctor);
+	//InjectHook(0x04D54AD, &TShape::btnctor);
+	//InjectHook(0x04E8DE7, &TShape::btnctor);
+	//InjectHook(0x04E8E5B, &TShape::btnctor);
+	//InjectHook(0x04F8181, &TShape::btnctor);
+	//InjectHook(0x04F867C, &TShape::btnctor);
+	//InjectHook(0x04FB37C, &TShape::btnctor);
+
+
+}
+
+
+ 
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
+
+	//LoadLibraryA("languageini.dll");
+	slplogo();
 	//check if is not 1.0e
 	//MOV CL, BYTE PTR DS : [680A18]
 	int AoC10e = (*(int*)0x0680A18 == 0x7);

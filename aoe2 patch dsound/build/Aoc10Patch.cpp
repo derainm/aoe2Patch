@@ -8,6 +8,47 @@ void Aoc10_interfaceId()
 {
 	Nop(0x04E7EC9, 6);
 	Nop(0x04E7EEC, 6);
+
+//	//fix overlay
+////550 -340= 
+////300 -2DC= 
+////writeDwordF1(0x01223DB, Aoc10C_H - 452);
+//	Patch(0x05223F7 + 1, (BYTE)0x02);
+//	writeDwordF1(0x01223FA, Aoc10C_V - 36);
+//	if (Aoc10_V >= 768)
+//		writeDwordF1(0x01223FF, Aoc10_H - 500);
+//	if (Aoc10_V >= 600 && Aoc10_V < 768)
+//		writeDwordF1(0x01223FF, Aoc10_H - 450);
+//	//Nop(0x05223D5, 31);
+//	//005223B0     EB 42          JMP SHORT age2_x1.005223F4
+//	Patch(0x05223B0, (BYTE)0xEB);
+//	Patch(0x05223B0 + 1, (BYTE)0x42);
+//	//004527C4   . 3D 00050000    CMP EAX, 500
+//	//004527C9     EB 11          JMP SHORT age2_x1.004527DC
+//	Patch(0x04527C9, (BYTE)0xEB);
+//	//0052237E     EB 0A          JMP SHORT age2_x1.0052238A
+//	Patch(0x052237E, (BYTE)0xEB);
+
+		//fix overlay
+	//550 -340= 
+	//300 -2DC= 
+	//writeDwordF1(0x01223DB, Aoc10C_H - 452);
+	Patch(0x04EA917 + 1, (BYTE)0x02);
+	writeDwordF1(0x00EA91A, Aoc10_V - 36);
+	if (Aoc10_V >= 768)
+		writeDwordF1(0x0EA91F, Aoc10_H - 500);
+	if (Aoc10_V >= 600 && Aoc10_V < 768)
+		writeDwordF1(0x0EA91F, Aoc10_H - 450);
+	//Nop(0x05223D5, 31);
+	//005223B0     EB 42          JMP SHORT age2_x1.005223F4
+	Patch(0x04EA8D0, (BYTE)0xEB);
+	Patch(0x04EA8D0 + 1, (BYTE)0x42);
+	//004527C4   . 3D 00050000    CMP EAX, 500
+	//004527C9     EB 11          JMP SHORT age2_x1.004527DC
+	Patch(0x05BB7D9, (BYTE)0xEB);
+	//0052237E     EB 0A          JMP SHORT age2_x1.0052238A
+	Patch(0x04EA89E, (BYTE)0xEB);
+
 }
 //7912A0 ==MOV ECX,DWORD PTR DS:[6833D0]
 DWORD Aoc10_setAoc10_interfaceId = (DWORD)Aoc10_interfaceId;
@@ -3616,11 +3657,11 @@ void  __declspec(naked)  AOC10_minimapColorhook5()
 		MOV EDX, DWORD PTR SS : [ESP + 30h]
 		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
 		MOV EDX, DWORD PTR DS : [ESI + 0FCh]
-		TEST ECX, ECX
-		JE _00432BD2
-		MOV ECX, DWORD PTR DS : [ECX + 9Ch]
-		CMP ECX, DWORD PTR DS : [EDX + 9Ch]
-		JNZ _00432BD2
+		//TEST ECX, ECX
+		//JE _00432BD2
+		//MOV ECX, DWORD PTR DS : [ECX + 9Ch]
+		//CMP ECX, DWORD PTR DS : [EDX + 9Ch]
+		//JNZ _00432BD2
 		//FLD DWORD PTR DS : [EDI + 1E8h]
 		//005DAEA3   . D987 0C020000  FLD DWORD PTR DS:[EDI+20C]
 		FLD DWORD PTR DS : [EDI + 20Ch]
