@@ -2197,7 +2197,7 @@ void __declspec(naked) f_Aoc10_007C1F20()
 DWORD Aoc10_007C1EF0 = (DWORD)f_Aoc10_007C1EF0;// 0x07C1EF0;
 DWORD Aoc10_007C1F20 = (DWORD)f_Aoc10_007C1F20;// 007C1F20;
 DWORD Aoc10_006139B4 = 0x0613327;
-DWORD Aoc10_006137C9 = 0x06132AA ;
+DWORD Aoc10_006132AA = 0x06132AA ;
 
 void __declspec(naked) f_Aoc10_007C1C38()
 {
@@ -2258,7 +2258,7 @@ void __declspec(naked) f_Aoc10_007C1C38()
 		ADD ESI, 14h
 		PUSH ESI
 		PUSH 1h
-		CALL Aoc10_006137C9
+		CALL Aoc10_006132AA
 		ADD ESP, 8h
 		MOV DWORD PTR DS : [Aoc10_7A5500] , EAX
 		TEST EAX, EAX
@@ -3505,11 +3505,12 @@ void Aoc10Widescreen(bool wideScreenCentred)
 	//0067BE90  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
 	BYTE  Aoc10interfacDrs[13]{ 0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00 };
 	writeData((DWORD)0x067BE90, Aoc10interfacDrs, 13);
-	BYTE aoclogoconqueror[5] = { 0x6A,0x00,0x90,0x90,0x90 };
-	writeData(0x04DF85E, aoclogoconqueror, 5);
+
 
 	if (wideScreenCentred)
 	{
+		BYTE aoclogoconqueror[5] = { 0x6A,0x00,0x90,0x90,0x90 };
+		writeData(0x04DF85E, aoclogoconqueror, 5);
 		//0051A3B7
 		InjectHook(0x04E2927, Aoc10WidescreenResizeScreenCentered, PATCH_JUMP);
 		//liste screen controle on game 
@@ -3746,10 +3747,649 @@ void AOC10_miniMapColor()
 	writeData(0x05DB8F9, AOC10__00433606, 10);
 }
 
+
+DWORD Aoc10_RessedButtonAddres;
+DWORD Aoc10_RessedECX;
+DWORD Aoc10_RessedESI;
+DWORD Aoc10_CurrentPlayer;
+
+//flag auto farms is actif
+DWORD Aoc10_FlagAutoFarm;
+
+
+//Aoc10_description label of button
+char Aoc10_description[] = "Auto Farms";
+//CALL 00481630
+DWORD Aoc1000481630 = 0x0481630;
+//004F00C1  |. E8 9A1C0000    CALL age2Aoc10x1.004F1D60
+DWORD Aoc10004F1D60 = 0x04F1D60;
+//004F00C9  |. E8 728AFFFF    CALL age2Aoc10x1.004E8B40
+DWORD Aoc10004E8B40 = 0x04E8B40;
+//004F0088  |. 68 32100000    PUSH 0x1032                              ; /Arg4 = 00001032
+DWORD Aoc10004F0088 = 0x04F0088;
+
+//logo change only when re select mil
+void __declspec(naked)  Aoc10AddAutoFarmButton004F0083()
+{
+	__asm {
+		//CALL Aoc1000520620
+		CALL Aoc1000481630
+
+		//LEA EAX, DWORD PTR SS : [ESP + 060h]
+		PUSH EBP
+		PUSH  offset Aoc10_description//EAX
+		PUSH EBP
+		PUSH EBP
+		PUSH - 01h
+		PUSH EBP
+		PUSH 0h//01352h
+		PUSH 032h
+		PUSH 0BAh// jump default switch case
+		cmp Aoc10_FlagAutoFarm, 1
+		JE logoActived
+		//52 53   =  
+		PUSH 23h//034h//logoposition in slp
+		Jmp next
+
+		logoActived :
+		PUSH 023h// 033h//logoposition in slp
+			Jmp next
+
+
+
+		next:
+		PUSH 03h//button position
+			MOV ECX, ESI
+			CALL Aoc10004F1D60
+			PUSH  EAX
+			MOV ECX, ESI
+			CALL Aoc10004E8B40
+
+
+			jmp Aoc10004F0088
+	}
+}
+
+
+//0054A8BB  |> 33C0           XOR EAX,EAX                              ;  Default case of switch 0054A45A
+//CALL 004795B0
+DWORD Aoc10004795B0 = 0x04795B0;
+void __declspec(naked)  Aoc10AddAutoFarmButton0054A8BB()
+{
+	__asm {
+		CMP EDX, 0BAh
+		JNZ Default
+		LEA EAX, DWORD PTR SS : [ESP + 03h] ;
+		LEA EDX, DWORD PTR SS : [ESP + 03h]
+			PUSH EAX
+			LEA EAX, DWORD PTR SS : [ESP + 07h]
+			PUSH EDX
+			PUSH EAX
+			PUSH 00h
+			PUSH 07h//0Eh
+			CALL Aoc10004795B0
+			POP ECX
+			RETN 04
+
+			Default:
+		XOR EAX, EAX;  Default case of switch 004BD37A
+			POP ECX
+			RETN 04h
+
+	}
+}
+//004E66E4   . E8 17040000    CALL age2Aoc10x1.004E6B00
+//004E66E9   . B8 01000000    MOV EAX,0x1
+DWORD Aoc10004E66E9 = 0x04E66E9;
+//004E66E4   . E8 17040000    CALL age2Aoc10x1.004E6B00
+DWORD Aoc10004E6B00 = 0x04E6B00;
+
+void __declspec(naked)  GetAoc10_RessedButtonAddres()
+{
+	__asm {
+		//get only ressed button addresse
+		//CMP EAX,0ADh //reseed button
+		CMP EAX, 0BAh //ADh reseed button
+		JNZ continue
+		CMP EDX, 032h
+		JNZ continue
+		MOV Aoc10_RessedButtonAddres, EBP
+		MOV Aoc10_RessedECX, EBX
+		MOV Aoc10_RessedESI, ESI
+		continue:
+		CALL Aoc10004E6B00
+			JMP Aoc10004E66E9
+	}
+}
+//004F1E8F  |. 8B83 30120000  MOV EAX,DWORD PTR DS:[EBX+0x1230]
+//Get missing addresse when unselect mil
+DWORD Aoc10_RecordMilAddr;
+DWORD Aoc10_initialized = 0x0;
+//004F1E95  |. 85C0           TEST EAX,EAX
+DWORD Aoc10004F1E95 = 0x04F1E95;
+
+void __declspec(naked)  Aoc10_GetMissingAdresseWhenunSelectMilAddres()
+{
+	__asm {
+		Cmp Aoc10_initialized, 1h
+		JE Restore
+		MOV EAX, DWORD PTR DS : [EBX + 01230h]
+		MOV Aoc10_RecordMilAddr, EAX
+		MOV Aoc10_initialized, 1h
+		//Mov Aoc10_RessedFarms, 0h
+		JMP Aoc10004F1E95
+		Restore :
+		MOV EAX, Aoc10_RecordMilAddr
+			//TEST EAX, EAX
+			//JE Aoc1000529BD6
+			JMP Aoc10004F1E95
+	}
+}
+DWORD Aoc10004F1E97 = 0x04F1E97;
+void __declspec(naked)  Aoc10_fixMilDeleteEmptyPtr()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR DS : [EBX + 01230h]
+		MOV  EAX, Aoc10_RecordMilAddr
+		TEST EAX, EAX
+
+		JMP Aoc10004F1E97
+
+	}
+}
+
+DWORD REAoc10EAX;
+DWORD REAoc10ECX;
+DWORD REAoc10EDX;
+DWORD REAoc10EBX;
+DWORD REAoc10ESP;
+DWORD REAoc10EBP;
+DWORD REAoc10ESI;
+DWORD REAoc10EDI;
+
+char Aoc10_messageON[260] = "Auto-Farms: ON";
+char Aoc10_messageOFF[260] = "Auto-Farms: Off";
+DWORD Aoc100051CD30 = 0x051CD30;
+DWORD Aoc10_RessedFarms = 0x0;
+//0x051E605
+DWORD Aoc10004EFF60 = 0x04EFF60;
+DWORD Aoc10004E5260 = 0x04E5260;
+DWORD Aoc1000420970 = 0x0420970;
+DWORD Aoc10005A1F60 = 0x05A1F60;
+DWORD Aoc10004F1E70 = 0x04F1E70;
+DWORD Aoc10004E6B2C = 0x04E6B2C;
+void __declspec(naked)  aoc10_AddAutoFarmButton00ReesedEvent()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+		Cmp EAX, 0BAh //if auto farm butoon is clicked
+		JNZ continueProcess
+		//Aoc10Save register
+		MOV REAoc10EAX, EAX
+		MOV REAoc10ECX, ECX
+		MOV REAoc10EDX, EDX
+		MOV REAoc10EBX, EBX
+		MOV REAoc10ESP, ESP
+		MOV REAoc10EBP, EBP
+		MOV REAoc10ESI, ESI
+		MOV REAoc10EDI, EDI
+		//reall button to auto resseed famrs
+		CMP Aoc10_RessedFarms, 0h
+		JE Normale
+		JMP LikeAD
+
+		Normale :
+		cmp Aoc10_FlagAutoFarm, 0
+			JE setOn
+
+			setOff :
+		mov Aoc10_FlagAutoFarm, 0
+			//refresh screen logo button auto farm
+			//MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			MOV EAX, DWORD PTR SS : [06833D0h + 01820h]
+			call Aoc10004EFF60
+			push 0h
+			push offset Aoc10_messageOFF
+			CALL Aoc10004E5260//Aoc100051CD30
+			//restore register
+			MOV EAX, REAoc10EAX
+			MOV ECX, REAoc10ECX
+			MOV EDX, REAoc10EDX
+			MOV EBX, REAoc10EBX
+			MOV ESP, REAoc10ESP
+			MOV EBP, REAoc10EBP
+			MOV ESI, REAoc10ESI
+			MOV EDI, REAoc10EDI
+			Jmp continueProcess
+
+			setOn :
+		mov Aoc10_FlagAutoFarm, 1h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [06833D0h + 01820h]
+			call Aoc10004EFF60
+			push 0h
+			push offset Aoc10_messageON
+			CALL Aoc10004E5260
+			//restore register
+			MOV EAX, REAoc10EAX
+			MOV ECX, REAoc10ECX
+			MOV EDX, REAoc10EDX
+			MOV EBX, REAoc10EBX
+			MOV ESP, REAoc10ESP
+			MOV EBP, REAoc10EBP
+			MOV ESI, REAoc10ESI
+			MOV EDI, REAoc10EDI
+			LikeAD :
+		MOV EAX, DWORD PTR SS : [ESP + 01Ch]
+
+			//CMP FarmsInQueue, 1
+			//JG AddZeroFarmsQueue
+			//PUSH 01h
+			//JMP short CallFunc
+			//AddZeroFarmsQueue:
+			//PUSH 0h
+			//JMP short CallFunc
+
+			//	CallFunc:
+			PUSH 01h
+			TEST EAX, EAX
+			JE short Aoc100051F429
+			//MOV ECX, DWORD PTR DS : [07912A0h]
+			MOV ECX, DWORD PTR DS : [0x6833D0]
+			//CALL Aoc10005E7560
+			CALL Aoc1000420970
+			MOV ECX, DWORD PTR DS : [EAX + 09Ch]
+			MOV EDX, DWORD PTR DS : [ESI + 0121Ch]
+			PUSH ECX
+			MOV ECX, DWORD PTR DS : [EDX + 068h]
+			//CALL Aoc100046A730
+			CALL Aoc10005A1F60
+			MOV ECX, DWORD PTR SS : [ESP + 04h]
+			MOV DWORD PTR FS : [0h] , ECX
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+			Aoc100051F429 :
+		MOV ECX, ESI; |
+			//CALL Aoc1000529A00; \age2Aoc10x1.00529A00
+			CALL Aoc10004F1E70
+			MOV ECX, DWORD PTR SS : [ESP + 04h]
+			MOV DWORD PTR FS : [0h] , ECX
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+			continueProcess :
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+			LEA ECX, DWORD PTR DS : [EAX - 01h]
+			JMP Aoc10004E6B2C
+	}
+}
+
+
+DWORD Aoc10SaveEAX;
+DWORD Aoc10SaveECX;
+DWORD Aoc10SaveEDX;
+DWORD Aoc10SaveEBX;
+DWORD Aoc10SaveESP;
+DWORD Aoc10SaveEBP;
+DWORD Aoc10SaveESI;
+DWORD Aoc10SaveEDI;
+//DWORD Aoc10_CurrentPlayer;
+
+//00405BF0  /$ 51             PUSH ECX
+//DWORD Aoc1000420970 = 0x0420970;
+//00405BFB  |. E8 004B1B00    CALL age2Aoc10x1.005BA700
+DWORD Aoc10005BA700 = 0x05BA700;
+//00405C00  |. 85C0           TEST EAX,EAX
+DWORD Aoc1000405C00 = 0x0405C00;
+void __declspec(naked)  Aoc10RebuildFarms()
+{
+	__asm {
+
+		//call 
+		cmp Aoc10_FlagAutoFarm, 1
+		JNZ Aoc10NoAutoFarm
+		//Aoc10Save register
+		MOV Aoc10SaveEAX, EAX
+		MOV Aoc10SaveECX, ECX
+		MOV Aoc10SaveEDX, EDX
+		MOV Aoc10SaveEBX, EBX
+		MOV Aoc10SaveESP, ESP
+		MOV Aoc10SaveEBP, EBP
+		MOV Aoc10SaveESI, ESI
+		MOV Aoc10SaveEDI, EDI
+
+		//get current player
+		//MOV ECX, DWORD PTR DS : [07912A0h]
+		MOV ECX, DWORD PTR DS : [06833D0h]
+		call Aoc1000420970
+		MOV Aoc10_CurrentPlayer, EAX
+		//restore register
+		MOV EAX, Aoc10SaveEAX
+		MOV ECX, Aoc10SaveECX
+		MOV EDX, Aoc10SaveEDX
+		MOV EBX, Aoc10SaveEBX
+		MOV ESP, Aoc10SaveESP
+		MOV EBP, Aoc10SaveEBP
+		MOV ESI, Aoc10SaveESI
+		MOV EDI, Aoc10SaveEDI
+		//call how many farm for random player
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		//recall how many farm
+		CALL Aoc10005BA700
+		//if not current player don't push button
+		CMP Aoc10_CurrentPlayer, ECX
+		JNZ Aoc10NoAutoFarm
+
+		//00603D4B  |. E8 90A7E5FF    CALL age2Aoc10x1.0045E4E0
+		CALL Aoc10005BA700
+		//if not farm in reseed farm then call reseed but event
+		CMP EAX, 1
+		JG short Aoc10NoAutoFarm; >
+		CMP Aoc10_RessedButtonAddres, 0 //if the button address is not loaded it could potentially crash the game 
+		JE  short Aoc10NoAutoFarm
+
+
+		//todo push only if farms <=1
+
+		//set flag auto ressed like AD  
+		Mov Aoc10_RessedFarms, 1h
+
+		MOV EAX, Aoc10SaveEAX
+		MOV ECX, 0h
+		MOV EDX, 032h //located in mil
+		MOV EAX, 0BAh//0ADh //resseed button
+
+		PUSH ECX
+		PUSH EDX
+		PUSH EAX
+
+		MOV EBP, Aoc10_RessedButtonAddres
+		MOV EBX, Aoc10_RessedECX
+		MOV ESI, Aoc10_RessedESI
+		MOV ECX, EBX
+		CALL Aoc10004E6B00//Aoc100051E5E0
+		Mov Aoc10_RessedFarms, 0h
+
+
+		//restore register
+		MOV EAX, Aoc10SaveEAX
+		MOV ECX, Aoc10SaveECX
+		MOV EDX, Aoc10SaveEDX
+		MOV EBX, Aoc10SaveEBX
+		MOV ESP, Aoc10SaveESP
+		MOV EBP, Aoc10SaveEBP
+		MOV ESI, Aoc10SaveESI
+		MOV EDI, Aoc10SaveEDI
+		Aoc10NoAutoFarm :
+
+
+		//refresh 
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			//recall how many farm
+			CALL Aoc10005BA700
+			Jmp Aoc1000405C00
+
+	}
+}
+
+//00604128   . 8910           MOV DWORD PTR DS:[EAX],EDX
+
+DWORD Aoc10FixMillAoc10EAX;
+DWORD Aoc10FixMillAoc10ECX;
+DWORD Aoc10FixMillAoc10EDX;
+DWORD Aoc1000604130 = 0x0604130;
+void __declspec(naked)  Aoc10_getEveryNewMillAdress()
+{
+	__asm {
+		//Aoc10Save register
+		MOV Aoc10FixMillAoc10EAX, EAX
+		MOV Aoc10FixMillAoc10ECX, ECX
+		MOV Aoc10FixMillAoc10EDX, EDX
+
+		MOV EAX, DWORD PTR DS : [EDX + 8h]
+		CMP WORD PTR DS : [EAX + 10h] , 44h //if mill
+		JNZ Normale
+		MOV Aoc10_RecordMilAddr, EDX
+
+		Normale :
+		//restaure register
+		MOV EAX, Aoc10FixMillAoc10EAX
+			MOV DWORD PTR DS : [EAX] , EDX
+			MOV EDX, DWORD PTR DS : [ESI + 0B0h]
+
+			//JMP Aoc1000411620
+			JMP Aoc1000604130
+
+	}
+}
+
+//setHook((void*)0x0604128, Aoc10_Aoc10_getEveryNewMillAdress);
+//
+//
+////GetAoc10_RessedButtonAddres
+//setHook((void*)0x04E66E4, GetAoc10_RessedButtonAddres);
+//
+////Aoc10_GetMissingAdresseWhenunSelectMilAddres
+////setHook((void*)0x04F1E8F, Aoc10_GetMissingAdresseWhenunSelectMilAddres);
+//setHook((void*)0x04F1E8F, Aoc10_fixMilDeleteEmptyPtr);
+//
+////creat auto farm button
+////004F0083  |. E8 A815F9FF    CALL age2Aoc10x1.00481630
+//setHook((void*)0x04F0083, Aoc10AddAutoFarmButton004F0083);
+////Creat auto farm hotkey (A)
+//setHook((void*)0x054A8BB, Aoc10AddAutoFarmButton0054A8BB);
+////Aoc10RebuildFarms
+////00405BFB  |. E8 004B1B00    CALL age2Aoc10x1.005BA700
+//setHook((void*)0x0405BFB, Aoc10RebuildFarms);
+////button event
+////004E6B25  |. 8B4424 14      MOV EAX,DWORD PTR SS:[ESP+0x14]
+//setHook((void*)0x04E6B25, aoc10_AddAutoFarmButton00ReesedEvent);
+
+
+DWORD Aoc10Aoc10Aoc10EBX = 0x0;
+DWORD Aoc10005A1F20 = 0x05A1F20;
+void __declspec(naked)  Aoc10AddAutoFarmEvent()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+		Cmp EAX, 0BAh //if auto farm butoon is clicked
+		JNZ continueProcess
+		//Aoc10Save register
+		MOV REAoc10EAX, EAX
+		MOV REAoc10ECX, ECX
+		MOV REAoc10EDX, EDX
+		MOV REAoc10EBX, EBX
+		MOV REAoc10ESP, ESP
+		MOV REAoc10EBP, EBP
+		MOV REAoc10ESI, ESI
+		MOV REAoc10EDI, EDI
+		//reall button to auto resseed famrs
+		CMP Aoc10_RessedFarms, 0h
+		JE Normale
+		JMP LikeAD
+
+		Normale :
+		cmp Aoc10_FlagAutoFarm, 0
+			JE setOn
+
+			setOff :
+		mov Aoc10_FlagAutoFarm, 0
+			//refresh screen logo button auto farm
+			//MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			MOV EAX, DWORD PTR SS : [06833D0h + 01820h]
+			call Aoc10004EFF60
+			push 0h
+			push offset Aoc10_messageOFF
+			CALL Aoc10004E5260//Aoc100051CD30
+			//restore register
+			MOV EAX, REAoc10EAX
+			MOV ECX, REAoc10ECX
+			MOV EDX, REAoc10EDX
+			MOV EBX, REAoc10EBX
+			MOV ESP, REAoc10ESP
+			MOV EBP, REAoc10EBP
+			MOV ESI, REAoc10ESI
+			MOV EDI, REAoc10EDI
+			Jmp continueProcess
+
+			setOn :
+		mov Aoc10_FlagAutoFarm, 1h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [06833D0h + 01820h]
+			call Aoc10004EFF60
+			push 0h
+			push offset Aoc10_messageON
+			CALL Aoc10004E5260
+			//restore register
+			MOV EAX, REAoc10EAX
+			MOV ECX, REAoc10ECX
+			MOV EDX, REAoc10EDX
+			MOV EBX, REAoc10EBX
+			MOV ESP, REAoc10ESP
+			MOV EBP, REAoc10EBP
+			MOV ESI, REAoc10ESI
+			MOV EDI, REAoc10EDI
+			LikeAD :
+
+		MOV ECX, DWORD PTR DS : [06833D0h]
+			PUSH 1h
+			CALL Aoc1000420970
+			MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+			MOV Aoc10Aoc10Aoc10EBX, EBX
+			MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+			PUSH EDX
+			MOV ECX, DWORD PTR DS : [EAX + 68h]
+			CALL Aoc10005A1F20
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+
+			continueProcess :
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+			LEA ECX, DWORD PTR DS : [EAX - 01h]
+			JMP Aoc10004E6B2C
+	}
+}
+DWORD Aoc10falgIsBadPointer = 0x0;
+DWORD Aoc10falgIsBadPointer121C = 0x0;
+DWORD Aoc10falgIsBadPointerplayer = 0x0;
+DWORD Aoc10EAXplayer = 0x0;
+void __declspec(naked)  Aoc10Aoc10RebuildFarms2()
+{
+	Aoc10falgIsBadPointer = IsBadReadPtr((void*)Aoc10Aoc10Aoc10EBX, sizeof(UINT_PTR));
+	Aoc10falgIsBadPointer121C = IsBadReadPtr((void*)(Aoc10Aoc10Aoc10EBX + 0x121C), sizeof(UINT_PTR));
+	__asm {
+
+		//call 
+		cmp Aoc10_FlagAutoFarm, 1
+		JNZ Aoc10NoAutoFarm
+
+		cmp Aoc10falgIsBadPointer, 1
+		JE Aoc10NoAutoFarm
+		cmp Aoc10falgIsBadPointer121C, 1
+		JE Aoc10NoAutoFarm
+		//Aoc10Save register
+		MOV Aoc10SaveEAX, EAX
+		MOV Aoc10SaveECX, ECX
+		MOV Aoc10SaveEDX, EDX
+		MOV Aoc10SaveEBX, EBX
+		MOV Aoc10SaveESP, ESP
+		MOV Aoc10SaveEBP, EBP
+		MOV Aoc10SaveESI, ESI
+		MOV Aoc10SaveEDI, EDI
+
+		//get current player
+		//MOV ECX, DWORD PTR DS : [07912A0h]
+		MOV ECX, DWORD PTR DS : [06833D0h]
+		call Aoc1000420970
+		MOV Aoc10_CurrentPlayer, EAX
+		//restore register
+		MOV EAX, Aoc10SaveEAX
+		MOV ECX, Aoc10SaveECX
+		MOV EDX, Aoc10SaveEDX
+		MOV EBX, Aoc10SaveEBX
+		MOV ESP, Aoc10SaveESP
+		MOV EBP, Aoc10SaveEBP
+		MOV ESI, Aoc10SaveESI
+		MOV EDI, Aoc10SaveEDI
+		//call how many farm for random player
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		//recall how many farm
+		CALL Aoc10005BA700
+		//if not current player don't push button
+		CMP Aoc10_CurrentPlayer, ECX
+		JNZ Aoc10NoAutoFarm
+
+		MOV ECX, DWORD PTR DS : [06833D0h]
+		PUSH 1h
+		CALL Aoc1000420970
+		mov Aoc10EAXplayer, EAX
+	}
+	Aoc10falgIsBadPointerplayer = IsBadReadPtr((void*)Aoc10EAXplayer, sizeof(UINT_PTR));
+	__asm
+	{
+
+		cmp Aoc10falgIsBadPointerplayer, 1h
+		JE Aoc10NoAutoFarm
+		MOV EAX, Aoc10EAXplayer
+		MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+		MOV EBX, Aoc10Aoc10Aoc10EBX
+		MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+		PUSH EDX
+		MOV ECX, DWORD PTR DS : [EAX + 68h]
+		CALL Aoc10005A1F20
+
+		//restore register
+		MOV EAX, Aoc10SaveEAX
+		MOV ECX, Aoc10SaveECX
+		MOV EDX, Aoc10SaveEDX
+		MOV EBX, Aoc10SaveEBX
+		MOV ESP, Aoc10SaveESP
+		MOV EBP, Aoc10SaveEBP
+		MOV ESI, Aoc10SaveESI
+		MOV EDI, Aoc10SaveEDI
+		Aoc10NoAutoFarm :
+
+
+		//refresh 
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			//recall how many farm
+			CALL Aoc10005BA700
+			Jmp Aoc1000405C00
+
+	}
+}
+void Aoc10AutoFarms() {
+
+	//creat auto farm button
+	//004F0083  |. E8 A815F9FF    CALL age2Aoc10x1.00481630
+	InjectHook((void*)0x04F0083, Aoc10AddAutoFarmButton004F0083, PATCH_JUMP);
+	//Creat auto farm hotkey (A)
+	InjectHook((void*)0x054A8BB, Aoc10AddAutoFarmButton0054A8BB, PATCH_JUMP);
+	//button event
+	//004E6B25  |. 8B4424 14      MOV EAX,DWORD PTR SS:[ESP+0x14]
+	InjectHook((void*)0x04E6B25, Aoc10AddAutoFarmEvent, PATCH_JUMP);
+	//Aoc10RebuildFarms
+	//00405BFB  |. E8 004B1B00    CALL age2Aoc10x1.005BA700
+	InjectHook((void*)0x0405BFB, Aoc10Aoc10RebuildFarms2, PATCH_JUMP);
+
+}
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
 	Aoc10Widescreen(wideScreenCentred);
 	AOC10_windowedMod(windowed);
 	AOC10_nocd();
 	AOC10_miniMapColor();
+	Aoc10AutoFarms();
 }

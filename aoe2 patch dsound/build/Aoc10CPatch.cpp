@@ -21,11 +21,13 @@ void interfaceId()
 	//300 -2DC= 
 	//writeDwordF1(0x01223DB, Aoc10C_H - 452);
 	Patch(0x05223F7+1, (BYTE)0x02);
+
 	writeDwordF1(0x01223FA, Aoc10C_V - 36);
 	if(Aoc10C_V >=768)
 		writeDwordF1(0x01223FF, Aoc10C_H - 500);
 	if (Aoc10C_V >= 600 && Aoc10C_V < 768)
 		writeDwordF1(0x01223FF, Aoc10C_H - 450);
+
 	//Nop(0x05223D5, 31);
 	//005223B0     EB 42          JMP SHORT age2_x1.005223F4
 	Patch(0x05223B0 , (BYTE)0xEB);
@@ -3514,14 +3516,15 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 	//0066EE98  69 6E 74 65 72 66 61 63 2E 64 72 73 00           interfac.drs.
 	BYTE  Aoc10CinterfacDrs[13]{0x69,0x6E,0x74,0x65,0x72,0x66,0x61,0x63,0x2E,0x64,0x72,0x73,0x00};
 	writeData((DWORD)0x066EE98, Aoc10CinterfacDrs, 13);
-	////hide conqueror logo
-	//BYTE aoclogoconqueror[5] =  {0x6A,0x00,0x90,0x90,0x90};
-	//writeData(0x05172EE, aoclogoconqueror, 5);
+
  
 
 
 	if (wideScreenCentred)
 	{
+		//hide conqueror logo
+		BYTE aoclogoconqueror[5] =  {0x6A,0x00,0x90,0x90,0x90};
+		writeData(0x05172EE, aoclogoconqueror, 5);
 		//0051A3B7
 		InjectHook(0x051A3B7, Aoc10CWidescreenResizeScreenCentered, PATCH_JUMP);
 		//liste screen controle on game 
@@ -4021,13 +4024,3172 @@ void slplogo()
 
 }
 
+ 
+DWORD _00527C18;
+
+//flag auto farms is actif
+DWORD FlagAutoFarm;
+
+//00527C59   . E8 C289FFFF    CALL age2_x1.00520620
+DWORD _00520620 = 0x0520620;
+DWORD _00527C5E = 0x0527C5E;
+DWORD _005298F0;
+char description[] = "Auto Farms";
+//004BD7DB  |> 33C0           XOR EAX,EAX                              ;  Default case of switch 004BD37A
+//hot key
+DWORD __0058F3F0 = 0x58F3F0;
+void __declspec(naked)  AddAutoFarmButton004BD7DB()
+{
+	__asm {
+		CMP EDX, 0BAh
+		JNZ Default
+		LEA EAX, DWORD PTR SS : [ESP + 03h] ;
+		LEA EDX, DWORD PTR SS : [ESP + 03h]
+			PUSH EAX
+			LEA EAX, DWORD PTR SS : [ESP + 07h]
+			PUSH EDX
+			PUSH EAX
+			PUSH 00h
+			PUSH 07h//0Eh
+			CALL __0058F3F0
+			POP ECX
+			RETN 04
+
+			Default:
+		XOR EAX, EAX;  Default case of switch 004BD37A
+			POP ECX
+			RETN 04h
+
+	}
+}
+//0x0440157
+DWORD _00457170 = 0x0457170;
+DWORD DeadFishTrapEAX;
+DWORD DeadFishTrapECX;
+DWORD DeadFishTrapEDX;
+DWORD DeadFishTrapEBX;
+DWORD DeadFishTrapESP;
+DWORD DeadFishTrapEBP;
+DWORD DeadFishTrapESI;
+DWORD DeadFishTrapEDI;
+DWORD _0044016A = 0x044016A;
+DWORD _00440161 = 0x0440161;
+DWORD __x = 0x0;
+DWORD __y = 0x0;
+DWORD CurrentUnit = 0x0;
+//00440134   . 8B1490         MOV EDX,DWORD PTR DS:[EAX+EDX*4]
+DWORD currentPlayerToRessedFishTrap = 0x0;
+//
+//DWORD _0051E5E0;
+DWORD _0045E4E0 = 0x045E4E0;
+DWORD _00603D50 = 0x0603D50;
+
+DWORD PPC_PTREAX;
+DWORD PPC_PTRECX;
+DWORD PPC_PTREDX;
+DWORD PPC_PTREBX;
+DWORD PPC_PTRESP;
+DWORD PPC_PTREBP;
+DWORD PPC_PTRESI;
+DWORD PPC_PTREDI;
+
+
+DWORD _00467380;
+DWORD _045E4F0;
+//0051F8CD  |. E8 8E070000    CALL age2_x1.00520060
+//click left handel
+
+//0051E1DF   . 83FF 01        CMP EDI,0x1
+DWORD _0046A6F0 = 0x046A6F0;
+DWORD _005E7560 = 0x05E7560;
+DWORD _00602F84 = 0x00602F84;
+
+//DWORD _00520620;
+
+DWORD _0058A650;
+DWORD _00520140;
+//logo change only when re select mil
+void __declspec(naked)  AddAutoFarmButton00527C38()
+{
+	__asm {
+		//CALL _00520620
+		CALL _0058A650
+
+		//PUSH 01032h  //4146, 	"Reseed Farm" todo add Auto Farms 
+		//LEA ECX, DWORD PTR SS : [ESP + 03Ch] ; |
+		//PUSH 012h; | Arg3 = 00000012
+		//LEA EDX, DWORD PTR SS : [ESP + 068h] ; |
+		//PUSH ECX; | Arg2
+		//PUSH EDX; | Arg1
+		//MOV ECX, ESI; |
+		//MOV DWORD PTR SS : [ESP + 06Ch] , EAX; |
+
+
+
+
+
+
+
+		//LEA EAX, DWORD PTR SS : [ESP + 060h]
+		PUSH EBP
+		PUSH  offset description//EAX
+		PUSH EBP
+		PUSH EBP
+		PUSH - 01h
+		PUSH EBP
+		PUSH 0h//01352h
+		PUSH 032h
+		PUSH 0BAh// jump default switch case
+		cmp FlagAutoFarm, 1
+		JE logoActived
+		//52 53   =  
+		PUSH 23h//034h//logoposition in slp
+		Jmp next
+
+		logoActived :
+		PUSH 023h// 033h//logoposition in slp
+			Jmp next
+
+
+
+		next:
+		PUSH 03h//button position
+			MOV ECX, ESI
+			CALL _005298F0
+			PUSH  EAX
+			MOV ECX, ESI
+			CALL _00520620
+
+
+			jmp _00527C18 //00527C5E  |. 8B86 90100000  MOV EAX,DWORD PTR DS:[ESI+0x1090]
+	}
+}
+
+//0051E5E0  /$ 64:A1 00000000     MOV EAX,DWORD PTR FS:[0]
+DWORD _0051E60C = 0x051E60C;
+DWORD __0527AF0 = 0x0527AF0;
+
+// mov in fuction 0x0603D4B rebuild farms
+//initialize to 1 to allow first push
+//DWORD FarmsInQueue=0x1;
+
+DWORD _00529A00 = 0x0529A00;
+//DWORD _005E7560 = 0x05E7560;
+DWORD _0046A730 = 0x046A730;
+DWORD RE_EAX;
+DWORD RE_ECX;
+DWORD RE_EDX;
+DWORD RE_EBX;
+DWORD RE_ESP;
+DWORD RE_EBP;
+DWORD RE_ESI;
+DWORD RE_EDI;
+
+char messageON[260] = "Auto-Farms: On";
+char messageOFF[260] = "Auto-Farms: Off";
+char AutoFishTrapOff[260] = "Auto-Fish-Trap: Off";
+char AutoFishTrapOn[260] = "Auto-Fish-Trap: On";
+DWORD _0051CD30 = 0x051CD30;
+DWORD RessedFarms = 0x0;
+//0x051E605
+DWORD FlagideButton = 0x0;
+DWORD _005246C0 = 0x05246C0;
+
+
+DWORD FalgisDock = 0x0;
+DWORD _Sub_00469680_bis;
+DWORD _Sub_00457170_bis;
+DWORD _005570F0 = 0x05570F0;
+DWORD FlagAutoShipTrap = 0x0;
+DWORD initialized = 0x0;
+//select mil
+//0051FEFB  |. E8 405A0000    CALL age2_x1.00525940
+
+//Get missing addresse when unselect mil
+DWORD RecordMilAddr;
+void __declspec(naked)  AddAutoFarmButton00ReesedEvent()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+		Cmp EAX, 0BAh //if auto farm butoon is clicked
+		JNZ CheckFishReseed//continueProcess
+		mov FalgisDock, 0h//setflagressed dock diasable
+		//save register
+		MOV RE_EAX, EAX
+		MOV RE_ECX, ECX
+		MOV RE_EDX, EDX
+		MOV RE_EBX, EBX
+		MOV RE_ESP, ESP
+		MOV RE_EBP, EBP
+		MOV RE_ESI, ESI
+		MOV RE_EDI, EDI
+		//reall button to auto resseed famrs
+		CMP RessedFarms, 0h
+		JE Normale
+		JMP LikeAD
+
+		Normale :
+		cmp FlagAutoFarm, 0
+			JE setOn
+
+			setOff :
+		mov FlagAutoFarm, 0
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset messageOFF
+			CALL _0051CD30
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			Jmp CheckFishReseed//continueProcess
+
+			setOn :
+		mov FlagAutoFarm, 1h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset messageON
+			CALL _0051CD30
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			LikeAD :
+		MOV EAX, DWORD PTR SS : [ESP + 01Ch]
+
+			//CMP FarmsInQueue, 1
+			//JG AddZeroFarmsQueue
+			//PUSH 01h
+			//JMP short CallFunc
+			//AddZeroFarmsQueue:
+			//PUSH 0h
+			//JMP short CallFunc
+
+			//	CallFunc:
+			PUSH 01h
+			TEST EAX, EAX
+			JE short _0051F429
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			CALL _005E7560
+			MOV ECX, DWORD PTR DS : [EAX + 09Ch]
+			MOV EDX, DWORD PTR DS : [ESI + 0121Ch]
+			PUSH ECX
+			MOV ECX, DWORD PTR DS : [EDX + 068h]
+			CALL _0046A730
+			MOV ECX, DWORD PTR SS : [ESP + 04h]
+			MOV DWORD PTR FS : [0h] , ECX
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+			_0051F429 :
+		MOV ECX, ESI; |
+			CALL _00529A00; \age2_x1.00529A00
+			MOV ECX, DWORD PTR SS : [ESP + 04h]
+			MOV DWORD PTR FS : [0h] , ECX
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+			CheckFishReseed :
+		//fish trap auto reseeed
+		/*CMP EAX,0AAh //more dock item
+		JNZ reseedFishTrape
+		CMP FlagideButton,1h
+		JE HideButton
+		MOV FlagideButton, 1h
+		JMP reseedFishTrape
+		HideButton:
+		MOV FlagideButton,0h
+		JMP reseedFishTrape
+
+		reseedFishTrape:
+		Cmp EAX, 0BBh
+		JNZ checkAutoFish//continueProcess
+		////creat unit fish trap
+		//MOV EDX, 0h //DWORD PTR SS : [ESP + 01Ch] ;  Case 12 of switch 0051E609
+		//MOV EAX, 0362h//fish trap unit //DWORD PTR SS : [ESP + 018h]
+		//NEG EDX
+		//SBB EDX, EDX
+		//MOV ECX, ESI
+		//AND EDX, 0FFFFFFFEh
+		//INC EDX
+		//PUSH EDX; / Arg2
+		//PUSH EAX; | Arg1
+		//CALL _005246C0; \age2_x1.005246C0
+		//MOV ECX, DWORD PTR SS : [ESP + 04h]
+		//MOV DWORD PTR FS : [0h] , ECX
+		//POP ESI
+		//ADD ESP, 0Ch
+		//RETN 0Ch
+		mov FalgisDock, 1h //set dock flag reseed enable
+		MOV EAX, DWORD PTR SS : [ESP + 01Ch]
+		PUSH 01h
+		TEST EAX, EAX
+		JE short _0051F429_bis
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		CALL _005E7560
+		MOV ECX, DWORD PTR DS : [EAX + 09Ch]
+		MOV EDX, DWORD PTR DS : [ESI + 0121Ch]
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDX + 068h]
+		CALL _0046A730
+		MOV ECX, DWORD PTR SS : [ESP + 04h]
+		MOV DWORD PTR FS : [0h] , ECX
+		POP ESI
+		ADD ESP, 0Ch
+		RETN 0Ch
+
+		_0051F429_bis :
+		MOV ECX, ESI; |
+		CALL _PushFarmMil //_00529A00; \age2_x1.00529A00
+		MOV ECX, DWORD PTR SS : [ESP + 04h]
+		MOV DWORD PTR FS : [0h] , ECX
+		POP ESI
+		ADD ESP, 0Ch
+		RETN 0Ch
+		*/
+	checkAutoFish:
+		CMP EAX, 0BBh
+			JNZ continueProcess//continueProcess
+
+			CMP FlagAutoShipTrap, 0h
+			JE AutoFishOn
+
+			//AutoFishOff :
+			MOV FlagAutoShipTrap, 0h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset AutoFishTrapOff
+			CALL _0051CD30
+			JMP continueProcess// continueProcess
+
+
+			AutoFishOn :
+		MOV FlagAutoShipTrap, 1h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset AutoFishTrapOn
+			CALL _0051CD30
+			JMP continueProcess//continueProcess
+
+
+			continueProcess :
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+			LEA ECX, DWORD PTR DS : [EAX - 01h]
+			JMP _0051E60C
+	}
+}
+DWORD _ActionShipBuild;
+
+
+
+
+void __declspec(naked)  Sub_00457170_bis()
+{
+	__asm {
+		PUSH ECX
+		PUSH ESI
+		PUSH EDI
+		MOV EDI, DWORD PTR SS : [ESP + 010h]
+		MOV ESI, ECX
+		MOVSX ECX, DI
+		MOV EAX, DWORD PTR DS : [ESI + 074h]
+		MOV EAX, DWORD PTR DS : [EAX + ECX * 4h]
+		TEST EAX, EAX
+		//JE age2_x1.0045728A
+		MOV DL, BYTE PTR DS : [EAX + 05Ah]
+		TEST DL, DL
+		CMP DI, 026Dh
+		CMP ECX, 0C7h
+
+
+		MOV EAX, DWORD PTR DS : [ESI]
+		//this make idle fish ship
+		PUSH 00h
+		PUSH 00h
+		PUSH 00h
+		PUSH - 01h
+		PUSH - 01h
+		PUSH 015h
+		LEA ECX, DWORD PTR SS : [ESP + 020h]
+		PUSH 04h
+		LEA EDX, DWORD PTR SS : [ESP + 02Ch]
+		PUSH ECX
+		PUSH EDX
+		MOV ECX, ESI
+		MOV EBP, 0
+		CALL  _005570F0  //DWORD PTR DS : [EAX + 0B0h]
+
+
+
+
+		MOV AL, 1h
+		TEST AL, AL
+		//JE SHORT age2_x1.0045728A
+		MOV EAX, DWORD PTR SS : [ESP + 1Ch]
+		MOV ECX, DWORD PTR SS : [ESP + 18h]
+		MOV EDX, DWORD PTR SS : [ESP + 14h]
+		PUSH EAX
+		MOV EAX, DWORD PTR SS : [ESP + 0Ch]
+		PUSH ECX
+		MOV ECX, DWORD PTR SS : [ESP + 018h]
+		//function that creat fondation cmd
+		PUSH EDX
+		MOV EDX, DWORD PTR DS : [ESI + 08Ch]
+		PUSH EDI
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDX + 068h]
+		CALL _Sub_00469680_bis // age2_x1.00469680
+		POP EDI
+		MOV AL, 01h
+		POP ESI
+		POP ECX
+		RETN 010h
+		POP EDI
+		XOR AL, AL
+		POP ESI
+		POP ECX
+		RETN 010h
+	}
+}
+void __declspec(naked)  ActionShipBuild()
+{
+	__asm {
+		SUB ESP, 0Ch
+		MOV EAX, DWORD PTR SS : [ESP + 010h]
+		PUSH EBX
+		PUSH EBP
+		MOV EBP, ECX
+		MOV ECX, DWORD PTR SS : [ESP + 01Ch]
+		XOR EBX, EBX
+		MOV DWORD PTR DS : [EAX] , EBX
+		MOV DWORD PTR SS : [ESP + 0Ch] , EBX
+		MOV WORD PTR DS : [ECX] , BX
+		MOV EAX, DWORD PTR SS : [EBP + 0268h]
+		CMP EAX, EBX
+		MOV EAX, DWORD PTR SS : [ESP + 02Ch]
+		CMP WORD PTR SS : [ESP + 020h] , 0FFFFh
+		CMP AX, 02h
+		MOV DWORD PTR SS : [ESP + 010h] , EAX
+
+		PUSH ESI
+		PUSH EDI
+		MOV DWORD PTR SS : [ESP + 010h] , EBX
+		LEA EDI, DWORD PTR SS : [EBP + 01C4h]
+		MOV EDX, DWORD PTR SS : [ESP + 010h]
+		MOV EAX, DWORD PTR SS : [EBP + 0268h]
+		CMP EDX, EAX
+		MOV ESI, DWORD PTR DS : [EDI]
+		TEST ESI, ESI
+		//CMP BYTE PTR DS : [ESI + 048h] , 02h
+		//CMP DWORD PTR DS : [ESI + 0Ch] , EBP
+
+		//MOV EAX, DWORD PTR DS : [ESI + 08h]
+		//MOVZX CX, BYTE PTR DS : [EAX + 095h]
+		//CMP CX, WORD PTR SS : [ESP + 028h]
+
+		MOV CX, WORD PTR SS : [ESP + 02Ch]
+		CMP CX, 0FFFFh
+		XOR DX, DX
+		MOV DL, CL
+		//CMP WORD PTR DS : [EAX + 016h] , DX
+		MOV CX, WORD PTR SS : [ESP + 030h]
+		CMP CX, 0FFFFh
+		MOV ECX, DWORD PTR SS : [ESP + 034h]
+		CMP CX, 0FFFFh
+
+		MOV ECX, DWORD PTR SS : [ESP + 018h]
+		CMP CX, 0FFFFh
+
+
+		MOV CL, BYTE PTR SS : [ESP + 03Ch]
+		TEST CL, CL
+
+		MOV EAX, DWORD PTR SS : [ESP + 040]
+
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+		MOV EDX, DWORD PTR DS : [EDI]
+		MOVSX ECX, AX
+		INC EAX
+		MOV DWORD PTR DS : [ECX * 4h + 06B71A0h] , EDX
+		MOV DWORD PTR SS : [ESP + 014h] , EAX
+		INC DWORD PTR SS : [ESP + 010h]
+		INC EBX
+		ADD EDI, 04h
+		CMP EBX, 028h
+
+		MOV EAX, DWORD PTR SS : [ESP + 0x14]
+		POP EDI
+		TEST AX, AX
+		POP ESI
+
+
+		MOV ECX, DWORD PTR SS : [ESP + 018h]
+		MOV EDX, DWORD PTR SS : [ESP + 01Ch]
+		POP EBP
+		POP EBX
+		//MOV DWORD PTR DS : [ECX] , 006B71A0h
+		//MOV WORD PTR DS : [EDX] , AX
+		MOV AL, 01h
+		ADD ESP, 0Ch
+		RETN 24h
+
+
+
+
+
+
+	}
+}
+////0044023F
+
+//DWORD _006137C9 = 0x06137C9;
+DWORD _005C8F70 = 0x05C8F70;
+DWORD _0045BF20 = 0x045BF20;
+void __declspec(naked)  Sub_00469680_bis()
+{
+	__asm {
+		PUSH ECX
+		PUSH EBX
+		PUSH EBP
+		MOV EBP, DWORD PTR SS : [ESP + 010h]
+		PUSH ESI
+		MOV EBP, 006B71A0h
+		TEST EBP, EBP
+		PUSH EDI
+		MOV DWORD PTR SS : [ESP + 010h] , ECX
+		//JE age2_x1.00469766
+		MOV BX, WORD PTR SS : [ESP + 01Ch]
+		MOV BL, 01h
+		CMP BX, 01h
+		//JL _00469766
+		MOVSX ESI, BX
+		LEA EDI, DWORD PTR DS : [ESI * 4h + 018h]
+		PUSH EDI
+		PUSH 01h
+		MOV DWORD PTR SS : [ESP + 024h] , EDI
+		CALL Aoc10C_006137C9//_006137C9
+		ADD ESP, 08h
+		LEA ECX, DWORD PTR DS : [EAX + 018h]
+		TEST EAX, EAX
+		JE short _00469766
+		TEST ESI, ESI
+		JLE short _004696EE
+		MOV EDI, EBP
+		SUB EDI, ECX
+		//_004696D0:
+		//MOV EDX, DWORD PTR DS : [EDI + ECX]
+		//TEST EDX, EDX
+		//JE short _004696DE
+		//MOV EDX, DWORD PTR DS : [EDX + 04h]
+		//MOV DWORD PTR DS : [ECX] , EDX
+		//JMP short _004696E4
+		//_004696DE:
+		//MOV DWORD PTR DS : [ECX] , -01h
+		//_004696E4:
+		//ADD ECX, 04h
+		//DEC ESI
+		//JNZ short _004696D0
+		MOV EDI, DWORD PTR SS : [ESP + 01Ch]
+		_004696EE :
+		MOV BYTE PTR DS : [EAX] , 066h
+		MOV BYTE PTR DS : [EAX + 01h] , BL
+		MOV ECX, DWORD PTR SS : [EBP]
+		TEST ECX, ECX
+		JE short _00469706
+		MOV ECX, DWORD PTR DS : [ECX + 0Ch]
+		MOV ECX, DWORD PTR DS : [ECX + 09Ch]
+		JMP short _00469709
+		_00469706 :
+		OR ECX, 0FFFFFFFFh
+			_00469709 :
+		MOV EDX, DWORD PTR SS : [ESP + 024h]
+			MOV ESI, DWORD PTR SS : [ESP + 020h]
+			MOV BYTE PTR DS : [EAX + 02h] , CL
+			MOV ECX, DWORD PTR SS : [ESP + 028h]
+			MOV DWORD PTR DS : [EAX + 04h] , EDX
+			MOV DL, BYTE PTR SS : [ESP + 02Ch]
+			MOV WORD PTR DS : [EAX + 0Ch] , SI
+			MOV DWORD PTR DS : [EAX + 08h] , ECX
+			MOV DWORD PTR DS : [EAX + 010h] , -01h
+			MOV BYTE PTR DS : [EAX + 014h] , DL
+			MOV ECX, DWORD PTR SS : [EBP]
+			TEST ECX, ECX
+			JE short _00469742
+			MOV ECX, DWORD PTR DS : [ECX + 0Ch]
+			MOV ECX, DWORD PTR DS : [ECX + 09Ch]
+			JMP short _00469744
+			_00469742 :
+		XOR ECX, ECX
+			_00469744 :
+		PUSH ECX
+			MOV ECX, DWORD PTR SS : [ESP + 014h]
+			PUSH EDI
+			PUSH EAX
+			CALL _005C8F70
+			TEST EAX, EAX
+			JE SHORT _00469766
+			MOV EAX, DWORD PTR SS : [EBP]
+			TEST EAX, EAX
+			JE SHORT _00469766
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			PUSH 00h; / Arg2 = 00000000
+			PUSH ESI; | Arg1
+			CALL _0045BF20; \age2_x1.0045BF20
+			_00469766 :
+		POP EDI
+			POP ESI
+			POP EBP
+			POP EBX
+			POP ECX
+			RETN 018h
+
+
+	}
+}
+DWORD _005E7380 = 0x05E7380;
+//DWORD _005E7560 = 0x05E7560;
+//DWORD _0045E4E0 = 0x045E4E0;
+DWORD _005EB990 = 0x05EB990;
+DWORD _00520030 = 0x0520030;
+DWORD _0054A1F0 = 0x054A1F0;
+//DWORD _0046A6F0 = 0x046A6F0;
+DWORD _00457CB0 = 0x0457CB0;
+
+void __declspec(naked)  PushFarmMil()
+{
+	__asm {
+		SUB ESP, 0204h
+		PUSH EBX
+		MOV EBX, ECX
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		PUSH ESI
+		PUSH 00h
+		CALL _005E7380
+		TEST EAX, EAX
+		JNZ _00529BD6
+		MOV EAX, DWORD PTR DS : [EBX + 01230h]
+		TEST EAX, EAX
+		JE _00529BD6
+		MOV EAX, DWORD PTR DS : [EAX + 08h]
+		//CMP WORD PTR DS : [EAX + 010h] , 044h //44 hex= 68 dec= mil
+		CMP WORD PTR DS : [EAX + 010h] , 02Dh //2D hex= 45 dec= DOCK
+		JNZ _00529BD6
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		CALL _005E7560
+		MOV ECX, EAX
+		CALL _0045E4E0
+		CMP EAX, 028h
+		JL short _00529A9A
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		PUSH 00h
+		PUSH 00h
+		PUSH 03h
+		CALL _005EB990
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		LEA EAX, DWORD PTR SS : [ESP + 0Ch]
+		PUSH 0200h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0BDFh
+		CALL DWORD PTR DS : [EDX + 028h]
+		PUSH 00h
+		LEA ECX, DWORD PTR SS : [ESP + 010h]
+		PUSH 024h
+		PUSH ECX
+		PUSH 01h
+		MOV ECX, EBX
+		CALL _00520030
+		POP ESI
+		POP EBX
+		ADD ESP, 0204h
+		RETN 04h
+		_00529A9A :
+		MOV ECX, DWORD PTR DS : [07912A0h]
+			CALL _005E7560
+			MOV ECX, EAX
+			CALL _0045E4E0
+			MOV ESI, DWORD PTR SS : [ESP + 0210h]
+			ADD EAX, ESI
+			CMP EAX, 028h
+			JLE short _00529ADA
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			CALL _005E7560
+			MOV ECX, EAX
+			CALL _0045E4E0
+			MOV ESI, 028h
+			SUB ESI, EAX
+			MOV DWORD PTR SS : [ESP + 0210h] , ESI
+			_00529ADA :
+		TEST ESI, ESI
+			JLE _00529BB5
+			FILD DWORD PTR SS : [ESP + 0210h]
+			PUSH 00h
+			PUSH 00h
+			PUSH 01h
+			PUSH ECX
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			LEA EDX, DWORD PTR SS : [ESP + 01Ah]
+			FSTP DWORD PTR SS : [ESP]
+			PUSH EDX
+			PUSH 0C7h
+			CALL _005E7560
+			MOV ECX, EAX
+			CALL _00457CB0
+			TEST AL, AL
+			JNZ _00529BB5
+			PUSH EDI
+			XOR EDI, EDI
+			CMP ESI, 01h
+			JLE short _00529B5E
+			_00529B1C :
+		DEC ESI
+			PUSH 00h
+			MOV DWORD PTR SS : [ESP + 0218h] , ESI
+			PUSH 00h
+			FILD DWORD PTR SS : [ESP + 021Ch]
+			PUSH 01h
+			PUSH ECX
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			LEA EAX, DWORD PTR SS : [ESP + 01Eh]
+			FSTP DWORD PTR SS : [ESP]
+			PUSH EAX
+			PUSH 0C7h
+			CALL _005E7560
+			MOV ECX, EAX
+			CALL _00457CB0
+			CMP AL, 01h
+			JE short _00529B59
+			CMP ESI, 01h
+			JG short _00529B1C
+			JMP short _00529B5E
+			_00529B59 :
+		MOV EDI, 01h
+			_00529B5E :
+		MOV ECX, DWORD PTR DS : [07912A0h]
+			PUSH 00h
+			PUSH 00h
+			PUSH 03h
+			CALL _005EB990
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			LEA EAX, DWORD PTR SS : [ESP + 010h]
+			PUSH 0200h
+			PUSH EAX
+			MOVSX EAX, WORD PTR SS : [ESP + 016h]
+			MOV EDX, DWORD PTR DS : [ECX]
+			PUSH EAX
+			PUSH 01h
+			PUSH 067h
+			CALL DWORD PTR DS : [EDX + 02Ch]
+			PUSH - 01h; / Arg10 = FFFFFFFF
+			PUSH 00h; | Arg9 = 00000000
+			PUSH - 01h; | Arg8 = FFFFFFFF
+			PUSH 00h; | Arg7 = 00000000
+			PUSH 00h; | Arg6 = 00000000
+			PUSH 00h; | Arg5 = 00000000
+			PUSH 00h; | Arg4 = 00000000
+			LEA ECX, DWORD PTR SS : [ESP + 02Ch] ; |
+			PUSH 024h; | Arg3 = 00000024
+			PUSH ECX; | Arg2
+			MOV ECX, DWORD PTR DS : [EBX + 01178h] ; |
+			PUSH 01h; | Arg1 = 00000001
+			CALL _0054A1F0; \age2_x1.0054A1F0
+			TEST EDI, EDI
+			POP EDI
+			JE short _00529BD6
+			_00529BB5 :
+		MOV ECX, DWORD PTR DS : [07912A0h]
+			PUSH ESI
+			CALL _005E7560
+			MOV EDX, DWORD PTR DS : [EAX + 09Ch]
+			MOV EAX, DWORD PTR DS : [EBX + 0121Ch]
+			PUSH EDX
+			MOV ECX, DWORD PTR DS : [EAX + 068h]
+			CALL _0046A6F0
+			_00529BD6 :
+		POP ESI
+			POP EBX
+			ADD ESP, 0204h
+			RETN 04h
+
+
+	}
+}
+
+
+DWORD SaveEAX;
+DWORD SaveECX;
+DWORD SaveEDX;
+DWORD SaveEBX;
+DWORD SaveESP;
+DWORD SaveEBP;
+DWORD SaveESI;
+DWORD SaveEDI;
+DWORD _0051DCC0 = 0x51DCC0;
+DWORD _0051E5E0 = 0x051E5E0;
+//DWORD _0051CD30 = 0x051CD30;
+
+
+DWORD RessedButtonAddres;
+DWORD RessedECX;
+DWORD RessedESI;
+DWORD CurrentPlayer;
+
+//0x0603D4B
+void __declspec(naked)  RebuildFarms()
+{
+	__asm {
+
+		//call 
+		cmp FlagAutoFarm, 1
+		JNZ _NoAutoFarm
+		//save register
+		MOV SaveEAX, EAX
+		MOV SaveECX, ECX
+		MOV SaveEDX, EDX
+		MOV SaveEBX, EBX
+		MOV SaveESP, ESP
+		MOV SaveEBP, EBP
+		MOV SaveESI, ESI
+		MOV SaveEDI, EDI
+
+		//get current player
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		call _005E7560
+		MOV CurrentPlayer, EAX
+		//restore register
+		MOV EAX, SaveEAX
+		MOV ECX, SaveECX
+		MOV EDX, SaveEDX
+		MOV EBX, SaveEBX
+		MOV ESP, SaveESP
+		MOV EBP, SaveEBP
+		MOV ESI, SaveESI
+		MOV EDI, SaveEDI
+		//call how many farm for random player
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		//recall how many farm
+		CALL _0045E4E0
+		//if not current player don't push button
+		CMP CurrentPlayer, ECX
+		JNZ _NoAutoFarm
+
+		//00603D4B  |. E8 90A7E5FF    CALL age2_x1.0045E4E0
+		CALL _0045E4E0
+		//if not farm in reseed farm then call reseed but event
+		CMP EAX, 1
+		JG short _NoAutoFarm; >
+		CMP RessedButtonAddres, 0 //if the button address is not loaded it could potentially crash the game 
+		JE  short _NoAutoFarm
+
+
+		//todo push only if farms <=1
+
+		//set flag auto ressed like AD  
+		Mov RessedFarms, 1h
+
+		MOV EAX, SaveEAX
+		MOV ECX, 0h
+		MOV EDX, 032h //located in mil
+		MOV EAX, 0BAh//0ADh //resseed button
+
+		PUSH ECX
+		PUSH EDX
+		PUSH EAX
+
+		MOV EBP, RessedButtonAddres
+		MOV EBX, RessedECX
+		MOV ESI, RessedESI
+		MOV ECX, EBX
+		CALL _0051E5E0
+		Mov RessedFarms, 0h
+
+
+		//restore register
+		MOV EAX, SaveEAX
+		MOV ECX, SaveECX
+		MOV EDX, SaveEDX
+		MOV EBX, SaveEBX
+		MOV ESP, SaveESP
+		MOV EBP, SaveEBP
+		MOV ESI, SaveESI
+		MOV EDI, SaveEDI
+		_NoAutoFarm :
+
+
+		//refresh 
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			//recall how many farm
+			CALL _0045E4E0
+			Jmp _00603D50
+
+	}
+}
+
+//get button address
+//0051E1C4   . E8 17040000    CALL age2_x1.0051E5E0
+//0x0603D4B
+//DWORD _0051E5E0 = 0x0051E5E0;
+DWORD _0051E1C9 = 0x051E1C9;
+void __declspec(naked)  GetRessedButtonAddres()
+{
+	__asm {
+		//get only ressed button addresse
+		//CMP EAX,0ADh //reseed button
+		CMP EAX, 0BAh //ADh reseed button
+		JNZ continue
+		CMP EDX, 032h
+		JNZ continue
+		MOV RessedButtonAddres, EBP
+		MOV RessedECX, EBX
+		MOV RessedESI, ESI
+		continue:
+		CALL _0051E5E0
+			JMP _0051E1C9
+	}
+}
+
+////get button address
+////0051E1C4   . E8 17040000    CALL age2_x1.0051E5E0
+////0x0603D4B
+////DWORD _0051E5E0 = 0x0051E5E0;
+//DWORD _0051E1C9 = 0x051E1C9;
+//void __declspec(naked)  GetRessedButtonAddres()
+//{
+//	__asm {
+//		//get only ressed button addresse
+//		//CMP EAX,0ADh //reseed button
+//		CMP EAX, 0BAh //ADh reseed button
+//		JNZ continue
+//		CMP EDX, 032h
+//		JNZ continue
+//		MOV RessedButtonAddres, EBP
+//		MOV RessedECX, EBX
+//		MOV RessedESI, ESI
+//		continue:
+//		CALL _0051E5E0
+//			JMP _0051E1C9
+//	}
+//}
+//select mil
+//0051FEFB  |. E8 405A0000    CALL age2_x1.00525940
+
+//Get missing addresse when unselect mil
+//DWORD RecordMilAddr;
+DWORD _00529A2D = 0x0529A2D;
+DWORD _00529BD6 = 0x0529BD6;
+DWORD _00529A25 = 0x0529A25;
+//00529A1F  |. 8B83 30120000  MOV EAX,DWORD PTR DS:[EBX+0x1230]
+
+void __declspec(naked)  GetMissingAdresseWhenunSelectMilAddres()
+{
+	__asm {
+
+
+		Cmp initialized, 1h
+		JE Restore
+		MOV EAX, DWORD PTR DS : [EBX + 01230h]
+		MOV RecordMilAddr, EAX
+		MOV initialized, 1h
+		//Mov RessedFarms, 0h
+		JMP _00529A25
+		Restore :
+		MOV EAX, RecordMilAddr
+			//TEST EAX, EAX
+			//JE _00529BD6
+			JMP _00529A25
+	}
+}
+
+
+DWORD _00527C7B = 0x0527C7B;
+DWORD fishEBX;
+char descriptionFishTrape[] = "Auto Fish Trape";
+char descriptionReseedFishTrape[] = "Reseed Fish Trape";
+DWORD _00527C74 = 0x0527C74;
+DWORD _00527B4A = 0x0527B4A;
+DWORD _00527B54 = 0x0527B54;
+void __declspec(naked)  CreatFishTrapButtons()
+{
+	__asm {
+		CMP WORD PTR DS : [ECX + 010h] , 02Dh//dock
+		JE AutoFishButton
+
+		CMP WORD PTR DS : [ECX + 010h] , 044h//mil
+		JNZ __00527C74
+		JMP _00527B4A //00527B4A  |. 8078 48 02     CMP BYTE PTR DS:[EAX+0x48],0x2
+		CMP BYTE PTR DS : [EAX + 0x48] , 0x2
+		JNZ __00527C74
+		jmp _00527B54
+
+
+		AutoFishButton :
+		CMP FlagideButton, 0h
+			JNZ __00527C74
+			mov fishEBX, EBP
+			/*
+		//auto ressed button dock
+		PUSH EBP
+		PUSH  offset descriptionReseedFishTrape//EAX
+		PUSH EBP
+		PUSH EBP
+		PUSH - 01h
+		PUSH EBP
+		PUSH 0h//01352h
+		PUSH 032h
+		PUSH 0BBh// jump default switch case
+		//52 53   =
+		PUSH 03Ah//logoposition in slp
+
+		PUSH 6h//0Bh//button position
+		MOV ECX, ESI
+		CALL _005298F0
+		PUSH  EAX
+		MOV ECX, ESI
+		CALL _00520620*/
+
+
+		//unHIDE when fixe
+		//auto fish trape button dock
+			PUSH EBP
+			PUSH  offset descriptionFishTrape//EAX
+			PUSH EBP
+			PUSH EBP
+			PUSH - 01h
+			PUSH EBP
+			PUSH 0h//01352h
+			PUSH 032h
+			PUSH 0BCh// jump default switch case
+			cmp FlagAutoShipTrap, 1h
+			JE logoActived
+			//52 53   =  
+			PUSH 039h//logoposition in slp
+			Jmp next
+
+			logoActived :
+		PUSH 038h//logoposition in slp
+			Jmp next
+
+			next :
+		PUSH 0Ah//0Ch//button position
+			MOV ECX, ESI
+			CALL _005298F0
+			PUSH  EAX
+			MOV ECX, ESI
+			CALL _00520620
+
+
+			__00527C74 :
+		JMP _00527C74
+
+			//restore EBP
+			//mov fishEBX, EBP
+			//PUSH EBX
+			//LEA EBX, DWORD PTR DS : [ESI + 0124Ah]
+			//00527C7B  |. 6A 00          PUSH 0x0
+
+		__00527B54:
+		//jmp _00527C7B 
+		jmp _00527B54 //00527C74  |> 53             PUSH EBX
+
+
+
+
+	}
+}
+//00529AFE     6A 32          PUSH 0x32   32 = 50 = farms 
+
+DWORD _00451EF0 = 0x0451EF0;
+DWORD _00450DFF = 0x0450DFF;
+DWORD _00450E2B = 0x0450E2B;
+
+//0x0450DF8
+void __declspec(naked)  ChangeToFishTrape()
+{
+	__asm {
+
+		//0000A48B  logo
+		MOV EAX, DWORD PTR SS : [EBP + 08h]
+		CMP WORD PTR DS : [EAX + 014h] , 0362h  //866 new fish trap created unit
+		JNZ Normal
+		MOV ECX, DWORD PTR SS : [ESP + 020h]
+		MOV EDX, DWORD PTR SS : [ESP + 024h]
+		PUSH - 01h
+		PUSH ECX
+		MOV EAX, DWORD PTR SS : [ESP + 050h]
+		PUSH 01h
+		PUSH - 04h  //farm event?
+		PUSH 00h
+		PUSH 86h//last logo 
+		PUSH EDX
+		PUSH 028h//size button
+		PUSH 028h//size button
+		PUSH EBX
+		PUSH EDI
+		PUSH EAX
+		MOV ECX, ESI
+		CALL _00451EF0
+		JMP _00450E2B
+
+		Normal :
+		MOV EAX, DWORD PTR SS : [EBP + 08h]
+			MOV EDX, DWORD PTR SS : [ESP + 020h]
+			JMP _00450DFF
+
+			//MOVSX EAX, WORD PTR DS : [EAX + 054h] ; ;logo indice
+			////logo building
+			//MOV ECX, DWORD PTR SS : [ESP + 0x20]
+
+			////logo unit
+			//MOV ECX, DWORD PTR SS : [ESP + 0x38]
+
+	}
+}
+//00568336  |. 894E 04        MOV DWORD PTR DS:[ESI+0x4],ECX
+
+DWORD _00527A60 = 0x0527A60;
+//004673B0  |. 0F87 71040000  JA age2_x1.00467827
+
+
+void __declspec(naked)  KillFishTrap()
+{
+	__asm {
+
+		CMP EAX, 0Fh
+		JA Default
+
+		MOV EDX, 2Bh //DOCK
+		MOV ECX, ESI;  Case 31 of switch 0051E609
+		CALL _00527A60
+		MOV ECX, DWORD PTR SS : [ESP + 04h]
+		MOV DWORD PTR FS : [0h] , ECX
+		POP ESI
+		ADD ESP, 0Ch
+		RETN 0Ch
+
+		Default :
+		MOV ECX, DWORD PTR SS : [ESP + 0x514] ;  Default case of switch 004677AF
+			POP EDI
+			POP ESI
+			POP EBP
+			POP EBX
+			MOV DWORD PTR FS : [0] , ECX
+			ADD ESP, 0x510
+			RETN 0x4
+
+
+	}
+}
+DWORD _00450A75 = 0x0450A75;
+DWORD _00450A55 = 0x0450A55;
+//0x0450A4E
+void __declspec(naked)  garnisonLikeMil()
+{
+	__asm {
+
+		CMP WORD PTR DS : [ECX + 010h] , 044h //mill
+		JNZ short checkDock
+		MOV FalgisDock, 0h
+		JE short __00450A55
+
+		checkDock :
+		CMP WORD PTR DS : [ECX + 010h] , 02Dh//dock
+			JNZ short __00450A75
+			MOV FalgisDock, 01h
+			CMP EBX, 0h
+			JNZ __00450A75
+			MOV EBX, 01h //force to show reseed fish trap
+			JMP _00450A75  //JMP _00450A55
+			__00450A75 :
+		JMP _00450A75
+			__00450A55 :
+		JMP _00450A55
+
+	}
+}
+
+//00450F49     8B4C24 34      MOV ECX,DWORD PTR SS:[ESP+0x34]
+
+DWORD FishTrapCount = 0x0;
+
+//00450F1A     8B4424 14      MOV EAX,DWORD PTR SS:[ESP+0x14]
+DWORD _00450F20 = 0x0450F20;
+DWORD CurrentCount = 0x0;
+DWORD CurrentbuttonID;//max garnison doxk 10 = A
+DWORD _____2_006139E4 = 0x006139E4;
+DWORD _00450F60 = 0x0450F60;
+DWORD _005A2780 = 0x05A2780;
+DWORD _005A2FC0 = 0x05A2FC0;
+//DWORD _067022C = 0x67022C;
+//DWORD val1 = 0x2442;  //41.000000
+//DWORD val2 = 0xF442;  //122.000000
+
+void __declspec(naked)  LoopMilOrShipTrapReseedQueue()
+{
+	__asm {
+
+		//MOV ECX, DWORD PTR DS : [ESI + 020h]
+		//LEA EAX, DWORD PTR DS : [ESI + 024h]
+		//PUSH EAX
+		//CALL _005A2FC0
+		//MOV ECX, DWORD PTR DS : [ESI + 020h]
+		//PUSH 067022Ch;  ASCII "tpnl_obj::draw_garrison"
+		//CALL _005A2780
+
+		//FishTrapCount
+		cmp FalgisDock, 1h
+		JNZ normal
+		cmp FishTrapCount, 0h
+		JE normal //no print button when 0 in queue
+		MOV EAX, FishTrapCount
+		DEC EAX
+		MOV DWORD PTR SS : [ESP + 014h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 034h]//current count unit garnison
+		MOV CurrentbuttonID, EAX
+		printbuton :
+		//panel placement?
+		FILD DWORD PTR SS : [ESP + 014h]
+			FMUL DWORD PTR SS : [ESP + 02Ch]
+			FADD DWORD PTR DS : [063766Ch]
+			CALL _____2_006139E4
+			MOV EDI, EAX
+			MOV EAX, DWORD PTR SS : [ESP + 018h]
+
+
+			//MOV EAX, DWORD PTR SS : [EBP + 08h]
+			//CMP WORD PTR DS : [EAX + 014h] , 0362h  //866 new fish trap created unit
+			//JNZ Normal
+			MOV ECX, DWORD PTR SS : [ESP + 020h]
+			MOV EDX, DWORD PTR SS : [ESP + 024h]
+			PUSH - 01h
+			PUSH ECX
+			MOV EAX, DWORD PTR SS : [ESP + 050h]
+			PUSH 01h
+			PUSH - 04h  //farm event?
+			PUSH 00h
+			PUSH 173h//86h//last logo 
+			PUSH EDX
+			PUSH 026h//026h//size button
+			PUSH 028h//028h//size button
+			PUSH 70h//70h // EBX
+			ADD EDI, 100h
+			PUSH EDI
+			PUSH CurrentbuttonID//0h//EAX
+			MOV ECX, ESI
+			CALL _00451EF0
+			//JMP _00450E2B
+
+			//MOV EAX, DWORD PTR SS : [ESP + 014h]
+			//MOV EAX, DWORD PTR SS : [ESP + 014h]
+			//TEST EAX, EAX
+			//JNZ short _00450F30
+			//MOV EDX, DWORD PTR SS : [ESP + 030h]
+			//SUB EBX, 02Ah
+			//DEC EDX
+			//MOV DWORD PTR SS : [ESP + 014h] , EDX
+			//JMP short _00450F34
+			//_00450F30:
+			DEC DWORD PTR SS : [ESP + 014h]//print buttons
+			//_00450F34:
+
+			MOV EAX, CurrentCount
+			CMP EAX, FishTrapCount
+			JG short normal
+			INC EAX
+			MOV CurrentCount, EAX
+			INC CurrentbuttonID
+			CMP EAX, FishTrapCount
+			JL short printbuton
+
+			normal :
+		MOV CurrentCount, 0h
+
+			MOV ECX, DWORD PTR DS : [ESI + 020h]
+			LEA EAX, DWORD PTR DS : [ESI + 024h]
+
+			JMP	_00450F60
+
+
+
+	}
+}
+
+
+
+
+//00467809  |. E8 E26CFFFF    CALL age2_x1.0045E4F0
+
+//0045E4F0
+DWORD _00457E40 = 0x0457E40;
+char FullFishTrapQueue[260] = "FULL fishTrap Queue";
+
+void __declspec(naked)  pushFishTrapGarnison()
+{
+	__asm {
+		PUSH ECX
+		PUSH ESI
+		PUSH EDI
+		MOV EDI, DWORD PTR SS : [ESP + 010h]
+		MOV ESI, ECX
+		CMP EDI, 01h
+		JMP short _0045E506
+		POP EDI
+		XOR EAX, EAX
+		POP ESI
+		POP ECX
+		RETN 04h
+		_0045E506 :
+		//CMP DWORD PTR DS : [ESI + 01EACh] , 028h//if full queue then donothing
+		CMP WORD PTR DS : [ESI + 01EAEh] , 0h//try to creat new queque hope this addresse is not use
+		//JL short _0045E517
+			JMP _0045E58D
+			//push 0h
+			//push offset FullFishTrapQueue
+			//CALL _0051CD30
+
+			POP EDI
+			XOR EAX, EAX
+			POP ESI
+			POP ECX
+			RETN 04h
+			_0045E517 :
+		FILD DWORD PTR SS : [ESP + 010h]
+			PUSH 00h
+			PUSH 00h
+			PUSH 01h
+			PUSH ECX
+			LEA EAX, DWORD PTR SS : [ESP + 01Ah]
+			MOV ECX, ESI
+			FSTP DWORD PTR SS : [ESP]
+			PUSH EAX
+			PUSH 0C7h
+			CALL _00457CB0
+			TEST AL, AL
+			JNZ short _0045E56E
+			CMP EDI, 01h
+			JLE short _0045E566
+			_0045E53C :
+		DEC EDI
+			PUSH 00h
+			MOV DWORD PTR SS : [ESP + 014h] , EDI
+			PUSH 00h
+			FILD DWORD PTR SS : [ESP + 018h]
+			PUSH 01h
+			PUSH ECX
+			LEA ECX, DWORD PTR SS : [ESP + 01Ah]
+			FSTP DWORD PTR SS : [ESP]
+			PUSH ECX
+			PUSH 0C7h
+			MOV ECX, ESI
+			CALL _00457CB0
+			CMP AL, 01h
+			JE short _0045E56E
+			CMP EDI, 01
+			JG short _0045E53C
+			_0045E566 :
+		POP EDI
+			XOR EAX, EAX
+			POP ESI
+			POP ECX
+			RETN 04h
+			_0045E56E :
+		FILD DWORD PTR SS : [ESP + 010h]
+			PUSH 01h
+			PUSH ECX
+			MOV ECX, ESI
+			FSTP DWORD PTR SS : [ESP]
+			PUSH 0C7h
+			CALL _00457E40
+			TEST AL, AL
+			JNZ short _0045E58D
+			POP EDI
+			XOR EAX, EAX
+			POP ESI
+			POP ECX
+			RETN 04h
+			_0045E58D :
+		//MOV EAX, DWORD PTR DS : [ESI + 01EACh]
+		MOV EAX, 0h
+			MOV AX, WORD PTR DS : [ESI + 01EAEh]
+			MOV EAX, FlagAutoShipTrap
+			POP EDI
+			//MOV DWORD PTR DS : [ESI + 01EACh] , EAX
+			MOV WORD PTR DS : [ESI + 01EAEh] , AX
+			//MOV FishTrapCount, EAX
+			MOV EAX, 01h
+			POP ESI
+			POP ECX
+			RETN 04h
+
+
+
+	}
+}
+//even button 
+//00467809  |. E8 E26CFFFF    CALL age2_x1.0045E4F0
+
+DWORD _0045E4F0 = 0x045E4F0;
+DWORD _pushFishTrapGarnison = (DWORD)pushFishTrapGarnison;
+DWORD _0046780E = 0x046780E;
+void __declspec(naked)  pushFarmsGarnison()
+{
+	__asm {
+		cmp FalgisDock, 0h
+		JNZ DOCK
+
+		MOVSX EAX, WORD PTR DS : [ESI + 04h] ;  Case D of switch 004673AD
+		MOV EDX, DWORD PTR DS : [EDI + 04h]
+		PUSH EAX
+		MOVSX ECX, WORD PTR DS : [ESI + 02h]
+		MOV EAX, DWORD PTR DS : [EDX + 04Ch]
+		MOV ECX, DWORD PTR DS : [EAX + ECX * 4h]
+		CALL _0045E4F0
+		JMP _0046780E
+
+		DOCK :
+		MOVSX EAX, WORD PTR DS : [ESI + 04h] ;  Case D of switch 004673AD
+			MOV EDX, DWORD PTR DS : [EDI + 04h]
+			PUSH EAX
+			MOVSX ECX, WORD PTR DS : [ESI + 02h]
+			MOV EAX, DWORD PTR DS : [EDX + 04Ch]
+			MOV ECX, DWORD PTR DS : [EAX + ECX * 4h]
+			CALL _pushFishTrapGarnison // _0045E4F0
+			JMP _0046780E
+
+	}
+}
+//0051F3ED  |> 8B4424 1C      MOV EAX,DWORD PTR SS:[ESP+0x1C]                   ;  Case AD of switch 0051E609
+
+DWORD _0051F3F3 = 0x051F3F3;
+void __declspec(naked)  setdockqueuedisable()
+{
+	__asm {
+		mov FalgisDock, 0h
+		MOV EAX, DWORD PTR SS : [ESP + 01Ch] ;  Case AD of switch 0051E609
+		PUSH 01h
+		JMP _0051F3F3
+	}
+}
+DWORD _0044DBE0 = 0x044DBE0;
+//force to show ressed fish trap when 0 garnison
+void __declspec(naked)  ShowReseedShipTrap()
+{
+	__asm {
+		MOV AL, BYTE PTR SS : [ESP + 01Ch]
+		MOV EDI, 01h
+		MOV DWORD PTR SS : [ESP + 038h] , EDI
+		TEST AL, AL
+
+		JMP _0044DBE0
+	}
+}
+//unqueue fishtrape
+DWORD _0045E5B0 = 0x045E5B0;
+DWORD _SublistunqueueFishTrape;
+void __declspec(naked)  unqueueFishTrape()
+{
+	__asm {
+		cmp FalgisDock, 0h
+		JNZ DOCK
+
+		MOVSX ECX, WORD PTR DS : [ESI + 04h] ;  Case E of switch 004673AD
+		MOV EAX, DWORD PTR DS : [EDI + 04h]
+		PUSH ECX
+		MOVSX EDX, WORD PTR DS : [ESI + 02h]
+		MOV ECX, DWORD PTR DS : [EAX + 04Ch]
+		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
+		CALL _0045E5B0
+		JMP default
+		DOCK :
+		MOVSX ECX, WORD PTR DS : [ESI + 04h] ;  Case E of switch 004673AD
+		MOV EAX, DWORD PTR DS : [EDI + 04h]
+		PUSH ECX
+		MOVSX EDX, WORD PTR DS : [ESI + 02h]
+		MOV ECX, DWORD PTR DS : [EAX + 04Ch]
+		MOV ECX, DWORD PTR DS : [ECX + EDX * 4h]
+		CALL _SublistunqueueFishTrape
+
+		default:
+			MOV ECX, DWORD PTR SS : [ESP + 0514h] ;  Default case of switch 004677AF
+				POP EDI
+				POP ESI
+				POP EBP
+				POP EBX
+				MOV DWORD PTR FS : [0h] , ECX
+				ADD ESP, 0510h
+				RETN 04h
+
+
+	}
+}
+DWORD _00457EC0 = 0x0457EC0;
+void __declspec(naked)  SublistunqueueFishTrape()
+{
+	__asm {
+
+		//MOV EAX, DWORD PTR DS : [ECX + 01EACh]
+		MOV EAX, DWORD PTR DS : [ECX + 01EBCh]//fish trap value list
+		MOV EDX, DWORD PTR SS : [ESP + 04h]
+		CMP EDX, EAX
+		JLE short _0045E5C0
+		MOV EDX, EAX
+		_0045E5C0 :
+		CMP EDX, 01
+			JGE short _0045E5CA
+			XOR EAX, EAX
+			RETN 04h
+			_0045E5CA :
+		SUB EAX, EDX
+			PUSH EDX
+			PUSH 0C7h
+			//MOV DWORD PTR DS : [ECX + 01EACh] , EAX
+			MOV DWORD PTR DS : [ECX + 01EBCh] , EAX
+			MOV FishTrapCount, EAX
+			CALL _00457EC0
+			MOV EAX, 01h
+			RETN 04h
+	}
+}
+//00440134   . 8B1490         MOV EDX,DWORD PTR DS:[EAX+EDX*4]
+//DWORD currentPlayerToRessedFishTrap = 0x0;
+DWORD _0044013E = 0x044013E;
+void __declspec(naked)  currentPlayerToRessedFishTrapAuto()
+{
+	__asm {
+		MOV EDX, DWORD PTR DS : [EAX + EDX * 4]
+		CMP BYTE PTR DS : [EDX + 0xA2] , 0x2
+		MOV currentPlayerToRessedFishTrap, EDX
+		JMP _0044013E
+	}
+}
+//rebuild farms
+////00457170  /$ 51             PUSH ECX
+
+//0x0440157
+
+//current player to ressed
+//00440134   . 8B1490         MOV EDX,DWORD PTR DS:[EAX+EDX*4]
+//00440149   . A1 C0517A00    MOV EAX,DWORD PTR DS:[0x7A51C0]
+
+
+DWORD _0044014F = 0x044014F;
+
+void __declspec(naked)  BuildFishTrape()
+{
+	__asm {
+
+
+		MOV EAX, DWORD PTR DS : [07A51C0h]
+
+		//save register
+		MOV DeadFishTrapEAX, EAX
+		MOV DeadFishTrapECX, ECX
+		MOV DeadFishTrapEDX, EDX
+		MOV DeadFishTrapEBX, EBX
+		MOV DeadFishTrapESP, ESP
+		MOV DeadFishTrapEBP, EBP
+		MOV DeadFishTrapESI, ESI
+		MOV DeadFishTrapEDI, EDI
+
+		MOV AX, WORD PTR DS : [ECX + 010h]
+		MOV CurrentUnit, EAX
+
+		CMP AX, 116h//0C7h //if dead fish trap
+		JNZ normale
+		//build fish trap click right function
+		//MOV EDI, DWORD PTR SS : [EBP + 0Ch]
+
+		MOV EDX, DWORD PTR DS : [EDI + 03Ch] //x
+		MOV __x, EDX
+		MOV EAX, DWORD PTR DS : [EDI + 038h]//y
+		MOV __y, EAX
+
+		MOV EBX, 0C7h
+		//RETN 0Ch
+
+
+
+		//MOV EDX, DWORD PTR DS : [EDI + 03Ch] //x
+		MOV EDX, __x
+		//MOV EAX, DWORD PTR DS : [EDI + 038h]//y
+		MOV EAX, DWORD PTR DS : [07912A0h]
+		MOV AX, WORD PTR DS : [EAX + 042Eh]
+		//PUSH EAX
+		//PUSH EDX
+		MOV  EAX, __y
+		//PUSH EAX
+		//PUSH 0C7h//EBX  //unit id fish trape : 0C7
+		MOV EBX, 0C7h
+		MOV EDI, currentPlayerToRessedFishTrap //player?
+		MOV ECX, currentPlayerToRessedFishTrap //player?
+		//CALL _00457170
+		//no call only collect informations
+		//Call _Sub_00457170_bis
+
+
+
+
+	normale:
+		//restaure register
+		MOV EAX, DeadFishTrapEAX
+			MOV ECX, DeadFishTrapECX
+			MOV EDX, DeadFishTrapEDX
+			MOV EBX, DeadFishTrapEBX
+			MOV ESP, DeadFishTrapESP
+			MOV EBP, DeadFishTrapEBP
+			MOV ESI, DeadFishTrapESI
+			MOV EDI, DeadFishTrapEDI
+
+
+			//	MOV AX, WORD PTR DS : [ECX + 010h]
+			//	CMP AX, 0165h
+			//	JNZ SHORT __0044016A
+			//	JMP _00440161
+
+
+			//	__0044016A :
+			//JMP _0044016A
+
+			JMP _0044014F
+
+
+
+
+	}
+}
+//004150E3   . 8B8F 0C010000  MOV ECX,DWORD PTR DS:[EDI+0x10C]
+DWORD record_EDIFromClick = 0x0;
+DWORD _004150E9 = 0x04150E9;
+void __declspec(naked)  GetEDIFromClick()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [EDI + 010Ch]
+		MOV record_EDIFromClick, EDI
+		JMP _004150E9
+	}
+}
+//00440109   . 8B4F 08        MOV ECX,DWORD PTR DS:[EDI+0x8]
+DWORD record_ESI = 0x0;
+DWORD _00440110 = 0x0440110;
+void __declspec(naked)  GetEsiFishtrapBuildFound()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [EDI + 08h]
+		MOV AX, WORD PTR DS : [ECX + 016h]
+		MOV record_ESI, ECX
+		JMP _00440110
+	}
+}
+DWORD _00469680 = 0x0469680;
+void __declspec(naked)  Test()
+{
+	__asm {
+		PUSH ECX
+		PUSH ESI
+		PUSH EDI
+		MOV EDI, DWORD PTR SS : [ESP + 010h]
+		MOV ESI, ECX
+		MOVSX ECX, DI
+		MOV EAX, DWORD PTR DS : [ESI + 074h]
+		MOV EAX, DWORD PTR DS : [EAX + ECX * 4h]
+		TEST EAX, EAX
+		//JE age2_x1.0045728A
+		MOV DL, BYTE PTR DS : [EAX + 0x5A]
+		TEST DL, DL
+		//JNZ SHORT age2_x1.0045719C
+		/*CMP DI, 0x26D
+		JNZ age2_x1.0045728A*/
+		CMP ECX, 0C7h
+
+		MOV EAX, DWORD PTR SS : [ESP + 01Ch]
+		MOV ECX, DWORD PTR SS : [ESP + 018h]
+		MOV EDX, DWORD PTR SS : [ESP + 014h]
+		PUSH EAX
+		MOV EAX, DWORD PTR SS : [ESP + 0Ch]
+		PUSH ECX
+		MOV ECX, DWORD PTR SS : [ESP + 018h]
+		PUSH EDX
+		MOV EDX, DWORD PTR DS : [ESI + 08Ch]
+		PUSH EDI
+		MOV EAX, 06B71A0h
+		PUSH EAX
+		MOV ECX, ESI
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDX + 068h]
+		CALL _00469680
+
+		POP EDI
+		MOV AL, 01h
+		POP ESI
+		POP ECX
+		RETN 010h
+
+
+	}
+}
+DWORD _004570C0 = 0x04570C0;
+DWORD _JMP;
+
+void __declspec(naked)  MouseClickRigthEvent()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [EBP + 01A8h]
+		MOV EBP, EDI
+		MOV EAX, __x
+		PUSH EAX
+		MOV EAX, DWORD PTR SS : [EBP + 038h]
+		MOV EDI, record_EDIFromClick
+		MOV EAX, __y
+		MOV EDX, DWORD PTR DS : [ECX]//00637A44h
+		ADD esp, 20h
+		PUSH EAX
+		PUSH EBP
+		CALL _004570C0 //DWORD PTR DS : [EDX + 0xC4] ;  age2_x1.004570C0
+		JMp _JMP
+	}
+}
+DWORD _MouseClickRigthEvent = (DWORD)MouseClickRigthEvent;
+//00464580   . 6A FF          PUSH -0x1
+
+
+//rebuild auto fish trap
+//0x044023F
+DWORD _0051FD90 = 0x051FD90;
+
+//DWORD _00457CB0 = 0x0457CB0;
+//DWORD _005C8F70 = 0x05C8F70;
+DWORD _0043CCB0 = 0x043CCB0;
+//DWORD _Test = (DWORD)Test;
+DWORD __00464580 = 0x0464580;
+
+//select unit
+//00562623 | .FF90 A0000000  CALL DWORD PTR DS : [EAX + 0xA0] ;  age2_x1.0042EAA0
+//00562629 | .EB 06          JMP SHORT age2_x1.00562631
+//0056262B | > FF90 B4000000  CALL DWORD PTR DS : [EAX + 0xB4]
+//
+DWORD CountMil = 0x0;
+
+void __declspec(naked)  BuildFishTrapeAfterDelete()
+{
+	__asm {
+		CALL _0051FD90
+
+		MOV EAX, CurrentUnit
+		CMP AX, 44h//new mil reset mill address dark
+		//JE resetmilAdresse
+		//MOV EAX, CurrentUnit
+		//CMP AX, 81h//new mil reset mill address feo
+		//JE resetmilAdresse
+		//CMP AX, 82h//new mil reset mill address castle
+		//JE resetmilAdresse
+		//CMP AX, 83h//new mil reset mill address imerial
+		JE resetmilAdresse
+
+
+
+		//if button auto fish trape is off then go to normal
+		CMP FlagAutoShipTrap, 0h
+		JE Noramle
+		//save register
+		MOV DeadFishTrapEAX, EAX
+		MOV DeadFishTrapECX, ECX
+		MOV DeadFishTrapEDX, EDX
+		MOV DeadFishTrapEBX, EBX
+		MOV DeadFishTrapESP, ESP
+		MOV DeadFishTrapEBP, EBP
+		MOV DeadFishTrapESI, ESI
+		MOV DeadFishTrapEDI, EDI
+
+
+
+		MOV EAX, CurrentUnit
+		CMP AX, 116h//0C7h //if dead fish trap
+		JNZ normale
+
+
+		////get current player
+		//MOV ECX, DWORD PTR DS : [07912A0h]
+		//call _005E7560
+
+		//build fish trap click right function
+		//MOV EDI, DWORD PTR SS : [EBP + 0Ch]
+
+		//MOV EDX, DWORD PTR DS : [EDI + 03Ch] //x
+		MOV EDX, __x
+		//MOV EAX, DWORD PTR DS : [EDI + 038h]//y
+		MOV EAX, DWORD PTR DS : [07912A0h]
+		//MOV ECX, DWORD PTR DS : [07912A0h]
+		//call _005E7560
+		//MOV currentPlayerToRessedFishTrap,EAX
+		MOV AX, WORD PTR DS : [EAX + 042Eh]
+		PUSH EAX
+		PUSH EDX
+		MOV  EAX, __y
+		PUSH EAX
+		PUSH 0C7h//EBX  //unit id fish trape : 0C7
+		MOV EBX, 0C7h
+		MOV EDI, currentPlayerToRessedFishTrap //player?
+		MOV ECX, currentPlayerToRessedFishTrap //player?
+		//CALL _00457170
+		Call _Sub_00457170_bis //work
+
+
+
+		////MOV EDX, DWORD PTR DS : [EDI + 03Ch] //x
+		//MOV EDX, __x
+		////MOV EAX, DWORD PTR DS : [EDI + 038h]//y
+		//MOV EAX, DWORD PTR DS : [07912A0h]
+		////MOV ECX, DWORD PTR DS : [07912A0h]
+		////call _005E7560
+		////MOV currentPlayerToRessedFishTrap,EAX
+		//MOV AX, WORD PTR DS : [EAX + 042Eh]
+		//PUSH EAX
+		//PUSH EDX
+		//MOV  EAX, __y
+		//PUSH EAX
+		//PUSH 0C7h//EBX  //unit id fish trape : 0C7
+		//MOV EBX, 0C7h
+		//MOV EDI, currentPlayerToRessedFishTrap //player?
+		//MOV ECX, currentPlayerToRessedFishTrap //player?
+		//CALL _00457170
+
+
+		//MOV EDX, __y
+		//MOV ECX, __x
+		//MOV EAX, DWORD PTR DS : [07912A0h]
+		//MOV AX, WORD PTR DS : [EAX + 042Eh]
+		//PUSH EAX
+		//PUSH ECX
+		////MOV ECX, DWORD PTR DS : [EDI + 010Ch]
+		//MOV ECX, currentPlayerToRessedFishTrap
+		//PUSH EDX
+		//MOV EBX, 0C7h
+		//PUSH EBX
+		//CALL _00457170
+
+		/*MOVECX,1h
+		PUSH ECX
+		MOV ECX, DWORD PTR SS : [ESP + 014h]
+		PUSH EDI
+		PUSH EAX
+		MOV EBP, 006B71A0h
+		MOV ESI, 0C7h
+		MOV EDI, 01Ch//creat?
+		CALL age2_x1.005C8F70*/
+
+
+
+
+		//004C7CD6 > C686 39020000 0 > MOV BYTE PTR DS : [ESI + 0x239] , 0x1
+		//004C7CDD > 8B5424 28       MOV EDX, DWORD PTR SS : [ESP + 0x28]
+		//004C7CE1   . 8B4424 24       MOV EAX, DWORD PTR SS : [ESP + 0x24]
+		//004C7CE5   . 8B4C24 20       MOV ECX, DWORD PTR SS : [ESP + 0x20]
+		//004C7CE9   . 52              PUSH EDX
+		//004C7CEA   . 8B5424 20       MOV EDX, DWORD PTR SS : [ESP + 0x20]
+		//004C7CEE   . 50              PUSH EAX
+		//004C7CEF   . 51              PUSH ECX
+		//004C7CF0   . 52              PUSH EDX
+		//004C7CF1   . 55              PUSH EBP
+		//004C7CF2   . 8BCE            MOV ECX, ESI
+		//004C7CF4.E8 378FFFFF     CALL age2_x1.004C0C30
+
+
+		/*
+
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		PUSH 00h
+		PUSH 00h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL _0043CCB0 // DWORD PTR DS : [EDX + 010h]
+		MOV EAX, DWORD PTR DS : [07912A0h]
+		//MOV ECX, DWORD PTR SS : [ESP + 010h]
+		//MOV EDX, DWORD PTR SS : [ESP + 0Ch]
+		MOV AX, WORD PTR DS : [EAX + 042Eh]
+		MOV ECX, __x
+		MOV EDX, __y
+		MOV ESI , record_ESI
+		PUSH EAX
+		PUSH ECX
+		//MOV ECX, DWORD PTR DS : [EDI + 010Ch]
+		MOV ECX, currentPlayerToRessedFishTrap
+		PUSH EDX
+		PUSH EBX
+		//CALL _00457170
+		call _Test*/
+
+
+		/*	POP EDI
+			POP ESI
+			POP EBX
+			RETN 014h*/
+		normale:
+		//restaure register
+		MOV EAX, DeadFishTrapEAX
+			MOV ECX, DeadFishTrapECX
+			MOV EDX, DeadFishTrapEDX
+			MOV EBX, DeadFishTrapEBX
+			MOV ESP, DeadFishTrapESP
+			MOV EBP, DeadFishTrapEBP
+			MOV ESI, DeadFishTrapESI
+			MOV EDI, DeadFishTrapEDI
+
+			Noramle :
+		POP EDI
+			POP ESI
+			POP EBX
+			MOV ESP, EBP
+			POP EBP
+			RETN 014h
+
+			resetmilAdresse :
+		INC CountMil
+
+
+
+
+
+			////MOV RecordMilAddr, 0h
+			//MOV initialized, 0h
+			////MOV FlagAutoFarm, 0h
+			////MOV FlagAutoShipTrap, 0h
+			MOV EAX, DeadFishTrapEAX
+			POP EDI
+			POP ESI
+			POP EBX
+			MOV ESP, EBP
+			POP EBP
+			RETN 014h
+
+	}
+}
+#pragma region Rest variable when game is close or finish
+DWORD _2_00560510 = 0x0560510;
+DWORD _0051E308 = 0x0051E308;
+//DWORD CleanWIndowsOverlay = 0x0;
+void __declspec(naked)  ResetAddresseAndFlag_QuitGameDialog()
+{
+	__asm {
+		CALL _2_00560510
+		//reset all game is finished
+		MOV RecordMilAddr, 0h
+		MOV initialized, 0h
+		MOV FlagAutoFarm, 0h
+		MOV FlagAutoShipTrap, 0h
+		//Mov CleanWIndowsOverlay ,1h
+		JMP _0051E308
+	}
+}
+//0051E27A   . E8 91220400    CALL age2_x1.00560510
+//DWORD _00560510 = 0x0560510;
+DWORD _0051E27F = 0x051E27F;
+
+void __declspec(naked)  ResetAddresseAndFlag_ResetGameDialog()
+{
+	__asm {
+		CALL _2_00560510
+		//reset all game is finished
+		MOV RecordMilAddr, 0h
+		MOV initialized, 0h
+		MOV FlagAutoFarm, 0h
+		MOV FlagAutoShipTrap, 0h
+		//Mov CleanWIndowsOverlay, 1h
+		JMP _0051E27F
+	}
+}
+//0051E4F0   . E8 2B1E0400    CALL age2_x1.00560320
+
+DWORD _0051E504 = 0x051E504;
+void __declspec(naked)  ResetAddresseAndFlag_QuitAndLoadDialog()
+{
+	__asm {
+		CALL _2_00560510
+		//reset all game is finished
+		MOV RecordMilAddr, 0h
+		MOV initialized, 0h
+		MOV FlagAutoFarm, 0h
+		MOV FlagAutoShipTrap, 0h
+		//Mov CleanWIndowsOverlay, 1h
+		JMP _0051E504
+	}
+}
+//0051E2B7   . E8 74ACF1FF    CALL age2_x1.00438F30
+DWORD _00438F30 = 0x0438F30;
+DWORD _0051E2BC = 0x051E2BC;
+void __declspec(naked)  ResetAddresseAndFlag_ResigneDialog()
+{
+	__asm {
+		CALL _00438F30
+		//reset all game is finished
+		MOV RecordMilAddr, 0h
+		MOV initialized, 0h
+		MOV FlagAutoFarm, 0h
+		MOV FlagAutoShipTrap, 0h
+		//Mov CleanWIndowsOverlay, 1h
+		JMP _0051E2BC
+	}
+
+}
+
+#pragma endregion  Rest variable when game is close or finish
+
+DWORD _PushFarmMil = (DWORD)PushFarmMil;
+//
+//CPU Disasm
+//Address   Hex dump              Command                                  Comments
+//00529A2D   .  8B40 08           MOV EAX, DWORD PTR DS : [EAX + 8]
+//00529A30   .  66:8378 10 44     CMP WORD PTR DS : [EAX + 10] , 44
+DWORD _00529A27 = 0x0529A27;
+
+
+//004115F1   . 8B5424 1C      MOV EDX, DWORD PTR SS : [ESP + 0x1C]
+//004115F5   . 899E AC000000  MOV DWORD PTR DS : [ESI + 0xAC] , EBX
+//004115FB   . 891D 70306800  MOV DWORD PTR DS : [0x683070] , EBX
+//00411601   . 83C4 04        ADD ESP, 0x4
+//00411604   . 89AE B4000000  MOV DWORD PTR DS : [ESI + 0xB4] , EBP
+//0041160A > 8B4A 04        MOV ECX, DWORD PTR DS : [EDX + 0x4]
+//0041160D   . 8B86 AC000000  MOV EAX, DWORD PTR DS : [ESI + 0xAC]
+//00411613   . 8D0488         LEA EAX, DWORD PTR DS : [EAX + ECX * 4]
+//00411616   . 8B08           MOV ECX, DWORD PTR DS : [EAX]
+//00411618   . 8910           MOV DWORD PTR DS : [EAX] , EDX
+//0041161A   . 8B96 B0000000  MOV EDX, DWORD PTR DS : [ESI + 0xB0]
+//
+
+
+
+//void __declspec(naked)  fixMilDeleteEmptyPtr()
+//{
+//	__asm {
+//		//save register
+//		MOV FixMill_EAX,EAX
+//		MOV FixMill_ECX,ECX
+//		MOV FixMill_EDX,EDX
+//		//get current player structure
+//		MOV ECX, DWORD PTR DS : [07912A0h]
+//		CALL _005E7560
+//		//get mill address
+//		MOV EAX, DWORD PTR DS : [EAX + 01C0h]
+//
+//		//restaure register 
+//		//MOV EAX, FixMill_EAX
+//		MOV ECX, FixMill_ECX
+//		MOV EDX, FixMill_EDX
+//
+//		//MOV EAX, DWORD PTR DS : [EBX + 01230h]
+//		TEST EAX, EAX
+//
+//		JMP _00529A27
+//	
+//	}
+//}
+void __declspec(naked)  fixMilDeleteEmptyPtr()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR DS : [EBX + 01230h]
+		MOV  EAX, RecordMilAddr
+		TEST EAX, EAX
+
+		JMP _00529A27
+
+	}
+}
+//00411618   . 8910           MOV DWORD PTR DS : [EAX] , EDX
+
+DWORD FixMill_EAX;
+DWORD FixMill_ECX;
+DWORD FixMill_EDX;
+DWORD _00411620 = 0x0411620;
+void __declspec(naked)  getEveryNewMillAdress()
+{
+	__asm {
+		//save register
+		MOV FixMill_EAX, EAX
+		MOV FixMill_ECX, ECX
+		MOV FixMill_EDX, EDX
+
+		MOV EAX, DWORD PTR DS : [EDX + 8h]
+		CMP WORD PTR DS : [EAX + 10h] , 44h //if mill
+		JNZ Normale
+		MOV RecordMilAddr, EDX
+
+		Normale :
+		//restaure register
+		MOV EAX, FixMill_EAX
+			MOV DWORD PTR DS : [EAX] , EDX
+			MOV EDX, DWORD PTR DS : [ESI + 0B0h]
+
+			JMP _00411620
+
+	}
+}
+//00527B1B   . 8B86 30120000  MOV EAX,DWORD PTR DS:[ESI+0x1230]
+
+DWORD _00527B21 = 0x0527B21;
+void __declspec(naked) GetSelectedMilAdressPtr()
+{
+	__asm {
+		//get current player structure
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		CALL _005E7560
+		MOV EDX, DWORD PTR DS : [EAX + 01C0h]
+
+		MOV EAX, DWORD PTR DS : [ESI + 01230h]
+		JMP _00527B21
+	}
+}
+//
+//00556B4F > 8B86 68020000  MOV EAX, DWORD PTR DS : [ESI + 0x268]
+//00556B55   . 83F8 28        CMP EAX, 0x28
+//
+//00413E94 > 6A 00          PUSH 0x0
+
+
+
+//creat count mill ???
+//00432237 | . 6A 44 | PUSH 0x44
+//00432239 | . 8D57 06 | LEA EDX, DWORD PTR DS : [EDI + 0x6]
+//0043223C | . 51 | PUSH ECX
+//0043223D | . 83C3 FA | ADD EBX, -0x6
+//00432240 | . 52 | PUSH EDX
+//00432241 | . 53 | PUSH EBX
+//00432242 | . 83C7 FA | ADD EDI, -0x6
+
+
+//mil addresse 
+//0044DBA5 > 8B85 54080000  MOV EAX, DWORD PTR SS : [EBP + 0x854]
+//0044DBAB   . 8B48 08        MOV ECX, DWORD PTR DS : [EAX + 0x8]
+//0044DBAE   . 66 : 8379 10 44  CMP WORD PTR DS : [ECX + 0x10] , 0x44
+
+
+
+
+//0051FD90 / $ 56             PUSH ESI
+//0051FD91 | . 8BF1           MOV ESI, ECX
+//0051FD93 | . 8B0D A0127900  MOV ECX, DWORD PTR DS : [0x7912A0]
+//0051FD99 | . 57             PUSH EDI
+//0051FD9A | .E8 C1770C00    CALL age2_x1.005E7560
+//0051FD9F | . 8B8E 30120000  MOV ECX, DWORD PTR DS : [ESI + 0x1230]
+//0051FDA5 | . 8BB8 C0010000  MOV EDI, DWORD PTR DS : [EAX + 0x1C0]
+//0051FDAB | . 33D2           XOR EDX, EDX
+//0051FDAD | . 3BCF           CMP ECX, EDI
+//0051FDAF | . 8B0D A0127900  MOV ECX, DWORD PTR DS : [0x7912A0]
+//0051FDB5 | . 0F95C2         SETNE DL
+//0051FDB8 | . 8BFA           MOV EDI, EDX
+//0051FDBA | .E8 A1770C00    CALL age2_x1.005E7560
+//0051FDBF | . 8B80 C0010000  MOV EAX, DWORD PTR DS : [EAX + 0x1C0]
+//0051FDC5 | . 8986 30120000  MOV DWORD PTR DS : [ESI + 0x1230] , EAX
+
+
+
+//005293B0  /$ 56             PUSH ESI
+//005293B1  |. 8BF1           MOV ESI,ECX
+//005293B3  |. 8B0D A0127900  MOV ECX,DWORD PTR DS:[0x7912A0]
+//005293B9  |. E8 A2E10B00    CALL age2_x1.005E7560
+//005293BE  |. 8B80 C0010000  MOV EAX,DWORD PTR DS:[EAX+0x1C0]
+//005293C4  |. 85C0           TEST EAX,EAX
+//005293C6  |. 8986 30120000  MOV DWORD PTR DS:[ESI+0x1230],EAX
+
+
+//queuefarms
+void __declspec(naked) queuefarms()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		PUSH ESI
+		CALL _005E7560
+		MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+		MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+		PUSH EDX
+		MOV ECX, DWORD PTR DS : [EAX + 68h]
+		CALL _0046A6F0
+
+	}
+}
+//0046A6F0 / $ 56             PUSH ESI
+//DWORD _005C8F70 = 0x05C8F70;
+//DWORD _006137C9 = 0x06137C9;
+
+void __declspec(naked) sendFlagFishTrapEventOn()
+{
+	__asm {
+		PUSH ESI
+		PUSH 10h
+		MOV ESI, ECX
+		PUSH 1h
+		CALL Aoc10C_006137C9//_006137C9
+		ADD ESP, 8h
+		TEST EAX, EAX
+		JE short _0046A728
+		MOV CX, WORD PTR SS : [ESP + 8h]
+		MOV DX, WORD PTR SS : [ESP + 0Ch]
+		PUSH 0h
+		MOV WORD PTR DS : [EAX + 2h] , CX
+		PUSH 10h
+		PUSH EAX
+		MOV ECX, ESI
+		MOV WORD PTR DS : [EAX + 4h] , DX
+		MOV BYTE PTR DS : [EAX] , 67h
+		MOV BYTE PTR DS : [EAX + 1h] , 0Fh// event F on we creat online event to get the flag 
+		CALL _005C8F70
+		_0046A728 :
+		POP ESI
+			RETN 8h
+	}
+}
+void __declspec(naked) sendFlagFishTrapEventOff()
+{
+	__asm {
+		PUSH ESI
+		PUSH 10h
+		MOV ESI, ECX
+		PUSH 1h
+		CALL Aoc10C_006137C9//_006137C9
+		ADD ESP, 8h
+		TEST EAX, EAX
+		JE short _0046A728
+		MOV CX, WORD PTR SS : [ESP + 8h]
+		MOV DX, WORD PTR SS : [ESP + 0Ch]
+		PUSH 0h
+		MOV WORD PTR DS : [EAX + 2h] , CX
+		PUSH 10h
+		PUSH EAX
+		MOV ECX, ESI
+		MOV WORD PTR DS : [EAX + 4h] , DX
+		MOV BYTE PTR DS : [EAX] , 67h
+		MOV BYTE PTR DS : [EAX + 1h] , 10h// event F on we creat online event to get the flag 
+		CALL _005C8F70
+		_0046A728 :
+		POP ESI
+			RETN 8h
+	}
+}
+
+//00467810 > 0FBF4E 04      MOVSX ECX, WORD PTR DS : [ESI + 4] ;  Case E of switch 004673AD
+
+
+
+//0x051E605
+DWORD ___EBX = 0x0;
+WORD flagAutoFish = 0x0;
+DWORD _sendFlagFishTrapEventOn = (DWORD)sendFlagFishTrapEventOn;
+DWORD _sendFlagFishTrapEventOff = (DWORD)sendFlagFishTrapEventOff;
+void __declspec(naked)  AddAutoFarmEvent()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+		Cmp EAX, 0BAh //if auto farm butoon is clicked
+		JNZ checkAutoFish//continueProcess 
+		mov FalgisDock, 0h//setflagressed dock diasable
+		//save register
+		MOV RE_EAX, EAX
+		MOV RE_ECX, ECX
+		MOV RE_EDX, EDX
+		MOV RE_EBX, EBX
+		MOV RE_ESP, ESP
+		MOV RE_EBP, EBP
+		MOV RE_ESI, ESI
+		MOV RE_EDI, EDI
+		//reall button to auto resseed famrs
+		CMP RessedFarms, 0h
+		JE Normale
+		JMP LikeAD
+
+		Normale :
+		cmp FlagAutoFarm, 0
+			JE setOn
+
+			setOff :
+		mov FlagAutoFarm, 0
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset messageOFF
+			CALL _0051CD30
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			Jmp continueProcess//continueProcess
+
+			setOn :
+		mov FlagAutoFarm, 1h
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset messageON
+			CALL _0051CD30
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			LikeAD :
+
+		MOV ECX, DWORD PTR DS : [7912A0h]
+			////get current player
+			//MOV ECX, DWORD PTR DS : [07912A0h]
+			//call __005E7560
+			//MOV IndexCurrentPlayer, ECX
+
+
+
+			//cmp EAX, ESI
+			//JNZ normale
+
+			////num_villagers
+			////MOV EAX, num_villagers
+			////MOV precNum_villagers, EAX
+			//MOV ecx, ress_ECX
+			//MOV EAX, dword ptr[ecx + 0A8h]
+
+			//PUSH ESI
+			PUSH 1h
+			CALL _005E7560
+			//MOV EAX,DWORD PTR SS:[ESP+24]
+			MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+			MOV ___EBX, EBX
+			MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+			PUSH EDX
+			MOV ECX, DWORD PTR DS : [EAX + 68h]
+			CALL _0046A6F0
+
+
+
+
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+
+
+			//auto fish trap
+		checkAutoFish:
+		CMP EAX, 0BCh
+			JNZ continueProcess//continueProcess
+			mov FalgisDock, 1h
+			//save register
+			MOV RE_EAX, EAX
+			MOV RE_ECX, ECX
+			MOV RE_EDX, EDX
+			MOV RE_EBX, EBX
+			MOV RE_ESP, ESP
+			MOV RE_EBP, EBP
+			MOV RE_ESI, ESI
+			MOV RE_EDI, EDI
+
+			CMP FlagAutoShipTrap, 0h
+			JE AutoFishOn
+			MOV FlagAutoShipTrap, 0h
+			//get current player
+			MOV ECX, DWORD PTR DS : [07912A0h]
+
+
+			PUSH 1h
+			CALL _005E7560
+			MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+			MOV ___EBX, EBX
+			MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+			PUSH EDX
+			MOV ECX, DWORD PTR DS : [EAX + 68h]
+			//CALL _0046A6F0 0D for farms
+			CALL _sendFlagFishTrapEventOff //F event
+
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset AutoFishTrapOff
+			CALL _0051CD30
+
+
+
+
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+			//MOV EAX, DWORD PTR DS : [EAX + 0A8h]
+			//ADD EAX, 048h //fish trap unused
+			//MOV  dword ptr[EAX], 0h
+
+		   /*
+			//call how many farm for random player
+			MOV EAX, DWORD PTR DS : [ESI + 08h]
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			//recall howauto fish trap activated?
+			MOV EAX, 0h
+			MOV AX, WORD PTR DS : [ECX + 1EAEh]
+			MOV EAX, flagAutoFish
+			MOV   WORD PTR DS : [ECX + 1EAEh] , AX*/
+
+
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+
+			//AutoFishOff :
+
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset AutoFishTrapOff
+			CALL _0051CD30
+			JMP continueProcess// continueProcess
+
+
+			AutoFishOn :
+		MOV FlagAutoShipTrap, 1h
+			//get current player
+			MOV ECX, DWORD PTR DS : [07912A0h]
+			PUSH 1h
+			call _005E7560
+			MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+			MOV ___EBX, EBX
+			MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+			PUSH EDX
+			MOV ECX, DWORD PTR DS : [EAX + 68h]
+			//CALL _0046A6F0
+			CALL sendFlagFishTrapEventOn
+
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+			//refresh screen logo button auto farm
+			MOV EAX, DWORD PTR SS : [7912A0h + 01820h]
+			call __0527AF0
+			push 0h
+			push offset AutoFishTrapOn
+			CALL _0051CD30
+
+			POP ESI
+			ADD ESP, 0Ch
+			RETN 0Ch
+
+
+
+
+
+
+			//restore register
+			MOV EAX, RE_EAX
+			MOV ECX, RE_ECX
+			MOV EDX, RE_EDX
+			MOV EBX, RE_EBX
+			MOV ESP, RE_ESP
+			MOV EBP, RE_EBP
+			MOV ESI, RE_ESI
+			MOV EDI, RE_EDI
+
+
+
+			JMP continueProcess//continueProcess
+
+			continueProcess :
+		MOV EAX, DWORD PTR SS : [ESP + 014h]
+			LEA ECX, DWORD PTR DS : [EAX - 01h]
+			JMP _0051E60C
+	}
+}
+//00467827   > 8B8C24 1405000>MOV ECX,DWORD PTR SS:[ESP+514]                            ;  Default case of switch 0046740C
+DWORD _0046782E = 0x046782E;
+void __declspec(naked)  EventAutReseedFishTrapOnline00467827()
+{
+	__asm
+	{
+		//fish trap on
+		cmp EAX, 0Fh
+		JNZ checkOff
+		MOVSX EAX, WORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [EDI + 4h]
+		MOVSX ECX, WORD PTR DS : [ESI + 2h]
+		MOV EAX, DWORD PTR DS : [EDX + 4Ch]
+		MOV ECX, DWORD PTR DS : [EAX + ECX * 4]
+		MOV WORD PTR DS : [ECX + 1EAEh] , 1h
+		JMP DefaultCase
+
+		checkOff :
+		//fish trap off
+		cmp EAX, 10h
+			JNZ DefaultCase
+			MOVSX EAX, WORD PTR DS : [ESI + 4h]
+			MOV EDX, DWORD PTR DS : [EDI + 4h]
+			MOVSX ECX, WORD PTR DS : [ESI + 2h]
+			MOV EAX, DWORD PTR DS : [EDX + 4Ch]
+			MOV ECX, DWORD PTR DS : [EAX + ECX * 4]
+			MOV WORD PTR DS : [ECX + 1EAEh] , 0h
+
+			DefaultCase :
+		MOV ECX, DWORD PTR SS : [ESP + 514] ;  Default case of switch 0046740C
+			JMP _0046782E
+
+	}
+}
+
+
+//0x0603D4B
+DWORD _falgIsBadPointer = 0x0;
+DWORD _falgIsBadPointer121C = 0x0;
+DWORD _falgIsBadPointerplayer = 0x0;
+DWORD EAXplayer = 0x0;
+void __declspec(naked)  RebuildFarms2()
+{
+	_falgIsBadPointer = IsBadReadPtr((void*)___EBX, sizeof(UINT_PTR));
+	_falgIsBadPointer121C = IsBadReadPtr((void*)(___EBX + 0x121C), sizeof(UINT_PTR));
+	__asm {
+		//call 
+		cmp FlagAutoFarm, 1
+		JNZ _NoAutoFarm
+		cmp _falgIsBadPointer, 1
+		JE _NoAutoFarm
+		cmp _falgIsBadPointer121C, 1
+		JE _NoAutoFarm
+		//save register
+		MOV SaveEAX, EAX
+		MOV SaveECX, ECX
+		MOV SaveEDX, EDX
+		MOV SaveEBX, EBX
+		MOV SaveESP, ESP
+		MOV SaveEBP, EBP
+		MOV SaveESI, ESI
+		MOV SaveEDI, EDI
+
+		//get current player
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		call _005E7560
+		MOV CurrentPlayer, EAX
+		//restore register
+		MOV EAX, SaveEAX
+		MOV ECX, SaveECX
+		MOV EDX, SaveEDX
+		MOV EBX, SaveEBX
+		MOV ESP, SaveESP
+		MOV EBP, SaveEBP
+		MOV ESI, SaveESI
+		MOV EDI, SaveEDI
+		//call how many farm for random player
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		//recall how many farm
+		CALL _0045E4E0
+		//if not current player don't push button
+		CMP CurrentPlayer, ECX
+		JNZ _NoAutoFarm
+
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		//PUSH ESI
+		PUSH 1h
+		CALL _005E7560
+		mov EAXplayer, EAX
+	}
+	_falgIsBadPointerplayer = IsBadReadPtr((void*)EAXplayer, sizeof(UINT_PTR));
+	__asm
+	{
+		cmp _falgIsBadPointerplayer, 1h
+		JE _NoAutoFarm
+		MOV EAX, EAXplayer
+		MOV EDX, DWORD PTR DS : [EAX + 9Ch]
+		MOV EBX, ___EBX
+		MOV EAX, DWORD PTR DS : [EBX + 121Ch]
+		PUSH EDX
+		MOV ECX, DWORD PTR DS : [EAX + 68h]
+		CALL _0046A6F0
+
+
+		//restore register
+		MOV EAX, SaveEAX
+		MOV ECX, SaveECX
+		MOV EDX, SaveEDX
+		MOV EBX, SaveEBX
+		MOV ESP, SaveESP
+		MOV EBP, SaveEBP
+		MOV ESI, SaveESI
+		MOV EDI, SaveEDI
+		_NoAutoFarm :
+
+
+		//refresh 
+		MOV EAX, DWORD PTR DS : [ESI + 08h]
+			MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+			//recall how many farm
+			CALL _0045E4E0
+			Jmp _00603D50
+
+
+	}
+}
+//
+//#pragma region Rest variable when game is close or finish
+//setHook((void*)0x051E303, ResetAddresseAndFlag_QuitGameDialog);
+//setHook((void*)0x051E27A, ResetAddresseAndFlag_ResetGameDialog);
+//setHook((void*)0x051E4FF, ResetAddresseAndFlag_QuitAndLoadDialog);
+//setHook((void*)0x051E2B7, ResetAddresseAndFlag_ResigneDialog);
+//#pragma endregion  Rest variable when game is close or finish
+//
+//
+//#pragma region Add AutoFarms Button
+////fix Mil DeleteEmptyPtr
+////00529A1F  |. 8B83 30120000  MOV EAX,DWORD PTR DS:[EBX+0x1230]
+//setHook((void*)0x0529A1F, fixMilDeleteEmptyPtr);
+//
+////00411618   . 8910            MOV DWORD PTR DS:[EAX],EDX
+//setHook((void*)0x0411618, getEveryNewMillAdress);
+//
+//////00527B1B   . 8B86 30120000  MOV EAX,DWORD PTR DS:[ESI+0x1230]
+////setHook((void*)0x0529A2D, GetSelectedMilAdressPtr);
+//
+//////count mill to reset mil address
+////setHook((void*)0x052363E, CountMillDestroyed);
+//
+//
+//setHook((void*)0x051E1C4, GetRessedButtonAddres);
+////00529A1F  |. 8B83 30120000  MOV EAX,DWORD PTR DS:[EBX+0x1230]
+///*setHook((void*)0x0529A1F, GetMissingAdresseWhenunSelectMilAddres);*/
+//////count queue farms
+//////0051F3ED   > 8B4424 1C      MOV EAX,DWORD PTR SS:[ESP+0x1C]          ;  Case AD of switch 0051E609
+////setHook((void*)0x051F3ED, CountQueue);
+//
+//
+//
+////add new button
+//
+//_005298F0 = 0x05298F0;
+//_00520620 = 0x0520620;
+//_00527C18 = 0x0527C18;
+////00527C59     E8 C289FFFF    CALL age2_x1.00520620
+////00527C13  |. E8 382A0600    CALL age2_x1.0058A650
+//_0058A650 = 0x058A650;
+////00527BFB     8B8A C8000000  MOV ECX,DWORD PTR DS:[EDX+0xC8]
+//
+////creat auto farm button
+//setHook((void*)0x0527C13, AddAutoFarmButton00527C38);
+////Creat auto farm hotkey (A)
+//setHook((void*)0x04BD7DB, AddAutoFarmButton004BD7DB);
+//
+//
+////auto reseed call
+//__0527AF0 = 0x0527AF0;
+//_0051E5E0 = 0x051E5E0;
+//_0045E4E0 = 0x045E4E0;
+//_00603D50 = 0x0603D50;
+//_00467380 = 0x0467380;
+//_045E4F0 = 0x045E4F0;
+//
+//setHook((void*)0x0603D4B, RebuildFarms);
+//
+//
+//
+//
+//_0051E60C = 0x051E60C;
+//
+//setHook((void*)0x051E605, AddAutoFarmButton00ReesedEvent);
+//
+////LoadLibraryA("wndmode.dll");
+//
+//#pragma endregion
+//
+//#pragma region auto fish trape 
+//
+//	//004150E3   . 8B8F 0C010000  MOV ECX,DWORD PTR DS:[EDI+0x10C]
+//setHook((void*)0x04150E3, GetEDIFromClick);
+//
+//////00440109   . 8B4F 08        MOV ECX,DWORD PTR DS:[EDI+0x8]
+//setHook((void*)0x0440109, GetEsiFishtrapBuildFound);
+//
+//
+//_Sub_00469680_bis = (DWORD)Sub_00469680_bis;
+//_Sub_00457170_bis = (DWORD)Sub_00457170_bis;
+//_PushFarmMil = (DWORD)PushFarmMil;
+//_ActionShipBuild = (DWORD)ActionShipBuild;
+////00527B3F  |. 66:8379 10 44  CMP WORD PTR DS:[ECX+0x10],0x44
+////create tow button one button auto reseed fish trap
+//setHook((void*)0x0527B3F, CreatFishTrapButtons);
+////00450DF8     8B45 08        MOV EAX,DWORD PTR SS:[EBP+0x8]
+//
+//
+////setHook((void*)0x0450DF8, ChangeToFishTrape);
+////add fish trap delete event
+//////setHookJA((void*)0x04673B0 , KillFishTrap);
+//
+//#pragma region garnison fish trap 
+//	/*setHook((void*)0x0450A4E , garnisonLikeMil);
+//	//garnison condition if mil
+//	//00450A43 | .C74424 18 0000 > MOV DWORD PTR SS : [ESP + 0x18] , 0x0
+//	//00450A4E  |. 66:8379 10 44  CMP WORD PTR DS:[ECX+0x10],0x44
+//
+//	//0045E4F0  /$ 51             PUSH ECX
+//
+//	_pushFishTrapGarnison = (DWORD)pushFishTrapGarnison;
+//	//00467809  |. E8 E26CFFFF    CALL age2_x1.0045E4F0
+//	//004677F7  |> 0FBF46 04      MOVSX EAX,WORD PTR DS:[ESI+0x4]                   ;  Case D of switch 004673AD
+//	setHook((void*)0x04677F7, pushFarmsGarnison);
+//	//00450F5A  |> 8B4E 20        MOV ECX,DWORD PTR DS:[ESI+0x20]
+//
+//	setHook((void*)0x0450F5A, LoopMilOrShipTrapReseedQueue);
+//
+//	//setdockqueueenable
+//	setHook((void*)0x051F3ED, setdockqueuedisable);
+//
+//	//0044DBDA   > 8A4424 1C      MOV AL,BYTE PTR SS:[ESP+0x1C]
+//	setHook((void*)0x044DBDA, ShowReseedShipTrap);
+//	//00467810  |> 0FBF4E 04      MOVSX ECX,WORD PTR DS:[ESI+0x4]                 ;  Case E of switch 004673AD
+//	_SublistunqueueFishTrape = (DWORD)SublistunqueueFishTrape;
+//	setHook((void*)0x0467810, unqueueFishTrape);
+//	//reseed fish
+//	//fish trap finished
+//	//006038AE.FF50 5C         CALL DWORD PTR DS : [EAX + 0x5C] ;  age2_x1.006024C0
+//	//widescreen elarge control to click button
+//	//007C0B3A   68 96010000      PUSH 0x196
+//	//007C0B3A - 0x400000 = 3C0B3A
+//	writeDwordF(0x3C0B3A, 406);//109*/
+//#pragma endregion garnison fish trap 
+//
+//	//rebuild fish trape
+//	//0043A705   . E8 26A01A00     CALL age2_x1.005E4730
+//	//004400D3   > 8B8E 24040000  MOV ECX,DWORD PTR DS:[ESI+0x424]         ;  Cases 66,69 of switch 0043FE80
+//	//00440157   . 66:8B41 10     MOV AX,WORD PTR DS:[ECX+0x10]
+//	//00440149   . A1 C0517A00    MOV EAX,DWORD PTR DS:[0x7A51C0]
+//
+//
+//	//setHook((void*)0x0440157, BuildFishTrape);
+//	//00440149
+//setHook((void*)0x0440149, BuildFishTrape);
+//
+////get player to reseed
+//setHook((void*)0x0440134, currentPlayerToRessedFishTrapAuto);
+////0044023F   . E8 4CFB0D00    CALL age2_x1.0051FD90
+//setHook((void*)0x044023F, BuildFishTrapeAfterDelete);
+//
+//#pragma endregion
+//
+
+
+//00603D58 | .D946 54        FLD DWORD PTR DS : [ESI + 54]
+//00603D5B | .D95424 08      FST DWORD PTR SS : [ESP + 8]
+//00603D5F | .D81D 64626300  FCOMP DWORD PTR DS : [636264]
+//00603D65 | .DFE0           FSTSW AX
+//00603D67 | .F6C4 40        TEST AH, 40
+//00603D6A     0F85 8B000000  JNZ age2_x1.00603DFB
+//00603D70     8B4E 08        MOV ECX, DWORD PTR DS : [ESI + 8]
+//00603D73     6A 00          PUSH 0
+//00603D75     6A 00          PUSH 0
+//00603D77     6A 01          PUSH 1
+//00603D79     8B41 0C        MOV EAX, DWORD PTR DS : [ECX + C]
+//00603D7C     6A 01          PUSH 1
+//00603D7E     6A 01          PUSH 1
+//00603D80     6A 01          PUSH 1
+//00603D82     8B50 74        MOV EDX, DWORD PTR DS : [EAX + 74]
+//00603D85     6A 01          PUSH 1
+//00603D87     8D4C24 24      LEA ECX, DWORD PTR SS : [ESP + 24]
+//00603D8B     6A 01          PUSH 1
+//00603D8D     8BBA C8000000  MOV EDI, DWORD PTR DS : [EDX + C8]
+//00603D93     51             PUSH ECX
+//00603D94     8B4E 58        MOV ECX, DWORD PTR DS : [ESI + 58]
+//00603D97     8B17           MOV EDX, DWORD PTR DS : [EDI]
+//00603D99     51             PUSH ECX
+//00603D9A     8B4C24 30      MOV ECX, DWORD PTR SS : [ESP + 30]
+//00603D9E     51             PUSH ECX
+//00603D9F     50             PUSH EAX
+//00603DA0     8BCF           MOV ECX, EDI
+//00603DA2     FF52 24        CALL DWORD PTR DS : [EDX + 24]
+
+//004649B0   . 83EC 18        SUB ESP, 18
+
+
+DWORD fi_EAX;
+DWORD fi_ECX;
+DWORD fi_EDX;
+DWORD fi_EBX;
+DWORD fi_ESP;
+DWORD fi_EBP;
+DWORD fi_ESI;
+DWORD fi_EDI;
+//0044010C   . 66:8B41 16     MOV AX,WORD PTR DS:[ECX+16]
+//rebuild fish trape
+DWORD _004649B0 = 0x04649B0;
+//DWORD __00464580 = 0x0464580;
+//DWORD _00440110 = 0x0440110;
+void __declspec(naked)  Fishtrap00440109()
+{
+	__asm {
+		//0044010C   . 66:8B41 16     MOV AX, WORD PTR DS : [ECX + 16]
+		//save register
+		MOV ECX, DWORD PTR DS : [EDI + 8h]
+		MOV AX, WORD PTR DS : [ECX + 16h]
+		MOV fi_EAX, EAX
+		MOV fi_ECX, ECX
+		MOV fi_EDX, EDX
+		MOV fi_EBX, EBX
+		MOV fi_ESP, ESP
+		MOV fi_EBP, EBP
+		MOV fi_ESI, ESI
+		MOV fi_EDI, EDI
+
+		cmp  WORD PTR DS : [ECX + 10h] , 116h //dead fish trap
+		JNZ continueProcess
+		MOV EAX, DWORD PTR DS : [EDI + 0Ch]
+		MOV EDX, DWORD PTR DS : [EAX + 74h]
+		MOV EDI, DWORD PTR DS : [EDX + 31Ch]//fish trap  31C / 4 = C7 == 199 = fish trap
+		MOV ESI, fi_EDI
+
+		MOV EAX, DWORD PTR DS : [ESI + 38h]//x
+		MOV ECX, DWORD PTR DS : [ESI + 3Ch]//y
+		MOV EDX, DWORD PTR DS : [EDI]
+		PUSH - 1h
+		PUSH 0h
+		PUSH EAX
+		/*MOV EAX, DWORD PTR DS : [ESI + 8h] //EDI*/
+		PUSH ECX
+		//MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 0Ch]
+		PUSH ECX
+		MOV ECX, EDI
+		CALL __00464580//_004649B0 // DWORD PTR DS : [EDX + 68h]
+
+		continueProcess :
+		//restaure rehister
+		MOV EAX, fi_EAX
+			MOV ECX, fi_ECX
+			MOV EDX, fi_EDX
+			MOV EBX, fi_EBX
+			MOV ESP, fi_ESP
+			MOV EBP, fi_EBP
+			MOV ESI, fi_ESI
+			MOV EDI, fi_EDI
+
+
+
+			JMP _00440110
+	}
+}
+ 
+
+//422A0000
+//428D0000
+//00638394
+//1C53F420
+//
+//0FBF2490
+//1BCCFC20
+//22F80210
+//0x0603D4B
+//00602DD0   . 66:8379 10 32  CMP WORD PTR DS : [ECX + 10] , 32
+//00602DD5   . 75 0D          JNZ SHORT age2_x1.00602DE4
+//condition when fish trap is delete same as farms
+DWORD _00602DE4 = 0x0602DE4;
+DWORD _00602DEC = 0x0602DEC;
+DWORD _00602DD7 = 0x0602DD7;
+//0052452C > 8B0D A0127900  MOV ECX, DWORD PTR DS : [7912A0]
+//00524532   . 57             PUSH EDI
+//00524533.E8 28300C00    CALL age2_x1.005E7560
+//00524538   . 8BC8           MOV ECX, EAX
+//0052453A.E8 7124F3FF    CALL age2_x1.004569B0
+
+
+
+//0044E8F1.E8 9A351B00    CALL age2_x1.00601E90
+//0055544F
+DWORD CurrentFishPlayer = 0x0;
+DWORD FixBugDuplicatedFishTrap;
+DWORD cptfish = 0x0;
+float PlayerThatReseedFishTrapWood;
+//DWORD _____2_006139E4 = 0x06139E4;
+void __declspec(naked)  Fishtrap00602DD0()
+{
+	__asm {
+
+
+
+		CMP WORD PTR DS : [ECX + 10h] , 32h
+		JE farm
+
+		cherckFishTrap :
+		CMP WORD PTR DS : [ECX + 10h] , 0C7h
+			JNZ normal
+			//
+			//CMP EAX, FixBugDuplicatedFishTrap
+			//JE normal
+			//
+			//MOV FixBugDuplicatedFishTrap, EAX
+
+			add cptfish, 1h
+			CMP cptfish, 1h
+			JE normal
+
+			MOV cptfish, 0h
+
+			MOV ECX, DWORD PTR DS : [ESI + 8h]
+			MOV EAX, DWORD PTR DS : [ECX + 0Ch]
+
+
+			NOP
+			MOV EDX, DWORD PTR DS : [EAX + 74h]
+			//get player structure
+			MOV ECX, DWORD PTR SS : [EAX + 0A8h]
+			//get player wood 
+			ADD ECX, 04h
+			FLD DWORD PTR DS : [ECX]
+			CALL _____2_006139E4 //convert float to dword?
+			CMP EAX, 64h
+			JL normal
+
+			//we get wood float value
+			MOV ECX, DWORD PTR DS : [ECX]
+			MOV PlayerThatReseedFishTrapWood, ECX
+			MOV ECX, DWORD PTR DS : [ESI + 8h]
+			MOV EAX, DWORD PTR DS : [ECX + 0Ch]
+			MOV EDX, DWORD PTR DS : [EAX + 74h]
+			/*MOV ECX, DWORD PTR SS : [EAX + 0A8h]*/
+			//check if player have enought wood to reseed a fish trap
+			//CMP todo check float 
+			//fish trap flag from player structure 
+			//(this will be synchro with all players )
+			/*ADD ECX, 48h*/ // 048 we get unused variable struct
+			//checkflag if we reseed fish trap button is activated
+			/*MOV ECX, dword ptr[ECX]*/
+			//CMP  WORD PTR DS : [ECX + 1EAEh] , 1h
+			CMP WORD PTR DS : [EAX + 1EAEh] , 1h
+			/*CMP ECX, 1h*/
+			JNZ normal
+	}
+	//we substract wood to make player pay for fish trap
+	PlayerThatReseedFishTrapWood = PlayerThatReseedFishTrapWood - 100.00f;
+	__asm {
+		MOV ECX, DWORD PTR DS : [ESI + 8h]
+		MOV EAX, DWORD PTR DS : [ECX + 0Ch]
+		MOV EDX, DWORD PTR DS : [EAX + 74h]
+		//get player structure
+		MOV ECX, DWORD PTR SS : [EAX + 0A8h]
+		ADD ECX, 4h //substract 100 wood to player who reseed fish trap
+		MOV EAX, PlayerThatReseedFishTrapWood
+		// afect the result
+		MOV  dword PTR SS : [ECX] , EAX
+
+		MOV ECX, DWORD PTR DS : [ESI + 8h]
+		MOV EAX, DWORD PTR DS : [ECX + 0Ch]
+		LEA ECX, DWORD PTR SS : [ESP + 24h]
+		MOV EDX, DWORD PTR DS : [EAX + 74h]
+		NOP
+		MOV EDI, DWORD PTR DS : [EDX + 31Ch]//fish trap unit id
+		NOP
+		MOV ECX, DWORD PTR DS : [ESI + 58h]
+		MOV EDX, DWORD PTR DS : [EDI]
+		NOP
+		MOV ECX, DWORD PTR SS : [ESP + 30h]
+		NOP
+		MOV ECX, EDI
+
+		NOP
+		//MOV EAX, DWORD PTR DS : [ESI + 58h]
+		//MOV ECX, DWORD PTR DS : [ESI + 54h]
+
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [EAX + 38h]//x
+		MOV EAX, DWORD PTR DS : [EAX + 3Ch]//y
+
+
+
+
+
+		MOV EDX, DWORD PTR DS : [EDI]
+		PUSH - 1h
+		PUSH 0h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		PUSH ECX
+		MOV ECX, EDI
+		CALL __00464580//_004649B0// DWORD PTR DS : [EDX + 68]
+
+
+
+
+
+		JMP  _00602DEC
+
+		normal :
+		JMP _00602DE4
+			farm :
+		JMP _00602DD7
+	}
+}
+
+ 
+
+
+//ci
+//00602DF3   . 8078 48 07     CMP BYTE PTR DS : [EAX + 48] , 7
+//00602DF7   . 72 08          JB SHORT age2_x1.00602E01
+
+//change Farm queue type dword to word
+//i know this is uggly but it is the only way i found to send every play that fish trap button is pushed
+//0045E5F0 / $ 8B81 AC1E0000  MOV EAX, DWORD PTR DS : [ECX + 1EAC]
+DWORD _0045E5F6 = 0x045E5F6;
+void __declspec(naked)  ChangeFarmqueue0045E5F0()
+{
+	__asm {
+		MOV EAX, 0h
+		MOV AX, WORD PTR DS : [ECX + 1EACh]
+		JMP _0045E5F6
+	}
+}
+//0045E5FF  |. 8981 AC1E0000  MOV DWORD PTR DS:[ECX+1EAC],EAX
+DWORD _0045E605 = 0x045E605;
+void __declspec(naked)  ChangeFarmqueue0045E5FF()
+{
+	__asm {
+		MOV WORD PTR DS : [ECX + 1EACh] , AX
+		JMP _0045E605
+	}
+}
+//0045E506     66:83BE AC1E00 > CMP WORD PTR DS : [ESI + 1EAC] , 28
+DWORD _0045E50D = 0x045E50D;
+void __declspec(naked)  ChangeFarmqueue0045E506()
+{
+	__asm {
+		CMP WORD PTR DS : [ESI + 1EACh] , 28h
+		JMP _0045E50D
+	}
+}
+
+//0045E58D     8B86 AC1E0000  MOV EAX,DWORD PTR DS:[ESI+1EAC]
+DWORD _0045E593 = 0x045E593;
+void __declspec(naked)  ChangeFarmqueue0045E58D()
+{
+	__asm {
+		MOV EAX, 0h
+		MOV AX, WORD PTR DS : [ESI + 1EACh]
+		JMP _0045E593
+	}
+}
+//0045E596  |. 8986 AC1E0000  MOV DWORD PTR DS:[ESI+1EAC],EAX
+DWORD _0045E59C = 0x045E59C;
+void __declspec(naked)  ChangeFarmqueue0045E596()
+{
+	__asm {
+		MOV WORD PTR DS : [ESI + 1EACh] , AX
+		//no sense because why we will update flag when we push auto farm button?? it is fish trap
+		//MOV WORD PTR DS : [ESI + 1EAEh] , flagAutoFish
+
+		JMP _0045E59C
+	}
+}
+//0045E4F7 | . 8BF1           MOV ESI, ECX
+//0045E4F9 | . 83FF 01        CMP EDI, 1
+DWORD _0045E4FC = 0x045E4FC;
+void __declspec(naked)  ChangeFarmqueue0045E4F7()
+{
+	__asm {
+		MOV ESI, ECX
+		//MOV WORD PTR DS : [ESI + 1EAEh] , flagAutoFish
+		CMP EDI, 1
+		JMP _0045E4FC
+	}
+}
+void autoFarmAnFishTrapReseed()
+{
+	BYTE a[]{ 0xE8,0xFB,0x95,0x6E,0xAB,0x54,0x55,0x68,0x24,0xA5,0xEA,0x54,0x55,0x55,0x6A,0xFF,0x55,0x6A,0x00,0x6A,0x32,0x68,0xBA,0x00,0x00,0x00,0x83,0x3D,0x60,0x5F,0x7A,0x00
+,0x01,0x74,0x04,0x6A,0x34,0xEB,0x04,0x6A,0x33,0xEB,0x00,0x6A,0x03,0x8B,0xCE,0xE8,0x6C,0x88,0x68,0xAB,0x54,0x50,0x8B,0xCE,0xE8,0x93,0xF5,0x67,0xAB,0x54,0xFF,0x25
+,0xD0,0xAD,0xEA,0x54
+
+	};
+
+	_005298F0 = 0x05298F0;
+	_00520620 = 0x0520620;
+	_00527C18 = 0x0527C18;
+	//00527C59     E8 C289FFFF    CALL age2_x1.00520620
+	//00527C13  |. E8 382A0600    CALL age2_x1.0058A650
+	_0058A650 = 0x058A650;
+	//00527BFB     8B8A C8000000  MOV ECX,DWORD PTR DS:[EDX+0xC8]
+
+	//creat auto farm button
+	InjectHook((void*)0x0527C13, AddAutoFarmButton00527C38,PATCH_JUMP);
+	////Creat auto farm hotkey (A)
+	//i put this on scicillian sejeant hotkey part
+	//setHook((void*)0x04BD7DB, AddAutoFarmButton004BD7DB);
+	//0x051E605farms and fish trap event
+	InjectHook((void*)0x051E605, AddAutoFarmEvent, PATCH_JUMP);
+	//0x0603D4B
+	InjectHook((void*)0x0603D4B, RebuildFarms2, PATCH_JUMP);
+ 
+
+}//004570DA   . 66:3D 1601     CMP AX, 116
+
+//00602DCD   . 8B48 08        MOV ECX, DWORD PTR DS : [EAX + 8]
+//00602DD0   . 66 : 8379 10 32  CMP WORD PTR DS : [ECX + 10] , 32  //add 0C7 too??
+//00602DD5   . 75 0D          JNZ SHORT age2_x1.00602DE4
+
+
+//005E251F  |. BD 204E0000    |MOV EBP,4E20
+//00457CB0
+//00603D70     90             NOP
+
+
+ 
 
  
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
 
 	//LoadLibraryA("languageini.dll");
-	slplogo();
+	//slplogo();
 	//check if is not 1.0e
 	//MOV CL, BYTE PTR DS : [680A18]
 	int AoC10e = (*(int*)0x0680A18 == 0x7);
@@ -4039,5 +7201,6 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 		Aoc10CWidescreen(wideScreenCentred);
 		windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
 		miniMapColor();
+		autoFarmAnFishTrapReseed();
 	}
 }
