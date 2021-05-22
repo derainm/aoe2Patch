@@ -7182,8 +7182,51 @@ void autoFarmAnFishTrapReseed()
 //00603D70     90             NOP
 
 
- 
+//005056A9  |. 81FF C8000000  |CMP EDI,0C8
 
+void Aoc10c_250pop()
+{
+	//005056A9 
+	writeByte(0x05056AB, 0xFA);
+}
+//Injection(0x5256b6, "E945912900"),
+//Injection(0x51de3e, "8BF289542414"),
+//Injection(0x51de4d, "31F689542414"),
+//Injection(0x525709, "8BF98BE9"),
+//Injection(0x525712, "31FFBD01000000"),
+DWORD Aoc10c_005256BC = 0x05256BC;
+void __declspec(naked)  Aoc10c_FixRecordingExplore1()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [791200h]
+		MOV EAX, DWORD PTR DS : [ECX + 1614h]
+		CMP DWORD PTR DS : [EAX + 568h] , 0h
+		JNZ short _007BE834
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		CMP DWORD PTR DS : [ECX + 13E0h] , 2h
+		JNZ short _007BE834
+		MOV EAX, DWORD PTR DS : [ESI + 121Ch]
+		MOV ECX, DWORD PTR DS : [EAX + 34h]
+		MOV BYTE PTR DS : [ECX + 0A256h] , 1h
+		_007BE834:
+		MOV ECX, DWORD PTR DS : [ESI + 10FCh]
+		JMP Aoc10c_005256BC
+	}
+}
+ 
+void Aoc10c_FixRecordingExploreStateBug()
+{
+	InjectHook((void*)0x5256b6, Aoc10c_FixRecordingExplore1, PATCH_JUMP);
+	BYTE Aoc10C_51de3e[6] = {0x8B,0xF2,0x89,0x54,0x24,0x14};
+	writeData(0x51de3e, Aoc10C_51de3e, 6);
+	BYTE Aoc10C_51de4d[6] = {0x31,0xF6,0x89,0x54,0x24,0x14};
+	writeData(0x51de4d, Aoc10C_51de4d, 6);
+	BYTE Aoc10C_0525709[4] = {0x8B,0xF9,0x8B,0xE9};
+	writeData(0x0525709, Aoc10C_0525709, 4);
+	BYTE Aoc10C_0525712[7] = {0x31,0xFF,0xBD,0x01,0x00,0x00,0x00};
+	writeData(0x525712, Aoc10C_0525712, 7);
+
+}
  
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 {
@@ -7202,5 +7245,7 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 		windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
 		miniMapColor();
 		autoFarmAnFishTrapReseed();
+		Aoc10c_250pop();
+		Aoc10c_FixRecordingExploreStateBug();
 	}
 }

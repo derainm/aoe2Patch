@@ -1239,6 +1239,49 @@ void aok20aCHatColor()
 	InjectHook((void*)0x0428851, Aok20agetplayerPosition00428791, PATCH_JUMP);
 	InjectHook((void*)0x042A8A8 , Aok20agetplayerPosition0042A7F8, PATCH_JUMP);
 }
+
+//0050A210  |. 81FF C8000000  |CMP EDI,0C8
+void Aok20a_250pop()
+{
+	//004FE095  |. 81FF C8000000  |CMP EDI,0C8
+	writeByte(0x04FE097, 0xFA);
+}
+DWORD aok20a_004E5016 = 0x04E5016;
+void __declspec(naked)  Aoc20a_FixRecordingExplore1()
+{
+	__asm {
+		//MOV ECX, DWORD PTR DS : [791200h]
+		MOV ECX, DWORD PTR DS : [663330h]
+		MOV EAX, DWORD PTR DS : [ECX + 1614h]
+		CMP DWORD PTR DS : [EAX + 568h] , 0h
+		JNZ short _007BE834
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [663330h]
+		CMP DWORD PTR DS : [ECX + 13E0h] , 2h
+		JNZ short _007BE834
+		MOV EAX, DWORD PTR DS : [ESI + 1200Ch]
+		MOV ECX, DWORD PTR DS : [EAX + 34h]
+		//MOV BYTE PTR DS : [ECX + 0A256h] , 1h
+		MOV  BYTE PTR DS : [EAX + 8ECEh] , 1h
+		_007BE834 :
+		MOV ECX, DWORD PTR DS : [ESI + 10F0h]
+		JMP aok20a_004E5016
+	}
+}
+void Aoc20a_FixRecordingExploreStateBug()
+{
+	InjectHook((void*)0x04E5010, Aoc20a_FixRecordingExplore1, PATCH_JUMP);
+
+	BYTE Aoc20a_51de3e[6] = { 0x8B,0xF2,0x89,0x54,0x24,0x14 };
+	writeData(0x04DDDF4, Aoc20a_51de3e, 6);
+	BYTE Aoc20a_51de4d[6] = { 0x31,0xF6,0x89,0x54,0x24,0x14 };
+	writeData(0x04DDE03, Aoc20a_51de4d, 6);
+	BYTE Aoc20a_0525709[4] = { 0x8B,0xF9,0x8B,0xE9 };
+	writeData(0x04E5063, Aoc20a_0525709, 4);
+	BYTE Aoc20a_0525712[7] = { 0x31,0xFF,0xBD,0x01,0x00,0x00,0x00 };
+	writeData(0x04E506C, Aoc20a_0525712, 7);
+
+}
 void Aoc20aPatchHook(bool wideScreenCentred, bool windowed) 
 {
 	nocdAOK20A();
@@ -1246,4 +1289,6 @@ void Aoc20aPatchHook(bool wideScreenCentred, bool windowed)
 	windowedModAok20a(windowed);
 	Aok20a_minimapColor();
 	//aok20aCHatColor();
+	Aok20a_250pop();
+	Aoc20a_FixRecordingExploreStateBug();
 }
