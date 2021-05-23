@@ -7135,7 +7135,7 @@ void __declspec(naked)  AddunitFormation4E5C57()
 		PUSH 0h
 		PUSH 0h
 		PUSH - 1h
-		PUSH 0A03Fh
+		PUSH 9C59h//0A03Fh
 		PUSH 0h
 		PUSH 0AFh
 		PUSH 2Ch
@@ -8405,7 +8405,7 @@ void  FixOverwriteRecording()
 }
 //// Fix default recording
 
-void aok20_FixDefaultRecording1()
+void  __declspec(naked) aok20_FixDefaultRecording1()
 {
 	__asm
 	{
@@ -8427,7 +8427,7 @@ void aok20_FixDefaultRecording1()
 	}
 }
 //005B924A  |. E8 D185E6FF    CALL empires2.00421820
-void aok20_FixDefaultRecording()
+void  aok20_FixDefaultRecording()
 {
 	InjectHook((void*)0x04DBD0F, aok20_FixDefaultRecording1, PATCH_CALL);
 	InjectHook((void*)0x05B9371, aok20_FixDefaultRecording1, PATCH_CALL);
@@ -8435,6 +8435,264 @@ void aok20_FixDefaultRecording()
 	InjectHook((void*)0x05B9402, aok20_FixDefaultRecording1, PATCH_CALL);
 }
 
+//0041C938  |. E8 A3710500    CALL empires2.00473AE0
+//language dll id (replace id?? here )
+//hard code some language ID
+char aok20_FusinFOrmation[] = "fusion formation";
+DWORD Aok20_0041C93D = 0x041C93D;
+DWORD Aok20_00473AE0 = 0x0473AE0;
+DWORD Aok20_004A2160 = 0x04A2160;
+
+//2A65, "9 DE_Hillfort"
+//2A66, "8 DE_Hideout"
+//2A67, "7 DE_Cross"
+//2A68, "6 DE_AcropolisAok"
+//2A69, "5 BF LORD"
+//2A6A, "4 Nomad"
+//2A6B, "3 Green Arabia"
+//2A6C, "21 ForestNothing"
+//2A6D, "20 MICHI"
+//2A6E, "2 ARENA"
+//2A6F, "19 ES_The_Unknown"
+//2A70, "18 SHERWOOD FOREST"
+//2A71, "17 CDC_El_Dorado"
+//2A72, "16 CDC_Arina"
+//2A73, "15 BO_Scandinavia"
+//2A74, "14 HC_Chaos_Pit"
+//2A75, "13 NAC_Land_Madness"
+//2A76, "12 DE_Golden_Pit"
+//2A77, "11 DE_Valley"
+//2A78, "10 DE_Lombardia"
+//2A79, "1 !! G  A voobly"
+//2A7A, "0 Kilimanjaro"
+char _2A65[]= "9 DE_Hillfort"	  ;
+char _2A66[]= "8 DE_Hideout"		  ;
+char _2A67[]= "7 DE_Cross"		  ;
+char _2A68[]= "6 DE_AcropolisAok"  ;
+char _2A69[]= "5 BF LORD"		  ;
+char _2A6A[]= "4 Nomad"			  ;
+char _2A6B[]= "3 Green Arabia"	  ;
+char _2A6C[]= "21 ForestNothing"	  ;
+char _2A6D[]= "20 MICHI"			  ;
+char _2A6E[]= "2 ARENA"			  ;
+char _2A6F[]= "19 ES_The_Unknown"  ;
+char _2A70[]= "18 SHERWOOD FOREST" ;
+char _2A71[]= "17 CDC_El_Dorado"	  ;
+char _2A72[]= "16 CDC_Arina"		  ;
+char _2A73[]= "15 BO_Scandinavia"  ;
+char _2A74[]= "14 HC_Chaos_Pit"	  ;
+char _2A75[]= "13 NAC_Land_Madness";
+char _2A76[]= "12 DE_Golden_Pit"	  ;
+char _2A77[]= "11 DE_Valley"		  ;
+char _2A78[]= "10 DE_Lombardia"	  ;
+char _2A79[]= "1 !! G  A voobly"	  ;
+char _2A7A[]= "0 Kilimanjaro"	  ;
+char _9C58[]="Triangle Formation" ;
+char _9C59[]="Fusion Formation"   ;
+void __declspec(naked) languageIdAok20()
+{
+	__asm
+	{
+		//CMP EAX, 2A6Ah// 9C59h
+		//JE _fusionFormation
+
+		cmp eax,2A65h
+		JE __2A65
+		cmp eax,2A66h
+		JE __2A66
+		cmp eax,2A67h
+		JE __2A67
+		cmp eax,2A68h
+		JE __2A68
+		cmp eax,2A69h
+		JE __2A69
+		cmp eax,2A6Ah
+		JE __2A6A
+		cmp eax,2A6Bh
+		JE	__2A6B
+		cmp eax,2A6Ch
+		JE __2A6C
+		cmp eax,2A6Dh
+		JE __2A6D
+		cmp eax,2A6Eh
+		JE __2A6E
+		cmp eax,2A6Fh
+		JE __2A6F
+		cmp eax,2A70h
+		JE __2A70
+		cmp eax,2A71h
+		JE __2A71
+		cmp eax,2A72h
+		JE __2A72
+		cmp eax,2A73h
+		JE __2A73
+		cmp eax,2A74h
+		JE __2A74
+		cmp eax,2A75h
+		JE __2A75
+		cmp eax,2A76h
+		JE  __2A75
+		cmp eax,2A77h
+		JE  __2A77
+		cmp eax,2A78h
+		JE  __2A78
+		cmp eax,2A79h
+		JE  __2A79
+		cmp eax,2A7Ah
+		JE  __2A7A
+		cmp eax, 9C58h
+		JE __9C58
+		cmp eax, 9C59h
+		JE __9C59
+
+		CALL Aok20_00473AE0
+		JMP Aok20_004A2160
+		//_fusionFormation:
+		//CALL Aok20_00473AE0
+		////MOV ESI, offset aok20_FusinFOrmation
+		////LEA ESI, DWORD PTR DS : [aok20_FusinFOrmation]
+
+		//MOV EDI, ESI
+		//LEA ESI, DWORD PTR DS : [aok20_FusinFOrmation]
+		//JMP continueproc
+		__2A65 :
+		CALL Aok20_00473AE0
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A65]
+		JMP continueproc
+		__2A66 : 
+		CALL Aok20_00473AE0
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A66]
+		JMP continueproc
+		__2A67 :
+		CALL Aok20_00473AE0
+		MOV EDI, ESI
+		LEA ESI, DWORD PTR DS : [_2A67]
+		JMP continueproc
+		__2A68 : 
+		CALL Aok20_00473AE0
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A68]
+		JMP continueproc
+		__2A69 :
+		CALL Aok20_00473AE0  
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A69]
+		JMP continueproc
+		__2A6A :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI 
+		LEA ESI, DWORD PTR DS : [_2A6A]
+		JMP continueproc
+		__2A6B : 
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A6B]
+		JMP continueproc
+		__2A6C :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A6C]
+		JMP continueproc
+		__2A6D : 
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A6D]
+		JMP continueproc
+		__2A6E :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A6E]
+		JMP continueproc
+		__2A6F : 
+		CALL Aok20_00473AE0  
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A6F]
+		JMP continueproc
+		__2A70 : 
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A70]
+		JMP continueproc
+		__2A71 : 
+		CALL Aok20_00473AE0
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A71]
+		JMP continueproc
+		__2A72 :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A72]
+		JMP continueproc
+		__2A73 :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A73]
+		JMP continueproc
+		__2A74 :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A74]
+		JMP continueproc
+		__2A75 :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A75]
+		JMP continueproc
+		__2A76 :
+		CALL Aok20_00473AE0
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A76]
+		JMP continueproc
+		__2A77 :
+		CALL Aok20_00473AE0
+		MOV EDI, ESI 
+		LEA ESI, DWORD PTR DS : [_2A77]
+		JMP continueproc
+		__2A78 :
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI 
+		LEA ESI, DWORD PTR DS : [_2A78]
+		JMP continueproc
+		__2A79 : 
+		CALL Aok20_00473AE0 
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A79]
+		JMP continueproc
+		__2A7A :
+		CALL Aok20_00473AE0  
+		MOV EDI, ESI  
+		LEA ESI, DWORD PTR DS : [_2A7A]
+		JMP continueproc
+		__9C58:
+		CALL Aok20_00473AE0
+		MOV EDI, ESI
+		LEA ESI, DWORD PTR DS : [_9C58]
+		JMP continueproc
+		__9C59:
+		CALL Aok20_00473AE0
+		MOV EDI, ESI
+		LEA ESI, DWORD PTR DS : [_9C59]
+		JMP continueproc
+
+		continueproc:
+		MOV ECX, 5h//size of string?
+		REP MOVS DWORD PTR ES : [ESI] , DWORD PTR DS : [EDI]
+		MOV EAX, 1h
+		JMP Aok20_004A2160
+	}
+}
+//004BD298  |. 8D4C24 08        LEA ECX,DWORD PTR SS:[ESP+8]
+
+
+//0041C924  |. 8B0D 10456600    MOV ECX,DWORD PTR DS:[664510]                                ;  language.10000000
+//004A2151 | . 8B15 10456600    MOV EDX, DWORD PTR DS : [664510] ;  language.10000000
+void Aok20_LoadLanguageId()
+{
+	//InjectHook((void*)0x041C938, languageIdAok20,PATCH_JUMP);
+	InjectHook((void*)0x04A215B, languageIdAok20,PATCH_JUMP);
+}
 
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 {
@@ -8456,4 +8714,5 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	gamedata20c();
 	FixOverwriteRecording();
 	aok20_FixDefaultRecording();
+	Aok20_LoadLanguageId();
 }

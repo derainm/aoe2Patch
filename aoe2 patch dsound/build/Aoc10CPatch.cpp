@@ -7249,3 +7249,13 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 		Aoc10c_FixRecordingExploreStateBug();
 	}
 }
+//CTRL + F11
+//005521F3     90             NOP
+
+//00551FD8 | .FF2485 1022550 > JMP DWORD PTR DS : [EAX * 4 + 552210]
+//
+//005521F8 | > 8B06           MOV EAX, DWORD PTR DS : [ESI]
+//005521FA | . 8BCE           MOV ECX, ESI
+//005521FC | .FF50 2C        CALL DWORD PTR DS : [EAX + 2C]
+//
+//	
