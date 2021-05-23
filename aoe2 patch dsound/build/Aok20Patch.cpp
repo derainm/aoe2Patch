@@ -8489,6 +8489,8 @@ char _2A79[]= "1 !! G  A voobly"	  ;
 char _2A7A[]= "0 Kilimanjaro"	  ;
 char _9C58[]="Triangle Formation" ;
 char _9C59[]="Fusion Formation"   ;
+DWORD ESI_scenario;
+DWORD EDI_scenario;
 void __declspec(naked) languageIdAok20()
 {
 	__asm
@@ -8557,129 +8559,179 @@ void __declspec(naked) languageIdAok20()
 		//JMP continueproc
 		__2A65 :
 		CALL Aok20_00473AE0
+		MOV  ESI_scenario, ESI
+		MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A65]
 		JMP continueproc
 		__2A66 : 
-		CALL Aok20_00473AE0
+		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A66]
 		JMP continueproc
 		__2A67 :
-		CALL Aok20_00473AE0
+		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI
 		LEA ESI, DWORD PTR DS : [_2A67]
 		JMP continueproc
 		__2A68 : 
 		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A68]
 		JMP continueproc
 		__2A69 :
-		CALL Aok20_00473AE0  
+		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A69]
 		JMP continueproc
 		__2A6A :
 		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI 
 		LEA ESI, DWORD PTR DS : [_2A6A]
 		JMP continueproc
 		__2A6B : 
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A6B]
 		JMP continueproc
 		__2A6C :
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A6C]
 		JMP continueproc
 		__2A6D : 
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A6D]
 		JMP continueproc
 		__2A6E :
 		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A6E]
 		JMP continueproc
 		__2A6F : 
-		CALL Aok20_00473AE0  
+		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A6F]
 		JMP continueproc
 		__2A70 : 
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A70]
 		JMP continueproc
 		__2A71 : 
 		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A71]
 		JMP continueproc
 		__2A72 :
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A72]
 		JMP continueproc
 		__2A73 :
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A73]
 		JMP continueproc
 		__2A74 :
 		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A74]
 		JMP continueproc
 		__2A75 :
-		CALL Aok20_00473AE0 
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A75]
 		JMP continueproc
 		__2A76 :
 		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A76]
 		JMP continueproc
 		__2A77 :
-		CALL Aok20_00473AE0
+		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI 
 		LEA ESI, DWORD PTR DS : [_2A77]
 		JMP continueproc
 		__2A78 :
 		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI 
 		LEA ESI, DWORD PTR DS : [_2A78]
 		JMP continueproc
 		__2A79 : 
 		CALL Aok20_00473AE0 
+			MOV  ESI_scenario, ESI  
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A79]
 		JMP continueproc
 		__2A7A :
-		CALL Aok20_00473AE0  
+		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI  
 		LEA ESI, DWORD PTR DS : [_2A7A]
 		JMP continueproc
 		__9C58:
 		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI
 		LEA ESI, DWORD PTR DS : [_9C58]
 		JMP continueproc
 		__9C59:
 		CALL Aok20_00473AE0
+			MOV  ESI_scenario, ESI 
+			MOV  EDI_scenario, EDI
 		MOV EDI, ESI
 		LEA ESI, DWORD PTR DS : [_9C59]
 		JMP continueproc
 
 		continueproc:
-		MOV ECX, 5h//size of string?
+
+		MOV ECX, 6h//size of string?
 		REP MOVS DWORD PTR ES : [ESI] , DWORD PTR DS : [EDI]
 		MOV EAX, 1h
+			MOV   ESI, ESI_scenario
+			MOV  EDI, EDI_scenario
 		JMP Aok20_004A2160
 	}
 }
