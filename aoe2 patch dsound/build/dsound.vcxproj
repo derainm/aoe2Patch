@@ -95,7 +95,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/Zc:sizedDealloc- %(AdditionalOptions)</AdditionalOptions>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,10 +111,16 @@
   <ItemGroup>
     <ClInclude Include="..\src\MemoryMgr.h" />
     <ClInclude Include="Aoc10CPatch.h" />
+    <ClInclude Include="Aoc10Patch.h" />
+    <ClInclude Include="Aok20aPatch.h" />
+    <ClInclude Include="Aok20Patch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\dsound.cpp" />
     <ClCompile Include="Aoc10CPatch.cpp" />
+    <ClCompile Include="Aoc10Patch.cpp" />
+    <ClCompile Include="Aok20aPatch.cpp" />
+    <ClCompile Include="Aok20Patch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\dsound.def" />

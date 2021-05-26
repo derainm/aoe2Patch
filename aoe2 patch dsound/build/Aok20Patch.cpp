@@ -803,6 +803,151 @@ void patchEXE(int H, int V)
 
 }
 
+void patchExe2(int H, int V)
+{
+	
+		//writeDwordF(0x001BCC6,H+0		 );
+		writeDwordF1(0x001BD0C,V+0		 );
+		writeDwordF1(0x001BD13,H+1		 );
+		writeDwordF1(0x001D355,H+0		 );
+		writeDwordF1(0x001D36F,V+0		 );
+		writeDwordF1(0x001D392,H+1		 );
+		writeDwordF1(0x001D94C,H+0		 );
+		writeDwordF1(0x001D97B,V+0		 );
+		writeDwordF1(0x001D985,H+1		 );
+		writeDwordF1(0x0048610,H+0		 );
+		writeDwordF1(0x0048617,H+1		 );
+		writeDwordF1(0x004865C,H+0		 );
+		writeDwordF1(0x0048681,H+1		 );
+		writeDwordF1(0x0048F07,H+0		 );
+		writeDwordF1(0x0048F0C,V+0		 );
+		writeDwordF1(0x0048F22,H+1		 );
+		writeDwordF1(0x0048F27,V+1		 );
+		writeDwordF1(0x0048F67,H+2		 );
+		writeDwordF1(0x0050B28,V+0		 );
+		writeDwordF1(0x0050C00,V+1		 );
+		writeDwordF1(0x0050DA3,V+2		 );
+		writeDwordF1(0x00510B3,V+0		 );
+		writeDwordF1(0x00510CD,V+1		 );
+		writeDwordF1(0x005DF7B,H+0		 );
+		writeDwordF1(0x005DF86,H+1		 );
+		writeDwordF1(0x005E030,H+0		 );
+		writeDwordF1(0x005E039,V+0		 );
+		writeDwordF1(0x005E04B,H+1		 );
+		writeDwordF1(0x005E054,V+1		 );
+		writeDwordF1(0x005E066,H+2		 );
+		writeDwordF1(0x005E06F,V+2		 );
+		writeDwordF1(0x005E105,H+0		 );
+		writeDwordF1(0x005E10E,V+0		 );
+		writeDwordF1(0x005E1AD,H+0		 );
+		writeDwordF1(0x005E1B6,V+0		 );
+		writeDwordF1(0x005E25B,H+0		 );
+		writeDwordF1(0x005E264,V+0		 );
+		writeDwordF1(0x005E2CE,H+0		 );
+		writeDwordF1(0x005E324,H+1		 );
+		writeDwordF1(0x005E32B,H+2		 );
+		writeDwordF1(0x005E394,H+0		 );
+		writeDwordF1(0x005E39B,H+2		 );
+		writeDwordF1(0x005E416,H+0		 );
+		writeDwordF1(0x005E41D,H+2		 );
+		writeDwordF1(0x005E490,H+0		 );
+		writeDwordF1(0x005E497,H+2		 );
+		writeDwordF1(0x00DA6EB,H+1		 );
+		writeDwordF1(0x00DA707,H+1		 );
+		writeDwordF1(0x00DA71C,V - 279	 );
+		writeDwordF1(0x00DA72E,V - 249	 );
+		writeDwordF1(0x00DA733,H+1		 );
+		writeDwordF1(0x00DA767,V - 206	 );
+		writeDwordF1(0x00DA7CA,V - 196	 );
+		writeDwordF1(0x00DA7D9,V - 178	 );
+		writeDwordF1(0x00DA811,V - 55	 );
+		writeDwordF1(0x00DA918,H - 301	 );
+		writeDwordF1(0x00DA92E,H - 241	 );
+		writeDwordF1(0x00DA944,H - 181	 );
+		writeDwordF1(0x00DA95A,H - 121	 );
+		writeDwordF1(0x00DA970,H - 62	 );
+		writeDwordF1(0x00DA982,V - 194	 );
+		writeDwordF1(0x00DA99B,V - 67	 );
+		writeDwordF1(0x00DA9B4,V - 197	 );
+		writeDwordF1(0x00DA9CD,V - 197	 );
+		writeDwordF1(0x00DA9E6,V - 167	 );
+		writeDwordF1(0x00DA9FF,V - 77	 );
+		writeDwordF1(0x00DAA18,V - 48	 );
+		writeDwordF1(0x00DAA31,V - 44	 );
+		writeDwordF1(0x00DAA42,H	+0		 );
+		writeDwordF1(0x00DAA5E,H	+0		 );
+		writeDwordF1(0x00DAA73,V - 230	 );
+		writeDwordF1(0x00DAA85,V - 200	 );
+		writeDwordF1(0x00DAA8A,H +	0	 );
+		writeDwordF1(0x00DAABE,V - 169	 );
+		writeDwordF1(0x00DAAC5,H - 336	 );
+		writeDwordF1(0x00DAAF3,H / 2 - 112);;
+		writeDwordF1(0x00DAB1C,H - 649	 );
+		writeDwordF1(0x00DAB21,V - 152	 );
+		writeDwordF1(0x00DAB30,V - 144	 );
+		writeDwordF1(0x00DAB68,V - 21	 );
+		writeDwordF1(0x00DAC6F,H - 303	 );
+		writeDwordF1(0x00DAC85,H - 243	 );
+		writeDwordF1(0x00DAC9B,H - 183	 );
+		writeDwordF1(0x00DACB1,H - 123	 );
+		writeDwordF1(0x00DACC7,H - 64	 );
+		writeDwordF1(0x00DACD9,V - 154	 );
+		writeDwordF1(0x00DACE0,H - 308	 );
+		writeDwordF1(0x00DACF2,V - 49	 );
+		writeDwordF1(0x00DACF9,H - 309	 );
+		writeDwordF1(0x00DAD0B,V - 156	 );
+		writeDwordF1(0x00DAD12,H - 96	 );
+		writeDwordF1(0x00DAD24,V - 162	 );
+		writeDwordF1(0x00DAD2B,H - 69	 );
+		writeDwordF1(0x00DAD3D,V - 137	 );
+		writeDwordF1(0x00DAD44,H - 60	 );
+		writeDwordF1(0x00DAD56,V - 59	 );
+		writeDwordF1(0x00DAD5D,H - 61	 );
+		writeDwordF1(0x00DAD6F,V - 35	 );
+		writeDwordF1(0x00DAD76,H - 74	 );
+		writeDwordF1(0x00DAD88,V - 39	 );
+		writeDwordF1(0x00DAD8F,H - 102	 );
+		writeDwordF1(0x00DF4E6,H+2		 );
+		writeDwordF1(0x00DF4EF,V+2		 );
+		writeDwordF1(0x00DF514,H+1		 );
+		writeDwordF1(0x00DF51D,V+1		 );
+		writeDwordF1(0x00DF551,H+0		 );
+		writeDwordF1(0x00DF55A,V+0		 );
+		writeDwordF1(0x00E1C30,H+1		 );
+		writeDwordF1(0x00E471A,H+1		 );
+		writeDwordF1(0x00E4732,V - 171	 );
+		writeDwordF1(0x00E4748,V - 138	 );
+		writeDwordF1(0x00E478A,V - 138	 );
+		writeDwordF1(0x00E475E,V - 118	 );
+		writeDwordF1(0x00E47A0,V - 118	 );
+		writeDwordF1(0x00E4774,V - 98	 );
+		writeDwordF1(0x00E47B6,V - 98	 );
+		writeDwordF1(0x00E47CC,V - 59	 );
+		writeDwordF1(0x00E47E2,V - 59	 );
+		writeDwordF1(0x00E47F8,V - 59	 );
+		writeDwordF1(0x00E4811,V - 59	 );
+		writeDwordF1(0x00E482C,V - 59	 );
+		writeDwordF1(0x00E4855,V - 144	 );
+		writeDwordF1(0x00E48AB,V - 118	 );
+		writeDwordF1(0x00E4869,V - 118	 );
+		writeDwordF1(0x00E487F,V - 98	 );
+		writeDwordF1(0x00E48C1,V - 98	 );
+		writeDwordF1(0x00E4895,V - 78	 );
+		writeDwordF1(0x00E48D7,V - 78	 );
+		writeDwordF1(0x00E48ED,V - 54	 );
+		writeDwordF1(0x00E4903,V - 54	 );
+		writeDwordF1(0x00E4919,V - 54	 );
+		writeDwordF1(0x00E4932,V - 54	 );
+		writeDwordF1(0x00E494B,V - 54	 );
+		writeDwordF1(0x00E4841,H+0		 );
+		writeDwordF1(0x00ED127,H+0		 );
+		writeDwordF1(0x00ED14E,H+1		 );
+		writeDwordF1(0x00EEAC4,H+0		 );
+		writeDwordF1(0x00EEAC9,V+0		 );
+		writeDwordF1(0x00EEADF,H+1		 );
+		writeDwordF1(0x00EEAE4,V+1		 );
+		writeDwordF1(0x01A6BC5,H+1		 );
+}
 void WideScreen(int H, int V)
 {
 	//unit formation button print
@@ -1151,7 +1296,8 @@ void  wide()
 	//EnterCriticalSection(&cs_Cord_X);
 	H = (int)u_Cord_X;
 	//EnterCriticalSection(&cs_Cord_X);
-
+	/*if (V == 800 && H == 600)
+		return;
 	//change interfaace id 
 	if (H < 1024 && V < 768)
 	{
@@ -1163,7 +1309,9 @@ void  wide()
 		BYTE _004DF5B2[] = { 0x81, 0xC7,  0xB0, 0xC7, 0x00 , 0x00 };
 		writeData(0x04DF5B2, _004DF5B2, 6);
 	}
-
+	*/
+	Nop(0x04DF2D5 , 6);
+	Nop(0x04DF2F8, 6);
 
 	//if ((preX == H && PreY == V))// || (ppreX == H && pPreY == V))
 	//{
@@ -1176,7 +1324,7 @@ void  wide()
 	if (centredwidescreenAOk20)
 		WideScreen(H, V);
 	else
-	patchEXE(H, V);
+		patchExe2(H, V);
 	//}
 	//else
 	//{
@@ -5066,7 +5214,9 @@ void widescreenAOk20(bool wideScreenCentred)
 	writeData(0x065D410, interfac, 16);
 	if (wideScreenCentred)
 	{
-		NormaleAoeWideScreen(&myCord_X, &myCord_Y);
+		//NormaleAoeWideScreen(&myCord_X, &myCord_Y);
+		UserPatchWideScreen();
+		centredwidescreenAOk20 =false;
 	}
 	else
 	{
