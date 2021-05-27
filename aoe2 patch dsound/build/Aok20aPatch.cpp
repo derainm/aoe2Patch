@@ -703,7 +703,10 @@ void Aok20a_u_patchEXE(int H, int V)
 		writeDwordF1(0x00DAEFF,V - 77	  );
 		writeDwordF1(0x00DAF18,V - 48	  );
 		writeDwordF1(0x00DAF31,V - 44	  );
-		writeDwordF1(0x00DAF42,H + 0	  );
+		if (H == 800 && V == 600)
+			writeDwordF1(0x00DAF42,H + 1	  );
+		else
+			writeDwordF1(0x00DAF42, H + 0);
 		writeDwordF1(0x00DAF5E,H + 0	  );
 		writeDwordF1(0x00DAF73,V - 230	  );
 		writeDwordF1(0x00DAF85,V - 200	  );
@@ -740,7 +743,10 @@ void Aok20a_u_patchEXE(int H, int V)
 		writeDwordF1(0x00DF9FF,V + 2	  );
 		writeDwordF1(0x00DFA24,H + 1	  );
 		writeDwordF1(0x00DFA2D,V + 1	  );
-		writeDwordF1(0x00DFA61,H + 0	  );
+		if (H == 800 && V == 600)
+			writeDwordF1(0x00DFA61,H + 1	  );
+		else
+			writeDwordF1(0x00DFA61,H + 0	  );
 		writeDwordF1(0x00DFA6A,V + 0	  );
 		writeDwordF1(0x00E2140,H + 1	  );
 		writeDwordF1(0x00E4CAA,H + 1	  );

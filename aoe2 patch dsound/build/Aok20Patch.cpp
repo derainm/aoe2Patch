@@ -874,7 +874,10 @@ void patchExe2(int H, int V)
 		writeDwordF1(0x00DA9FF,V - 77	 );
 		writeDwordF1(0x00DAA18,V - 48	 );
 		writeDwordF1(0x00DAA31,V - 44	 );
-		writeDwordF1(0x00DAA42,H	+0		 );
+		if (H == 800 && V == 600)//( V < 768)//H == 800 &&
+			writeDwordF1(0x00DAA42,H	+1		 );
+		else
+			writeDwordF1(0x00DAA42, H +0);
 		writeDwordF1(0x00DAA5E,H	+0		 );
 		writeDwordF1(0x00DAA73,V - 230	 );
 		writeDwordF1(0x00DAA85,V - 200	 );
@@ -911,7 +914,11 @@ void patchExe2(int H, int V)
 		writeDwordF1(0x00DF4EF,V+2		 );
 		writeDwordF1(0x00DF514,H+1		 );
 		writeDwordF1(0x00DF51D,V+1		 );
-		writeDwordF1(0x00DF551,H+0		 );
+		//if(H==800 && V==600)
+		if (H == 800 && V == 600)//(V < 768)//(V < 768)
+			writeDwordF1(0x00DF551,H+1		 );
+		else
+			writeDwordF1(0x00DF551, H +0);
 		writeDwordF1(0x00DF55A,V+0		 );
 		writeDwordF1(0x00E1C30,H+1		 );
 		writeDwordF1(0x00E471A,H+1		 );
@@ -3866,7 +3873,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	writeData(0x04E1C09, u_PUSH_4E1C20, 5);
 	writeByte(0x04E1C13, 0x90);
 	//004DF521  |. 7C 2D          JL SHORT empires2.004DF550
-	writeByte(0x04DF521, 0xEB);
+	//////////writeByte(0x04DF521, 0xEB);
 	//  good luck if we do this ...
 	////resize
 	//setHook((void*)0x04DA6EA, u_patchExe);
@@ -3874,7 +3881,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	//fix bug  1280 force to jum 1024x768
 	//004DA6F5     E9 52030000    JMP 004DAA4C
 	BYTE _004DAA4C[] = { 0xE9,0x52,0x03,0x00,0x00,0x90 };
-	writeData(0x04DA6F5, _004DAA4C, 6);
+	//////////writeData(0x04DA6F5, _004DAA4C, 6);
 	//	//004DF5B2  |. 81C7 9CC70000  ADD EDI,0C79C
 	////0C79C  =  51100
 	//
