@@ -12,6 +12,31 @@ typedef uintptr_t addr;
 #include <fstream>
 #include "../build/Aok20Patch.h"
 #include "../build/Aok20aPatch.h"
+#include <TlHelp32.h>
+using namespace std;
+
+DWORD GetProcessIdByName(const char* processName) {
+	PROCESSENTRY32 entry;
+	entry.dwSize = sizeof(PROCESSENTRY32);
+
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+	if (Process32First(snapshot, &entry) == TRUE)
+	{
+		while (Process32Next(snapshot, &entry) == TRUE)
+		{
+			if (_stricmp(entry.szExeFile, processName) == 0)
+			{
+				CloseHandle(snapshot);
+				return entry.th32ProcessID;
+			}
+		}
+	}
+
+	CloseHandle(snapshot);
+	return 0;
+}
+
 
 struct dsound_dll
 {
@@ -68,6 +93,11 @@ void init_dsound(HINSTANCE hInst)
 
 int AoK20ab, AoK20, AoC10Ce, AoC10, UserPatch;//(user patch version aofe + 1.5 +1.1 .. etc)
 
+inline bool exists_File(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
+
 void init()
 {
 	AoK20ab = (*(int*)0x005FB0D3 == 0x042474FF);
@@ -77,43 +107,47 @@ void init()
 	//UserPatch15 = (AoC10Ce && *(int*)0x0051A3B8 == 0x002A6674);
 	UserPatch = (AoC10Ce && *(int*)0x0051A3B8 != 0x003D1446);
 	//todo add aofe 
-	
+	bool centredWideScreen = true;
 	if (AoC10Ce && !UserPatch)
 	{
-		Aoc10CPatchHook(true,true);
+		if (!exists_File("on.ini"))// !AoC10e&&
+		{
+			Aoc10CPatchHook(centredWideScreen, true);
+		}
 	}
 	if (AoC10)
 	{
-		Aoc10PatchHook(true, true);
+		Aoc10PatchHook(centredWideScreen, true);
 	}
 	if (AoK20)
 	{
-		Aoc20PatchHook(false,true);
+		Aoc20PatchHook(centredWideScreen,true);
 	}	
 	if (AoK20ab)
 	{
-		Aoc20aPatchHook(false,true);
+		Aoc20aPatchHook(centredWideScreen,true);
 	}
 }
 
 
-
-inline bool exists_test3(const std::string& name) {
-	struct stat buffer;
-	return (stat(name.c_str(), &buffer) == 0);
-}
 
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH)
 	{
-		//int AoC10e = (*(int*)0x0680A18 == 0x7);
-		init_dsound(hInst);
-		if ( !exists_test3("on.ini"))// !AoC10e&&
+		// load dll only if voobly is closed
+		if (!GetProcessIdByName("Voobly.exe"))  
 		{
+			//load patch here + dsound library
+			init_dsound(hInst);
 			init();
 		}
-
+		else
+		{
+			//default dsound lirary
+			MessageBox(NULL, "Aoe2 patch is off because voobly is open", "Aoe2 patch ", MB_ICONINFORMATION);
+			init_dsound(hInst);
+		}
 	}
 
 	if (reason == DLL_PROCESS_DETACH)
