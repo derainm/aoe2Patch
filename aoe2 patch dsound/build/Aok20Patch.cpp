@@ -9062,6 +9062,9 @@ void Aok20_LoadLanguageId()
 	InjectHook((void*)0x04BD298, languageIdAok20v2,PATCH_JUMP);
 	InjectHook((void*)0x04BD26D, getIdLang,PATCH_JUMP);
 }
+//bug crash
+//005B93AF  |. E8 AC343274    CALL DSOUND.748DC860
+
 
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 {
@@ -9081,7 +9084,7 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	FixRecordRestoredGameBugHookAOK20();
 	antiDeleteHookAOK20();
 	gamedata20c();
-	FixOverwriteRecording();
-	aok20_FixDefaultRecording();
+	//FixOverwriteRecording();
+	//aok20_FixDefaultRecording();
 	Aok20_LoadLanguageId();
 }
