@@ -3873,7 +3873,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	writeData(0x04E1C09, u_PUSH_4E1C20, 5);
 	writeByte(0x04E1C13, 0x90);
 	//004DF521  |. 7C 2D          JL SHORT empires2.004DF550
-	//////////writeByte(0x04DF521, 0xEB);
+	writeByte(0x04DF521, 0xEB);
 	//  good luck if we do this ...
 	////resize
 	//setHook((void*)0x04DA6EA, u_patchExe);
@@ -3881,7 +3881,7 @@ void UserPatchWideScreen()//DWORD* myCord_X, DWORD* myCord_Y)
 	//fix bug  1280 force to jum 1024x768
 	//004DA6F5     E9 52030000    JMP 004DAA4C
 	BYTE _004DAA4C[] = { 0xE9,0x52,0x03,0x00,0x00,0x90 };
-	//////////writeData(0x04DA6F5, _004DAA4C, 6);
+	writeData(0x04DA6F5, _004DAA4C, 6);
 	//	//004DF5B2  |. 81C7 9CC70000  ADD EDI,0C79C
 	////0C79C  =  51100
 	//
@@ -8894,13 +8894,173 @@ void __declspec(naked) languageIdAok20()
 }
 //004BD298  |. 8D4C24 08        LEA ECX,DWORD PTR SS:[ESP+8]
 
+//get id language
+//004BD26D  |. 8B8C24 0C01000>MOV ECX,DWORD PTR SS:[ESP+10C]
 
+
+DWORD langId;
+DWORD aok20_004BD274= 0x04BD274;
+
+void  __declspec(naked) getIdLang()
+{
+	__asm
+	{
+		MOV ECX, DWORD PTR SS : [ESP + 10Ch]
+		MOV langId, ECX
+		JMP aok20_004BD274
+	}
+
+}
+DWORD Aok20_004BD29D = 0x04BD29D  ;
+DWORD Aok20_LangEax ;
+void __declspec(naked) languageIdAok20v2()
+{
+	__asm
+	{
+		//CMP EAX, 2A6Ah// 9C59h
+		//JE _fusionFormation
+		MOV Aok20_LangEax,EAX
+		MOV EAX, langId
+		cmp eax, 2A65h
+		JE __2A65
+		cmp eax, 2A66h
+		JE __2A66
+		cmp eax, 2A67h
+		JE __2A67
+		cmp eax, 2A68h
+		JE __2A68
+		cmp eax, 2A69h
+		JE __2A69
+		cmp eax, 2A6Ah
+		JE __2A6A
+		cmp eax, 2A6Bh
+		JE	__2A6B
+		cmp eax, 2A6Ch
+		JE __2A6C
+		cmp eax, 2A6Dh
+		JE __2A6D
+		cmp eax, 2A6Eh
+		JE __2A6E
+		cmp eax, 2A6Fh
+		JE __2A6F
+		cmp eax, 2A70h
+		JE __2A70
+		cmp eax, 2A71h
+		JE __2A71
+		cmp eax, 2A72h
+		JE __2A72
+		cmp eax, 2A73h
+		JE __2A73
+		cmp eax, 2A74h
+		JE __2A74
+		cmp eax, 2A75h
+		JE __2A75
+		cmp eax, 2A76h
+		JE  __2A75
+		cmp eax, 2A77h
+		JE  __2A77
+		cmp eax, 2A78h
+		JE  __2A78
+		cmp eax, 2A79h
+		JE  __2A79
+		cmp eax, 2A7Ah
+		JE  __2A7A
+		cmp eax, 9C58h
+		JE __9C58
+		cmp eax, 9C59h
+		JE __9C59
+		JMP continueproc
+		__2A65 :
+		 LEA ECX, DWORD PTR SS : [_2A65]
+		JMP normaleprocess
+			__2A66 :
+		 LEA ECX, DWORD PTR SS : [_2A66]
+			 JMP normaleprocess
+			__2A67 :
+		 LEA ECX, DWORD PTR SS : [_2A67]
+			 JMP normaleprocess
+			__2A68 :
+		 LEA ECX, DWORD PTR SS : [_2A68]
+			 JMP normaleprocess
+			__2A69 :
+		 LEA ECX, DWORD PTR SS : [_2A69]
+			 JMP normaleprocess
+			__2A6A :
+		 LEA ECX, DWORD PTR SS : [_2A6A]
+			 JMP normaleprocess
+			__2A6B :
+		 LEA ECX, DWORD PTR SS : [_2A6B]
+			 JMP normaleprocess
+			__2A6C :
+		 LEA ECX, DWORD PTR SS : [_2A6C]
+			 JMP normaleprocess
+			__2A6D :
+		 LEA ECX, DWORD PTR SS : [_2A6D]
+			 JMP normaleprocess
+			__2A6E :
+		 LEA ECX, DWORD PTR SS : [_2A6E]
+			 JMP normaleprocess
+			__2A6F :
+		 LEA ECX, DWORD PTR SS : [_2A6F]
+			 JMP normaleprocess
+			__2A70 :
+		 LEA ECX, DWORD PTR SS : [_2A70]
+			 JMP normaleprocess
+			__2A71 :
+		 LEA ECX, DWORD PTR SS : [_2A71]
+			 JMP normaleprocess
+			__2A72 :
+		 LEA ECX, DWORD PTR SS : [_2A72]
+			 JMP normaleprocess
+			__2A73 :
+		 LEA ECX, DWORD PTR SS : [_2A73]
+			 JMP normaleprocess
+			__2A74 :
+		 LEA ECX, DWORD PTR SS : [_2A74]
+			 JMP normaleprocess
+			__2A75 :
+		 LEA ECX, DWORD PTR SS : [_2A75]
+			 JMP normaleprocess
+			__2A76 :
+		 LEA ECX, DWORD PTR SS : [_2A76]
+			 JMP normaleprocess
+			__2A77 :
+		 LEA ECX, DWORD PTR SS : [_2A77]
+			 JMP normaleprocess
+			__2A78 :
+		 LEA ECX, DWORD PTR SS : [_2A78]
+			 JMP normaleprocess
+			__2A79 :
+		 LEA ECX, DWORD PTR SS : [_2A79]
+			 JMP normaleprocess
+			__2A7A :
+		 LEA ECX, DWORD PTR SS : [_2A7A]
+			 JMP normaleprocess
+			__9C58 :
+		 LEA ECX, DWORD PTR SS : [_9C58]
+			 JMP normaleprocess
+			__9C59 :
+		 LEA ECX, DWORD PTR SS : [_9C59]
+			normaleprocess:
+			MOV EAX, Aok20_LangEax
+			PUSH EAX
+			JMP Aok20_004BD29D
+
+			continueproc :
+			MOV EAX, Aok20_LangEax
+			LEA ECX, DWORD PTR SS : [ESP + 8h]
+			PUSH EAX
+			JMP Aok20_004BD29D  
+	}
+}
 //0041C924  |. 8B0D 10456600    MOV ECX,DWORD PTR DS:[664510]                                ;  language.10000000
 //004A2151 | . 8B15 10456600    MOV EDX, DWORD PTR DS : [664510] ;  language.10000000
 void Aok20_LoadLanguageId()
 {
 	//InjectHook((void*)0x041C938, languageIdAok20,PATCH_JUMP);
-	InjectHook((void*)0x04A215B, languageIdAok20,PATCH_JUMP);
+	//InjectHook((void*)0x04A215B, languageIdAok20,PATCH_JUMP);
+	InjectHook((void*)0x04BD298, languageIdAok20v2,PATCH_JUMP);
+	InjectHook((void*)0x04BD26D, getIdLang,PATCH_JUMP);
 }
 
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
