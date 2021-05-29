@@ -8256,15 +8256,134 @@ DWORD _00426F50 = 0x0426F50;
 DWORD _005B9240 = 0x05B9240;
 
 DWORD _005B8130 = 0x05B8130;
+DWORD Rec_EAX;
+DWORD Rec_ECX;
+DWORD Rec_EDX;
+DWORD Aok20_00432430 = 0x0432430;
+DWORD Aok20_005B8149 = 0x05B8149;
+DWORD Aok20_005B8765 = 0x05B8765  ;
+//0x05B8184
+DWORD Aok20_005B2EA0 = 0x05B2EA0;
+DWORD Aok20_005B2EE0 = 0x05B2EE0;
+DWORD Aok20_005B1560 = 0x05B1560;
+DWORD Aok20_005B9430 = 0x05B9430;
+DWORD Aok20_005B85DD = 0x05B85DD;
+DWORD Aok20_004A2060 = 0x04A2060;
+DWORD Aok20_005B4520 = 0x05B4520;
+DWORD Aok20_00421EC0 = 0x0421EC0;
+void __declspec(naked)   FixRecordRestoredGame005B812Av2()
+{
+	__asm {
+		 ADD ESP, 8
+		 CMP EAX, EBX
+		 JE short _005B876E
+		 MOV BYTE PTR DS : [EAX] , BL
+		 _005B876E:
+		 LEA EDX, DWORD PTR SS : [ESP + 14h]
+		 MOV ECX, EBP
+		 PUSH EDX
+		 CALL Aok20_005B2EA0
+		 LEA EAX, DWORD PTR SS : [ESP + 14h]
+		 MOV ECX, EBP
+		 PUSH EAX
+		 CALL Aok20_005B2EE0
+		 /*CMP DWORD PTR SS : [ESP + 120h] , EBX
+		 JNZ SHORT empires2.005B87DD
+			 */
+
+		  MOV ECX, EBP
+		  CALL _005B9240//record game afer restore?
+		  TEST EAX, EAX
+		  JNZ short _005B87DD
+		  MOV ESI, DWORD PTR SS : [ESP + 10h]
+		  CMP ESI, EBX
+		  JE short _005B87C0
+		  MOV ECX, ESI
+		  CALL Aok20_004A2060
+		  TEST EAX, EAX
+		  JE short _005B87C0
+		  MOV ECX, ESI
+		  CALL Aok20_004A2060
+		  CMP BYTE PTR DS : [EAX] , BL
+		  JE short _005B87C0
+		  PUSH EBX
+		  MOV ECX, ESI
+		  JMP Aok20_005B85DD
+		_005B87C0:
+		MOV ECX, EBP
+		CALL Aok20_005B4520
+		MOV ECX, EBP
+		CALL Aok20_00421EC0
+		POP EDI
+		POP ESI
+		POP EBP
+		POP EBX
+		ADD ESP, 110h
+		RETN 4h
+
+ 
+		_005B87DD:
+		PUSH EBX
+		MOV ECX, EBP
+		CALL Aok20_005B1560
+		MOV ECX, EBP
+		CALL Aok20_005B9430
+		/*POP EDI
+		POP ESI
+		POP EBP
+		POP EBX
+		ADD ESP, 108
+		RETN 8*/
+		POP EDI
+		POP ESI
+		POP EBP
+		POP EBX
+		ADD ESP, 110h
+		RETN 4h
+
+
+
+	}
+}
+DWORD aok_005B9251 = 0x05B9251;
+DWORD aok_005B9271 = 0x05B9271;
+DWORD aok_00421820 = 0x0421820;
+void __declspec(naked) ourRecordFunction_005B9240()
+{
+	__asm {
+		 SUB ESP, 910h
+		 PUSH ESI
+		 PUSH EDI
+		 MOV ESI, ECX
+		 CALL aok_00421820
+		 TEST EAX, EAX
+		 JE  _005B941B
+		 MOV EDI, DWORD PTR DS : [664530h]
+		 JMP aok_005B9271
+		 _005B941B :
+		 JMP aok_005B9251
+	}
+}
+DWORD Aok20_ourRecordFunction_005B9240 = (DWORD)ourRecordFunction_005B9240;
 void __declspec(naked)   FixRecordRestoredGame005B812A()
 {
 	__asm {
+	
+
 		//MOV ECX, DWORD PTR DS : [7912A0]
 		//MOV ECX, DWORD PTR DS : [6645C4h]
+		MOV Rec_EAX, EAX
+		MOV Rec_ECX, ECX
+		MOV Rec_EDX, EDX
 		MOV ECX, DWORD PTR DS : [6645C4h]
 		//call _00426F50// 00426F50 / $ 81EC 10090000  SUB ESP, 910
-		call _005B9240
+		call Aok20_ourRecordFunction_005B9240//_005B9240
+
+		MOV EAX, Rec_EAX
+		MOV ECX, Rec_ECX
+		MOV EDX, Rec_EDX
 		MOV ECX, DWORD PTR SS : [EBP + 1B0h]
+
 		JMP _005B8130
 
 	}
@@ -8298,13 +8417,17 @@ void FixRecordRestoredGameBugHookAOK20()
 	//005B812A  |> 8B8D B0010000  MOV ECX,DWORD PTR SS:[EBP+1B0]
 	InjectHook((void*)0x05B812A, FixRecordRestoredGame005B812A,PATCH_JUMP);
 	//005B55BC | . 68 0CD96400    PUSH empires2.0064D90C;  ASCII "Status Screen"
-	InjectHook((void*)0x05B55BC, FixRecordRestoredGame005B55BC, PATCH_JUMP);
+	//InjectHook((void*)0x05B55BC, FixRecordRestoredGame005B55BC, PATCH_JUMP);
 
 	//005B921A | . 83FE 09        CMP ESI, 9
 	//	005B921D | . ^ 7C E9          JL SHORT empires2.005B9208
 
 
+	//005B8144  |. E8 E7A2E7FF    CALL empires2.00432430
+	//InjectHook((void*)0x05B8184  , FixRecordRestoredGame005B812Av2, PATCH_JUMP);
 
+	//0048B547     90             NOP
+		Nop(0x048B547, 2);
 
 }
  
@@ -9088,3 +9211,22 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	//aok20_FixDefaultRecording();
 	Aok20_LoadLanguageId();
 }
+
+//005E60C3 | . 68 35230000    PUSH 2335
+//005BC097   . 68 48260000    PUSH 2648                                        ; |Arg1 = 00002648
+//004321C0  |. 68 49260000    PUSH 2649
+//00432251  |. 68 E3260000    PUSH 26E3
+//0041CA2F  |. 68 DC070000    PUSH 7DC
+
+
+
+//004321C0 | . 68 49260000    PUSH 2649
+//005BC013   > A1 B0456600    MOV EAX,DWORD PTR DS:[6645B0]            ;  Case 17B9 of switch 005BBEA2
+//00439E59  |. 3946 18        CMP DWORD PTR DS:[ESI+18],EAX
+
+
+
+
+
+//0x05B8144
+//005B9240
