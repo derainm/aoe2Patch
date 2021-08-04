@@ -5267,12 +5267,12 @@ void version()
 	writeData(0x4F00DE, _04F00DE, 6);
 }
 
-
+HMODULE Aok20_7A5050;//windowed lib address
 void windowedModAok20(bool windowed)
 {
 	if (windowed)
 	{
-		LoadLibraryA("windmode.dll");
+		Aok20_7A5050=(HMODULE)LoadLibraryA("windmode.dll");
 		BYTE c_6690[] =
 		{
 		0x66,0x90
@@ -7478,6 +7478,127 @@ void __declspec(naked)  AddRMS506878()
 	}
 }
 #pragma endregion
+//noamde research
+//004A2791  |> 68 24486700    PUSH age2_x1.00674824                    ;  ASCII "NOMAD-MAP"; Case 21 of switch 004A26BB
+//0045F392   > BF 28376700    MOV EDI,age2_x1.00673728                 ;  ASCII "Nomad.rms"; Case 21 of switch 0045EEFF
+
+//004A43B8 | . 8BCE           MOV ECX, ESI
+//004A43BA | .E8 71311500    CALL age2_x1.005F7530
+//004A43BF | . 6A 21          PUSH 21
+//004A43C1 | . 68 2C656700    PUSH age2_x1.0067652C;  ASCII "nomad"
+
+//init ress 200 200 100 200 ....
+//0042A391   . 8B5481 FC      MOV EDX, DWORD PTR DS : [ECX + EAX * 4 - 4]
+//0042A395   . 8B8A A8000000  MOV ECX, DWORD PTR DS : [EDX + A8]
+//0042A39B.D981 70010000  FLD DWORD PTR DS : [ECX + 170]
+//0042A3A1.D805 38656300  FADD DWORD PTR DS : [636538]
+//0042A3A7.D959 04        FSTP DWORD PTR DS : [ECX + 4]
+//0042A3AA   . 8B4D 4C        MOV ECX, DWORD PTR SS : [EBP + 4C]
+//0042A3AD   . 8B5481 FC      MOV EDX, DWORD PTR DS : [ECX + EAX * 4 - 4]
+//0042A3B1   . 8B8A A8000000  MOV ECX, DWORD PTR DS : [EDX + A8]
+//0042A3B7.D981 78010000  FLD DWORD PTR DS : [ECX + 178]
+//0042A3BD.D805 D8556300  FADD DWORD PTR DS : [6355D8]
+//0042A3C3.D959 0C        FSTP DWORD PTR DS : [ECX + C]
+//0042A3C6   . 8B4D 4C        MOV ECX, DWORD PTR SS : [EBP + 4C]
+//0042A3C9   . 8B5481 FC      MOV EDX, DWORD PTR DS : [ECX + EAX * 4 - 4]
+//0042A3CD   . 8B8A A8000000  MOV ECX, DWORD PTR DS : [EDX + A8]
+//0042A3D3.D981 74010000  FLD DWORD PTR DS : [ECX + 174]
+//0042A3D9.D805 38656300  FADD DWORD PTR DS : [636538]
+//0042A3DF.D959 08        FSTP DWORD PTR DS : [ECX + 8]
+
+//add nomad 475 wood 
+//0042A5A8.D81D 24656300  FCOMP DWORD PTR DS : [636524]
+//0042A5AE.DFE0           FSTSW AX
+//0042A5B0.F6C4 01        TEST AH, 1
+//0042A5B3   . 74 0C          JE SHORT age2_x1.0042A5C1
+//0042A5B5.D942 04        FLD DWORD PTR DS : [EDX + 4]
+//0042A5B8.D805 20656300  FADD DWORD PTR DS : [636520]
+//0042A5BE.D95A 04        FSTP DWORD PTR DS : [EDX + 4]
+//0042A5C1 > 0FBF45 48      MOVSX EAX, WORD PTR SS : [EBP + 48]
+//0042A5C5   . 41             INC ECX
+//0042A5C6   . 3BC8           CMP ECX, EAX
+//0042A5C8   . ^ 7C CF          JL SHORT age2_x1.0042A599
+//0042A5CA > 66:395D 48     CMP WORD PTR SS : [EBP + 48] , BX
+//0042A5CE   . 8BC3           MOV EAX, EBX
+//0042A5D0   . 7E 22          JLE SHORT age2_x1.0042A5F4
+//0042A5D2 > 8B4D 4C        MOV ECX, DWORD PTR SS : [EBP + 4C]
+//0042A5D5   . 40             INC EAX
+//
+//
+//00558A04 | . 68 AC806500    PUSH empires2.006580AC;  ASCII "team-islands"
+//00558A09 | . 8BCE           MOV ECX, ESI
+//00558A0B | .E8 9062EBFF    CALL empires2.0040ECA0
+//0x0558A0B
+DWORD _0040ECA0= 0x040ECA0;
+DWORD _00558A10 = 0x0558A10;
+char nomadM[100] = "nomad";
+void __declspec(naked)  AddRMSNoamdRessources()
+{
+	__asm {
+		call _0040ECA0
+		PUSH 18
+		PUSH offset nomadM// empires2.006580AC;  ASCII "team-islands"
+		MOV ECX, ESI
+		call _0040ECA0
+		JMP _00558A10
+	}
+}
+//005CBCB6 > 8B0D C4456600  MOV ECX, DWORD PTR DS : [6645C4] ;  Default case of switch 005CB920
+//005CBCBC.E8 7FF4FEFF    CALL empires2.005BB140
+//005CBCC1   . 84C0           TEST AL, AL
+//005CBCC3   . 0F84 83000000  JE empires2.005CBD4C
+
+//005CBE7F.E8 7C5BE5FF    CALL empires2.00421A00
+//005CBE84   . 88842E 8B02000 > MOV BYTE PTR DS : [ESI + EBP + 28B] , AL
+//005CBE8B   . 46             INC ESI
+//005CBE8C   . 83FE 09        CMP ESI, 9
+//005CBE8F   . ^ 7C E7          JL SHORT empires2.005CBE78
+//005CBE91   . 66:395D 48     CMP WORD PTR SS : [EBP + 48] , BX
+//005CBE95   . 8BF3           MOV ESI, EBX
+//005CBE97   . 0F8E 41060000  JLE empires2.005CC4DE
+// 
+
+//005CAEF1   . 83C0 F7        ADD EAX, -9;  Switch(cases 9..18)
+// // nomad =20?
+//005CAEF4   . 83F8 0F        CMP EAX, 0F
+//005CAEF7   . 0F87 42010000  JA empires2.005CB03F
+//005CAEFD.FF2485 A8C75C0 > JMP DWORD PTR DS : [EAX * 4 + 5CC7A8]
+//005CAF04 > 8B0D C4456600  MOV ECX, DWORD PTR DS : [6645C4] ;  Case 9 of switch 005CAEF1
+
+//005CAEE6   . 8B0D C4456600  MOV ECX, DWORD PTR DS : [6645C4]
+//005CAEEC.E8 AFFFFEFF    CALL empires2.005BAEA0
+//005CAEF1   . 83C0 F7        ADD EAX, -9;  Switch(cases 9..18)
+//005CAEF4   . 83F8 0F        CMP EAX, 0F
+DWORD selectedMap = 0x0;
+DWORD _005BAEA0 = 0x05BAEA0;
+DWORD _005CAEF7 = 0x05CAEF7;
+void __declspec(naked)  AddRMSNoamdRessources2()
+{
+	__asm {
+		CALL _005BAEA0
+		ADD EAX, -9h;  Switch(cases 9..18)
+		CMP EAX, 0Fh
+		MOV selectedMap,EAX
+		JMP _005CAEF7 
+	}
+}
+//005CBCBC   . E8 7FF4FEFF    CALL empires2.005BB140
+
+DWORD _005CBAD3= 0x05CBAD3 ;
+float nomadWood = 475.00f;
+//005CBB59   . D805 1CCB6200  FADD DWORD PTR DS:[62CB1C]
+void __declspec(naked)  AddRMSNoamdRessources3()
+{
+	__asm {
+		 cmp selectedMap,20h
+		 JE nomadRes
+		 FADD DWORD PTR DS : [62CB1Ch]
+		 JMP  _005CBAD3
+		 nomadRes:
+		 FADD DWORD PTR DS : [nomadWood]
+		 JMP  _005CBAD3
+	}
+}
 
 
 void AddRmsAOK20()
@@ -7502,6 +7623,13 @@ void AddRmsAOK20()
 	//on scenario screen
 	_0050687D = 0x050687D;
 	InjectHook((void*)0x506878, AddRMS506878, PATCH_JUMP);
+
+	//nomade ressource seztup
+	InjectHook((void*)0x0558A0B, AddRMSNoamdRessources, PATCH_JUMP);
+	//005CAEEC   . E8 AFFFFEFF    CALL empires2.005BAEA0
+	InjectHook((void*)0x05CAEEC, AddRMSNoamdRessources2, PATCH_JUMP);
+	//005CBACD   . D805 1CCB6200  FADD DWORD PTR DS:[62CB1C]
+	InjectHook((void*)0x05CBACD , AddRMSNoamdRessources3, PATCH_JUMP);
 }
 
 //0043C7F1  |. E8 2ADC1A00    CALL empires2.005EA420
@@ -7866,7 +7994,7 @@ DWORD _004DCACA = 0x04DCACA;
 
 DWORD basePlayersAdress;
 BYTE color;
-
+DWORD aok20_chatEcx;
 
 void __declspec(naked)  chatColor004DCAC1()
 {
@@ -7897,6 +8025,9 @@ void __declspec(naked)  chatColor004DCAC1()
 		MOV ECX, DWORD PTR DS : [ECX]
 		ADD ECX, 10h
 		MOV EAX, 0h
+		CMP ECX,0FFFh
+		JL white
+
 		MOV al, BYTE PTR DS : [ECX]
 		MOV color, al
 		//restaure register
@@ -7924,6 +8055,20 @@ void __declspec(naked)  chatColor004DCAC1()
 		MOV color, 15h
 		standartColor :
 		push color
+			JMP _004DCACA
+
+			white :
+			//restaure register
+			MOV  EAX, c_EAX
+			MOV  ECX, c_ECX
+			MOV  EDX, c_EDX
+			MOV  EBX, c_EBX
+			MOV  ESP, c_ESP
+			MOV  EBP, c_EBP
+			MOV  ESI, c_ESI
+			MOV  EDI, c_EDI
+			LEA ECX, DWORD PTR SS : [ESP + 34h]
+			push 0FFh
 			JMP _004DCACA
 			//white:
 
@@ -8411,7 +8556,19 @@ void __declspec(naked)   FixRecordRestoredGame005B55BC()
 			JMP _005B55C1
 	}
 }
+//MOV AL,BYTE PTR DS:[ECX+9D0]
+DWORD AOK20_00421820 = 0x0421820;
+DWORD AOK20_005B9407 =0x05B9407;
+void __declspec(naked)   ForceRecordRecord()
+{
+	__asm {
+		MOV DWORD PTR DS : [ECX + 9D8h] , 1h
+		MOV   BYTE PTR DS : [ECX + 9D0h],1h
+		CALL  AOK20_00421820
+		JMP AOK20_005B9407 
 
+	}
+}
 void FixRecordRestoredGameBugHookAOK20()
 {
 	//005B812A  |> 8B8D B0010000  MOV ECX,DWORD PTR SS:[EBP+1B0]
@@ -8428,7 +8585,13 @@ void FixRecordRestoredGameBugHookAOK20()
 
 	//0048B547     90             NOP
 		Nop(0x048B547, 2);
-
+		/*//record
+		//005B91E7 | > C705 C8D46400 > MOV DWORD PTR DS : [64D4C8] , 1D4C;  Case 2 of switch 005B91D5
+		//005B91F1 | .EB 0A          JMP SHORT empires2.005B91FD
+		Nop(0x05B9251, 6);
+		//005B9409     EB 10          JMP SHORT empires2.005B941B
+		//Patch(0x05B9409, (BYTE)0xEB);
+		InjectHook((void*)0x05B9402, ForceRecordRecord, PATCH_JUMP);*/
 }
  
 //004E2CD0 / $ 51             PUSH ECX
@@ -9187,8 +9350,180 @@ void Aok20_LoadLanguageId()
 }
 //bug crash
 //005B93AF  |. E8 AC343274    CALL DSOUND.748DC860
+//005BC76C  |. E8 6F20EAFF    CALL empires2.0045E7E0                   ; \empires2.0045E7E0
+//005FE400   $ 55             PUSH EBP
+
+const char kernel32[] = "kernel32.dll";
+//const char FlushInstructionCache[] = "FlushInstructionCache";
+//const char VirtualProtect[] = "VirtualProtect";
+DWORD Aok20_005FE400 = 0x05FE400;
+void __declspec(naked) f_007F10E0()
+{
+	__asm
+	{
+		PUSH EBP
+		MOV EBP, ESP
+		SUB ESP, 20h
+		PUSH EBX
+		PUSH ESI
+		PUSH EDI
+		PUSH offset kernel32; ASCII "kernel32.dll"
+		CALL  DWORD PTR DS : [61C110h] ; KERNEL32.LoadLibraryA//CALL DWORD PTR DS : [<&KERNEL32.LoadLibraryA>] ; KERNEL32.LoadLibraryA
+		TEST EAX, EAX
+		JE _007F1183
+		MOV DWORD PTR SS : [EBP - 0Ch] , EAX
+		MOV EDI, EAX
+		PUSH offset _007DB7E0; ASCII "FlushInstructionCache"// FlushInstructionCache
+		PUSH EDI
+		CALL DWORD PTR DS : [61C0D8h] ; KERNEL32.GetProcAddress //[<&KERNEL32.GetProcAddress>] 
+		TEST EAX, EAX
+		JE short _007F1179
+		MOV DWORD PTR SS : [EBP - 10h] , EAX
+		PUSH offset _007DB7F6; ASCII "VirtualProtect"//VirtualProtect ; ASCII "VirtualProtect" //age2_x1_.007F1313
+		PUSH EDI
+		CALL DWORD PTR DS : [61C0D8h] ; KERNEL32.GetProcAddress //[<&KERNEL32.GetProcAddress>] 
+		TEST EAX, EAX
+		JE short _007F1179
+		MOV DWORD PTR SS : [EBP - 14h] , EAX
+		MOV EBX, DWORD PTR SS : [EBP + 8h]
+		LEA ESI, DWORD PTR SS : [EBP + 8h]
+		LEA ECX, DWORD PTR SS : [EBP - 4h]
+		MOV EDI, DWORD PTR DS : [ESI + 8h]
+		MOV EAX, DWORD PTR DS : [ESI]
+		PUSH ECX
+		PUSH 40h
+		PUSH EDI
+		PUSH EAX
+		MOV DWORD PTR SS : [EBP - 8h] , EAX
+		MOV DWORD PTR SS : [EBP - 4h] , 0h
+		CALL DWORD PTR SS : [EBP - 14h]
+		MOV EAX, DWORD PTR DS : [ESI + 4h]
+		PUSH EDI
+		PUSH EAX
+		MOV ECX, DWORD PTR SS : [EBP - 8h]
+		PUSH ECX
+		CALL Aok20_005FE400//age2_x1_.00616A40
+		MOV EAX, DWORD PTR SS : [EBP - 4h]
+		ADD ESP, 0Ch
+		LEA EDX, DWORD PTR SS : [EBP - 4h]
+		PUSH EDX
+		PUSH EAX
+		PUSH EDI
+		MOV ECX, DWORD PTR SS : [EBP - 8h]
+		PUSH ECX
+		CALL DWORD PTR SS : [EBP - 14h]
+		CALL DWORD PTR DS : [61C130h] ; KERNEL32.GetCurrentProcess // [<&KERNEL32.GetCurrentProcess>] 
+		MOV ECX, DWORD PTR DS : [ESI + 8h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		PUSH ECX
+		PUSH EDX
+		PUSH EAX
+		CALL DWORD PTR SS : [EBP - 10h]
+		_007F1179:
+		MOV EAX, DWORD PTR SS : [EBP - 0Ch]
+		PUSH EAX
+		CALL DWORD PTR DS : [61C1A0h] ; KERNEL32.FreeLibrary// [<&KERNEL32.FreeLibrary>]
+		_007F1183:
+		POP EDI
+		POP ESI
+		OR EAX, EAX
+		POP EBX
+		MOV ESP, EBP
+		POP EBP
+		RETN 0Ch
+	}
+}
+
+//005BC5A8  |. 8A48 3D        MOV CL,BYTE PTR DS:[EAX+3D]
 
 
+
+//windowed mod with full screen 
+// 005BC795  |. 68 A8DC6500    PUSH empires2.0065DCA8                   ;  ASCII "video_changed_res=%d, double_size=%d"
+//005E5809    -E9 02CA1D00    JMP age2_x1_.007C2210
+DWORD Aok20_0041DA0E = 0x041DA0E;
+DWORD Aok20_0049FE00 = 0x049FE00;
+DWORD Aok20_0045E7E0 = 0x045E7E0;
+DWORD Aok20_f_007F10E0 = (DWORD)f_007F10E0;
+
+//0041DA09   . E8 F2230800    CALL empires2.0049FE00
+//0045E7E0  /$ 83EC 6C        SUB ESP,6C
+//B8 20 00 00 00 50 8B 55 10 52 8B 4D 0C 51
+//00447537 | ? 008A 483D80F9  ADD BYTE PTR DS : [EDX + F9803D48] , CL
+//7A5050   - 0512000 =293050
+//// Change background mode flag
+//Injection(0x29304c, "01"),
+// Extend windowed support
+//Injection(0x293048, "01"),
+//conclusion we just set flag to 1
+
+
+//005BC5D8  |. 68 D0DC6500    PUSH empires2.0065DCD0                               ; /Arg1 = 0065DCD0 ASCII "8BITVIDEO"
+
+//005BC5A8  |. 8A48 3D        MOV CL,BYTE PTR DS:[EAX+3D]
+//005BC5A8  |. 8A48 3D        MOV CL,BYTE PTR DS:[EAX+3D]
+DWORD Aok20_005BC5AE = 0x05BC5AE;
+void __declspec(naked) windowedFullScreen005BC5A8()
+{
+	__asm
+	{
+		MOV EAX, DWORD PTR DS : [Aok20_7A5050]//[7A5050]
+		TEST EAX, EAX
+		JMP Aok20_005BC5AE  
+	}
+}
+ 
+ 
+void __declspec(naked) windowedFullScreen()
+{
+	__asm
+	{
+		CALL Aok20_0049FE00
+		//007C2215   8B15 50507A00    MOV EDX, DWORD PTR DS : [7A5050]
+		_007C2215:
+		MOV EDX, DWORD PTR DS : [Aok20_7A5050]
+		TEST EDX, EDX
+		JE short _007C2256
+		PUSH 1h
+		ADD EDX, 11A71h
+		PUSH _007C225B
+		PUSH EDX
+		PUSH 0Eh
+		ADD EDX, 45h
+		PUSH _007C225C
+		PUSH EDX
+		CALL Aok20_f_007F10E0//age2_x1_.007F10E0
+		CALL Aok20_f_007F10E0//age2_x1_.007F10E0
+		//MOV ECX, DWORD PTR DS : [ESI + 6Ch]
+			//todo to fix?
+
+		MOV ECX, DWORD PTR DS : [ESI + 68h]
+		PUSH 8h
+		PUSH 258h
+		PUSH 320h
+		CALL Aok20_0045E7E0
+		_007C2256:
+		JMP Aok20_0041DA0E
+		_007C225B:
+		JMP short _007C2215
+		_007C225C:
+		MOV EAX, 20h
+		PUSH EAX
+		MOV EDX, DWORD PTR SS : [EBP + 10h]
+		PUSH EDX
+		MOV ECX, DWORD PTR SS : [EBP + 0Ch]
+		PUSH ECX
+		//???
+	}
+}
+//why need full screen
+//windowed mod increse preformance issue to aok it is good to have it to fix lag 
+void windowedFullScreenHook()
+{
+	//0041DA09   . E8 F2230800    CALL empires2.0049FE00
+	InjectHook((void*)0x041DA09, windowedFullScreen, PATCH_JUMP);
+	InjectHook((void*)0x05BC5A8, windowedFullScreen005BC5A8, PATCH_JUMP);
+}
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 {
 	widescreenAOk20(wideScreenCentred);
@@ -9201,7 +9536,7 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	AddNewBittonFormationAOK20();
 	AddRmsAOK20();
 	FixLagHookAOK20();
-	chatchatColorFixeAOK20();
+	//chatchatColorFixeAOK20();
 	popHookAOK20();
 	aok20AddAColor();
 	FixRecordRestoredGameBugHookAOK20();
@@ -9210,23 +9545,10 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	//FixOverwriteRecording();
 	//aok20_FixDefaultRecording();
 	Aok20_LoadLanguageId();
+	//windowedFullScreenHook();
+
 }
-
-//005E60C3 | . 68 35230000    PUSH 2335
-//005BC097   . 68 48260000    PUSH 2648                                        ; |Arg1 = 00002648
-//004321C0  |. 68 49260000    PUSH 2649
-//00432251  |. 68 E3260000    PUSH 26E3
-//0041CA2F  |. 68 DC070000    PUSH 7DC
-
-
-
-//004321C0 | . 68 49260000    PUSH 2649
-//005BC013   > A1 B0456600    MOV EAX,DWORD PTR DS:[6645B0]            ;  Case 17B9 of switch 005BBEA2
-//00439E59  |. 3946 18        CMP DWORD PTR DS:[ESI+18],EAX
-
-
-
-
-
-//0x05B8144
-//005B9240
+ 
+//crash out patch
+//0048175E  |. 8A44B8 05      MOV AL,BYTE PTR DS:[EAX+EDI*4+5]
+//482BD6

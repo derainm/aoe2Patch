@@ -3566,6 +3566,17 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 		InjectHook(0x0522356, ResizeslpInterface, PATCH_JUMP);
 		//005252BB   .-E9 50C32900    JMP age2_x1_.007C1610
 		InjectHook(0x05252BB, fixRecordInterface, PATCH_JUMP);
+		//0051FBBF     EB 7D          JMP SHORT age2_x1.0051FC3E
+		//	0051FBC1     90             NOP
+		//	0051FBC2     90             NOP
+		//	0051FBC3     90             NOP
+		//	0051FBC4     90             NOP
+		//	0051FBC5     90             NOP
+		//	0051FBC6     90             NOP
+		//	0051FBC7     90             NOP
+		writeByte(0x051FBBF, 0xEB);
+		writeByte(0x51FBC0, 0x7D);
+		Nop(0x051FBC1, 7);
 
 	}
 }
