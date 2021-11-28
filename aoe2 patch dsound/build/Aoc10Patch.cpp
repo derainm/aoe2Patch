@@ -3567,7 +3567,10 @@ void Aoc10Widescreen(bool wideScreenCentred)
 		//004E80EB     90             NOP
 		//004E80EC     90             NOP
 		Nop(0x04E80EB, 2);
-
+		//fix x1024 widescreen bug
+		//004E8116     EB 46          JMP SHORT age2_x1.004E815E
+		writeByte(0x04E8116, 0xEB);
+		writeByte(0x04E8116+1, 0x46);
 
 
 	}

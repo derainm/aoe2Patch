@@ -1,8 +1,10 @@
-#include "Aoc10CPatch.h"
+﻿#include "Aoc10CPatch.h"
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
 #include <assert.h>
- 
+#include <iostream>
+#include <fstream>
+#include <string>
 
 DWORD Aoc10C_H;
 DWORD Aoc10C_V;
@@ -3577,7 +3579,10 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 		writeByte(0x051FBBF, 0xEB);
 		writeByte(0x51FBC0, 0x7D);
 		Nop(0x051FBC1, 7);
-
+		//fix x1024 widescreen bug
+		//0051FBF6     EB 46          JMP SHORT age2_x1.0051FC3E
+		writeByte(0x051FBF6, 0xEB);
+		writeByte(0x051FBF6+1, 0x46);
 	}
 }
 void noStartup()
@@ -7238,8 +7243,5658 @@ void Aoc10c_FixRecordingExploreStateBug()
 	writeData(0x525712, Aoc10C_0525712, 7);
 
 }
+
+using namespace std;
+
+float ratioLogoUnitTech = 1.0f;
+int translationX = 0;
+bool selectedIdlVillager = false;
+bool selectAllTC = false;
+bool selectAllArmy = false;
+bool selectAllSiegeWorkshop = false;
+bool selectAllMilitaryBuilding = false;
+bool selectAllArcheryRange = false;
+bool selectAllCastle = false;
+bool selectAllDonjon = false;
+bool selectAllKrepost = false;
+bool selectAllMarket = false;
+bool selectAlMonastery = false;
+bool selectAlltradeCarte = false;
+bool selectAllDock = false;
+bool selectAllBarrack = false;
+bool selectAllStable = false;
+bool deleteAllSelected = false;
+
+int cptIDLEVIllager = 0;
+int cptTCselected = 0;
+int cptArmyselected = 0;
+int cptallSiegeWorkshop = 0;
+int cptallMilitaryBuilding = 0;
+int cptallArcheryRange = 0;
+int cptallCastle = 0;
+int cptallDonjon = 0;
+int cptallKrepost = 0;
+int cptallMarket = 0;
+int cptallMonastery = 0;
+int cptalltradeCarte = 0;
+int cptallDock = 0;
+int cptallBarrack = 0;
+int cptallStable = 0;
+int countUnitDelete = 0;
+
+char strWood[50];
+char strFood[50];
+char strGold[50];
+char strStone[50];
+char strNBVillager[50];
+char strIDLE[50];
+char strCiv[100];
+char strAge[100];
+
+char strResWood[50];
+char strResFood[50];
+char strResGold[50];
+char strResStone[50];
+char strResPOP[50];
+
+DWORD flagClean = 0x0;
+int Hotkeys[15][4] =
+{
+	{0x56 , 0xA0, 0x0, 0x0}, //0: Select all idle villagers (default Ctrl+.)
+	{0x44 , 0xA0, 0x0, 0x0},    //1: Select all idle army (default Ctrl+,)
+	{0x53 , 0xA0, 0x0, 0x0},    //2: Select all trade carts (default Ctrl+M)
+	{0x46 , 0xA0, 0x0, 0x0},    //3: Select all Town Centers (default Ctrl+H)
+	{0x58 , 0xA0, 0x0, 0x0},    //4: Select all Barracks (default Ctrl+Q)
+	{0x43 , 0xA0, 0x0, 0x0},    //5: Select all Archery Ranges (default Ctrl+W)
+	{0x41 , 0xA0, 0x0, 0x0},    //6: Select all Stables (default Ctrl+E)
+	{0x5A , 0xA0, 0x0, 0x0},    //7: Select all Siege Workshops (default Ctrl+R)
+	{0x52 , 0xA0, 0x0, 0x0},    //8: Select all Docks (default Ctrl+T)
+	{0x54 , 0xA0, 0x0, 0x0},    //9: Select all Markets (default Ctrl+D)
+	{0x47 , 0xA0, 0x0, 0x0},    //10: Select all Monasteries (default Ctrl+F)
+	{0x59 , 0xA0, 0x0, 0x0},    //11: Select all Castles (default Ctrl+C)
+	{0x4B , 0xA0, 0x0, 0x0},    //12: Select all Krepost (default Ctrl+V)
+	{0x44 , 0xA0, 0x0, 0x0},    //13: Select all Donjon (default Ctrl+V)
+	{0x4D , 0xA0, 0x0, 0x0}     //14: Select all Military buildings (default Ctrl+A)
+};
+
+//16770 = V//Select_all Idle_villagers
+//16771 = D// Select all Idle_military
+//16772 = S// Select all Trade_carts
+//16773 = F// Select all Town_centers
+//16774 = X// Select all Barracks
+//16775 = C// Select all Archery ranges
+//16776 = A// Select all Stables
+//16777 = Z// Select all Siege_workshops
+//16778 = R// Select all Docks
+//16779 = T// Select all Markets
+//16780 = G// Select all Monasteries
+//16781 = Y// Select all Castles
+//16782 = K// Select all Kreposts
+//16783 = D// Select all Donjons
+//16783 = M//Select all Military_Buildings
+DWORD Starting = 0x0;
+DWORD _00442320 = 0x0442320;
+DWORD _0043E690 = 0x043E690;
+//MOV Starting, 1h
+void __declspec(naked)  getstartedGame()
+{
+	__asm {
+		CALL _0043E690
+		MOV Starting, 1h
+		JMP _00442320
+	};
+}
+DWORD _7_005E7560 = 0x05E7560;
+//0x0521139
+//transform get current player to get each player
+DWORD CompterNbPlayer = 0x1;//not 0,we don't compte gaia
+DWORD showOnlyCurrrentPlayerVillagerPerRessources = 0x0;
+DWORD currentplayerIndexx;
+DWORD PlarAddresss;
+
+void __declspec(naked) geteachPlayer()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		CALL _7_005E7560
+		MOV currentplayerIndexx, ECX
+		MOV ECX, DWORD PTR DS : [7912A0h]
+
+		MOV EAX, DWORD PTR DS : [ECX + 424h]
+		TEST EAX, EAX
+		JE short _005E758F
+		MOV DX, WORD PTR DS : [EAX + 48h]//number of player gaia included
+		JL short _005E758F//if single player we ignore
+		//MOV CX,WORD PTR DS:[EAX+94h]//current player
+		retry :
+		MOV ECX, 0h
+			MOV ECX, CompterNbPlayer
+			INC CompterNbPlayer
+			CMP currentplayerIndexx, ECX
+			JNZ flagf
+
+			MOV showOnlyCurrrentPlayerVillagerPerRessources, 1h
+			JMP conti
+			flagf :
+		MOV showOnlyCurrrentPlayerVillagerPerRessources, 0h
+			conti :
+
+		CMP CX, DX
+			JGE short _005E758F
+			TEST CX, CX
+			JL short _005E758F
+			MOV EDX, DWORD PTR DS : [EAX + 4Ch]
+			MOVSX ECX, CX
+			MOV EAX, DWORD PTR DS : [EDX + ECX * 4h]
+			MOV PlarAddresss, EAX
+			RETN
+			_005E758F :
+		MOV CompterNbPlayer, 1h // we reset player compter
+			JMP retry
+	}
+}
+DWORD hidev = 0x0;
+//0052150B   > 894424 10      MOV DWORD PTR SS:[ESP+10],EAX
+DWORD _00521592 = 0x0521592;
+DWORD _00521513 = 0x0521513;
+void __declspec(naked) showOnlyRessPerVillageOnCurrentPlayer()
+{
+	__asm {
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		CMP showOnlyCurrrentPlayerVillagerPerRessources, 1h
+		JNZ _hide
+		CMP hidev, 1h
+		JE _hide
+		JMP _00521513
+		_hide :
+		JMP _00521592
+	}
+}
+DWORD TradeUnite;
+DWORD Repairman;
+DWORD Builder;
+DWORD StoneMiner;
+DWORD GoldMiner;
+DWORD Lumberjack;
+DWORD sheperds;
+DWORD Hunter;
+DWORD Fishermen;
+DWORD Forage;
+DWORD Farmer;
+DWORD FishingShipp;
+DWORD IdleFishingShipps;
+DWORD IdleVillagers;
+DWORD onFOOD;
+DWORD onGOLD;
+DWORD IDLE;
+
+DWORD IndexCurrentPlayer;
+
+DWORD ma_EAX;
+DWORD ma_ECX;
+DWORD ma_EDX;
+DWORD ma_EBX;
+DWORD ma_ESP;
+DWORD ma_EBP;
+DWORD ma_ESI;
+DWORD ma_EDI;
+DWORD _EAXVilStatus;
+DWORD _00521403 = 0x0521403;
+DWORD _GetPlayerColor;
+
+
+
+//void __declspec(naked)  ggetMatrix()
+//{
+//    __asm {
+//        //cmp _GetPlayerColor,0h
+//        //JNZ matrix 
+//      /*
+//
+//        MOV EDX, DWORD PTR DS : [7912A0h]
+//        MOV EAX, DWORD PTR DS : [EDX + 424h]
+//        MOV EAX, DWORD PTR DS : [EAX + 4Ch]
+//        MOV ECX, IndexCurrentPlayer
+//        MOV ECX, DWORD PTR DS : [EAX + ECX * 4h]
+//        //MOV ECX, DWORD PTR DS : [EAX +  4h] 
+//        MOV EDX, DWORD PTR DS : [ECX + 160h]
+//        MOV EAX, DWORD PTR DS : [EDX + 20h]//color
+//        MOV _GetPlayerColor, EAX
+//      
+//
+//        //restore register
+//        MOV EAX, ma_EAX
+//        MOV ECX, ma_ECX
+//        MOV EDX, ma_EDX
+//        MOV EBX, ma_EBX
+//        MOV ESP, ma_ESP
+//        MOV EBP, ma_EBP
+//        MOV ESI, ma_ESI
+//        MOV EDI, ma_EDI
+//          */
+//
+//
+//    //matrix:
+//        //save register
+//        MOV ma_EAX, EAX
+//            MOV ma_ECX, ECX
+//            MOV ma_EDX, EDX
+//            MOV ma_EBX, EBX
+//            MOV ma_ESP, ESP
+//            MOV ma_EBP, EBP
+//            MOV ma_ESI, ESI
+//            MOV ma_EDI, EDI
+//
+//        //save eax
+//        MOV _EAXVilStatus, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 50h]
+//            MOV IdleVillagers, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 4Ch]
+//            MOV IdleFishingShipps, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 48h]
+//            MOV FishingShipp, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 44h]
+//            MOV Farmer, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 40h]
+//            MOV Forage, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 3Ch]
+//            MOV Fishermen, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 38h]
+//            MOV Hunter, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 34h]
+//            MOV sheperds, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 30h]
+//            MOV Lumberjack, EAX
+//            //MOV EAX,0h
+//            MOV AL, BYTE PTR SS : [ESP + 2Ch]//WORD PTR SS : [ESP + 2Ch]
+//            MOV GoldMiner, EAX
+//            //MOV EAX, 0h
+//            MOV AL, BYTE PTR SS : [ESP + 2Eh]//2Ah
+//            MOV StoneMiner, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 28h]
+//            MOV Builder, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 24h]
+//            MOV Repairman, EAX
+//            MOV EAX, DWORD PTR SS : [ESP + 20h]
+//            MOV TradeUnite, EAX
+//
+//            MOV onFOOD, 0h
+//            MOV EAX, 0h
+//            ADD EAX, sheperds
+//            ADD EAX, Hunter
+//            ADD EAX, Fishermen
+//            ADD EAX, Forage
+//            ADD EAX, Farmer
+//            ADD EAX, FishingShipp
+//            MOV onFOOD, EAX
+//
+//            MOV onGOLD, 0h
+//            MOV EAX, 0h
+//            ADD EAX, GoldMiner
+//            ADD EAX, TradeUnite
+//            MOV onGOLD, EAX
+//
+//            MOV IDLE, 0h
+//            MOV EAX, 0h
+//            ADD EAX, IdleVillagers
+//            ADD EAX, IdleFishingShipps
+//            MOV IDLE, EAX
+//
+//            //restore eax
+//            MOV  EAX, _EAXVilStatus
+//
+//            //restore register
+//            MOV EAX, ma_EAX
+//            MOV ECX, ma_ECX
+//            MOV EDX, ma_EDX
+//            MOV EBX, ma_EBX
+//            MOV ESP, ma_ESP
+//            MOV EBP, ma_EBP
+//            MOV ESI, ma_ESI
+//            MOV EDI, ma_EDI
+//            MOV ECX, 0483h
+//            XOR EAX, EAX
+//            SUB ECX, EBX
+//
+//
+//            JMP _00521403
+//    }
+//
+//}
+;
+
+float floatFromBits(DWORD const a)
+{
+	return static_cast<int>(a);
+}
+
+
+//0051BF0C   . 8B0D A0127900  MOV ECX,DWORD PTR DS:[0x7912A0]
+DWORD _00521110 = 0x0521110;
+DWORD _00521F29 = 0x0521F29;
+
+DWORD stats_EAX;
+DWORD stats_ECX;
+DWORD stats_EDX;
+DWORD stats_EBX;
+DWORD stats_ESP;
+DWORD stats_EBP;
+DWORD stats_ESI;
+DWORD stats_EDI;
+//0x0521F23
+DWORD FLAGShowPanelVilStatus = 0x0;
+
+void __declspec(naked)  GetVillagerStatusDisplayressources()
+{
+	__asm {
+		//save register
+		MOV stats_EAX, EAX
+		MOV stats_ECX, ECX
+		MOV stats_EDX, EDX
+		MOV stats_EBX, EBX
+		MOV stats_ESP, ESP
+		MOV stats_EBP, EBP
+		MOV stats_ESI, ESI
+		MOV stats_EDI, EDI
+		//CMP Starting, 1h
+		//JNZ restore
+
+
+		MOV EAX, DWORD PTR DS : [07912A0h]
+		TEST EAX, EAX
+		JE restore
+		//00446397   > 8B8D 20180000  MOV ECX,DWORD PTR SS:[EBP+0x1820]
+
+		MOV FLAGShowPanelVilStatus, 1h
+		MOV ECX, DWORD PTR SS : [EAX + 01820h]
+		TEST ECX, ECX
+		JE restore
+		MOV ECX, ESI
+		CALL _00521110
+		MOV FLAGShowPanelVilStatus, 0h
+		//ECX
+		// 00521F29  |. 8A88 14020000  MOV CL,BYTE PTR DS:[EAX+0x214]
+		//loop_ :
+		// //?????
+		//////MOV EAX, DWORD PTR SS : [ECX + 50h]
+		//////TEST EAX, EAX
+		//////JE restore
+
+
+
+	restore:
+		//restaure register
+		MOV EAX, stats_EAX
+			MOV ECX, stats_ECX
+			MOV EDX, stats_EDX
+			MOV EBX, stats_EBX
+			MOV ESP, stats_ESP
+			MOV EBP, stats_EBP
+			MOV ESI, stats_ESI
+			MOV EDI, stats_EDI
+			//normale
+			MOV EAX, DWORD PTR DS : [ESI + 0121Ch]
+			JMP _00521F29
+	}
+}
+DWORD pop_current;                  //+0x2C
+DWORD Pop_avaible;                  //+0x2C
+//get current pop
+//00452914 | .  50            PUSH EAX; / Arg6 = 0C8
+//0045291A   . 50             PUSH EAX                                 ; |Arg5
+DWORD _00452923 = 0x0452923;
+DWORD _006139E4 = 0x06139E4;
+
+DWORD Pop_stats_EAX;
+DWORD Pop_stats_ECX;
+DWORD Pop_stats_EDX;
+DWORD Pop_stats_EBX;
+DWORD Pop_stats_ESP;
+DWORD Pop_stats_EBP;
+DWORD Pop_stats_ESI;
+DWORD Pop_stats_EDI;
+void __declspec(naked)  getCurentPOP()
+{
+	__asm {
+
+
+
+		PUSH EAX; / Arg6 = 0C8
+		MOV Pop_avaible, EAX
+		CALL _006139E4
+		MOV pop_current, EAX
+		PUSH EAX; | Arg5
+		PUSH 02h; | Arg4 = 00000002
+		LEA EAX, DWORD PTR SS : [EBP + 017Fh]
+		JMP _00452923
+	}
+
+}
+//00555460 
+
+
+//00520A8F   . 8D8424 9C00000>LEA EAX,DWORD PTR SS:[ESP+9C]
+
+//DWORD _00520A96 = 0x0520A96;
+DWORD _00602D6F = 0x0602D6F;
+DWORD z_00556C50 = 0x0556C50;
+DWORD z_005E7560 = 0x05E7560;
+void __declspec(naked)  cleanScreenn()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP flagClean, 1h
+		JNZ conti
+		//save register
+		MOV Pop_stats_EAX, EAX
+		MOV Pop_stats_ECX, ECX
+		MOV Pop_stats_EDX, EDX
+		MOV Pop_stats_EBX, EBX
+		MOV Pop_stats_ESP, ESP
+		MOV Pop_stats_EBP, EBP
+		MOV Pop_stats_ESI, ESI
+		MOV Pop_stats_EDI, EDI
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		CALL z_005E7560
+		MOV ECX, EAX
+		CALL z_00556C50
+		MOV flagClean, 0h
+
+		//restore register
+		MOV EAX, Pop_stats_EAX
+		MOV ECX, Pop_stats_ECX
+		MOV EDX, Pop_stats_EDX
+		MOV EBX, Pop_stats_EBX
+		MOV ESP, Pop_stats_ESP
+		MOV EBP, Pop_stats_EBP
+		MOV ESI, Pop_stats_ESI
+		MOV EDI, Pop_stats_EDI
+		conti :
+		MOV EAX, DWORD PTR DS : [ESI + 18h]
+			CMP EAX, -1h
+
+
+			//JMP _00520A96
+			JMP _00602D6F
+	}
+}
+
+//00520A8F   . 8D8424 9C00000>LEA EAX,DWORD PTR SS:[ESP+9C]
+
+DWORD _00520A96 = 0x0520A96;
+//DWORD _00602D6F = 0x0602D6F;
+void __declspec(naked)  cleanScreenn2()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP flagClean, 1h
+		JNZ conti
+		//save register
+		MOV Pop_stats_EAX, EAX
+		MOV Pop_stats_ECX, ECX
+		MOV Pop_stats_EDX, EDX
+		MOV Pop_stats_EBX, EBX
+		MOV Pop_stats_ESP, ESP
+		MOV Pop_stats_EBP, EBP
+		MOV Pop_stats_ESI, ESI
+		MOV Pop_stats_EDI, EDI
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		CALL z_005E7560
+		MOV ECX, EAX
+		CALL z_00556C50
+		MOV flagClean, 0h
+		//restore register
+		MOV EAX, Pop_stats_EAX
+		MOV ECX, Pop_stats_ECX
+		MOV EDX, Pop_stats_EDX
+		MOV EBX, Pop_stats_EBX
+		MOV ESP, Pop_stats_ESP
+		MOV EBP, Pop_stats_EBP
+		MOV ESI, Pop_stats_ESI
+		MOV EDI, Pop_stats_EDI
+		conti :
+
+		LEA EAX, DWORD PTR SS : [ESP + 9Ch]
+
+
+			JMP _00520A96
+			//JMP _00602D6F
+	}
+}
+DWORD _0044DBF5 = 0x044DBF5;
+DWORD _0044DB43 = 0x044DB43;
+DWORD flagHide = 0x0;
+
+DWORD getplayer = 0x05E7560;
+DWORD _0046A110 = 0x046A110;
+
+
+DWORD removeUnitQueue_EAX;
+DWORD removeUnitQueue_ECX;
+DWORD removeUnitQueue_EDX;
+DWORD removeUnitQueue_EBX;
+DWORD removeUnitQueue_ESP;
+DWORD removeUnitQueue_EBP;
+DWORD removeUnitQueue_ESI;
+DWORD removeUnitQueue_EDI;
+void __declspec(naked)  hideCreationBarre()
+{
+	__asm {
+
+		cmp flagHide, 1h
+		JE hidelogoCreated
+
+		normale :
+		CMP AX, 7Dh
+			JNZ __0044DBF5
+			JMP _0044DB43
+
+			__0044DBF5 :
+		JMP _0044DBF5
+			hidelogoCreated :
+		//save registery
+		MOV removeUnitQueue_EAX, EAX
+			MOV removeUnitQueue_ECX, ECX
+			MOV removeUnitQueue_EDX, EDX
+			MOV removeUnitQueue_EBX, EBX
+			MOV removeUnitQueue_ESP, ESP
+			MOV removeUnitQueue_EBP, EBP
+			MOV removeUnitQueue_ESI, ESI
+			MOV removeUnitQueue_EDI, EDI
+
+			//even that unqueue units button
+			MOV EAX, 0h//DWORD PTR SS:[ESP+18]                                   ;  Case 97 of switch 0051E609
+			MOV ECX, DWORD PTR DS : [7912A0h]
+			PUSH - 1h
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH EAX
+			PUSH 4h
+			PUSH 1h
+			CALL getplayer//age2_x1_.005E7560
+			//006B7190  30 93 E5 13                                      0å
+			MOV ESI, DWORD PTR DS : [6B7190h]
+
+			MOV ECX, DWORD PTR DS : [ESI + 121Ch]
+			ADD EAX, 1C0h
+			PUSH EAX
+			MOV ECX, DWORD PTR DS : [ECX + 68h]
+			CALL _0046A110
+			MOV flagHide, 0h
+
+			//restore registery
+			MOV EAX, removeUnitQueue_EAX
+			MOV ECX, removeUnitQueue_ECX
+			MOV EDX, removeUnitQueue_EDX
+			MOV EBX, removeUnitQueue_EBX
+			MOV ESP, removeUnitQueue_ESP
+			MOV EBP, removeUnitQueue_EBP
+			MOV ESI, removeUnitQueue_ESI
+			MOV EDI, removeUnitQueue_EDI
+
+			CMP AX, 7Dh
+			JNZ __0044DBF5
+			JMP _0044DB43
+	}
+
+}
+//00521110
+DWORD _005E73C0 = 0x05E73C0;
+//DWORD _007B9000 = 0x07B9000;
+DWORD p_EAX;
+DWORD p_ECX;
+DWORD p_EDX;
+DWORD p_EBX;
+DWORD p_ESP;
+DWORD p_EBP;
+DWORD p_ESI;
+DWORD p_EDI;
+//0x5213FA
+DWORD eachPlayerStoneMiner;
+void __declspec(naked)  simulation_00521110()
+{
+	__asm {
+		SUB ESP, 244h
+		PUSH EBX
+		PUSH EBP
+		PUSH ESI
+		MOV EBP, ECX
+		PUSH EDI
+		MOV ECX, 0Dh
+		XOR EAX, EAX
+		LEA EDI, DWORD PTR SS : [ESP + 20h]
+		REP STOS DWORD PTR ES : [EDI]
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		XOR EBX, EBX
+		MOV DWORD PTR SS : [ESP + 10h] , EBX
+		MOV DWORD PTR SS : [ESP + 14h] , EBX
+		CALL geteachPlayer //dpamode.geteachPlayer
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		PUSH 0Bh
+		MOV EDI, EAX
+		CALL _005E73C0//age2_x1_.005E73C0
+		MOV ESI, EAX
+		MOV EAX, DWORD PTR DS : [EDI + 78h]
+		MOV ECX, DWORD PTR DS : [EAX + 4h]
+		MOV EAX, DWORD PTR DS : [EAX + 8h]
+		TEST EAX, EAX
+		JLE _0052127A
+		MOV DWORD PTR SS : [ESP + 18h] , ECX
+		MOV DWORD PTR SS : [ESP + 1Ch] , EAX
+		_00521168 :
+		MOV EBX, DWORD PTR DS : [ECX]
+			MOV EAX, DWORD PTR DS : [EBX + 8h]
+			MOVSX EAX, WORD PTR DS : [EAX + 16h]
+			ADD EAX, -2h;  Switch(cases 2..15)
+			CMP EAX, 13h
+			JA _0052125C
+			XOR ECX, ECX
+			MOV CL, BYTE PTR DS : [EAX + 5215B0h]
+			CMP ECX, 1h
+			JE _stoneMiner
+			JMP _0052125C
+			JMP DWORD PTR DS : [ECX * 4 + 5215A0h]
+			_stoneMiner :
+			MOV EDX, DWORD PTR DS : [EBX] ;  Case 4 of switch 00521171
+			MOV ECX, EBX
+			CALL DWORD PTR DS : [EDX + 164h]
+			TEST AL, AL
+			JE short _005211A3
+			INC DWORD PTR SS : [ESP + 50h]
+			JMP _0052125C
+			_005211A3 :
+		MOV EAX, DWORD PTR DS : [EBX + 8h]
+			MOVSX EAX, WORD PTR DS : [EAX + 10h]
+			CMP EAX, 0D8h;  Switch(cases D8..162)
+			JG short _005211E5
+			JE short _005211DF
+			ADD EAX, -38h
+			CMP EAX, 9Eh
+			JA _0052125C
+			XOR ECX, ECX
+			MOV CL, BYTE PTR DS : [EAX + 5215E8h]
+			CMP ECX, 5h
+			JNZ _0052125C
+
+			INC WORD PTR SS : [ESP + 2Eh]
+			JMP _0052125C
+			//JMP _0052125C //we ignore other res
+			JMP DWORD PTR DS : [ECX * 4 + 5215C4h]
+			INC DWORD PTR SS : [ESP + 28h]
+			JMP _0052125C
+			INC DWORD PTR SS : [ESP + 3Ch]
+			JMP short _0052125C
+			_005211DF :
+		INC DWORD PTR SS : [ESP + 38h] ;  Case D8 of switch 005211AA
+			JMP short _0052125C
+			_005211E5 :
+		CMP EAX, 162h
+			JG short _0052121F
+			JE short _00521219
+			ADD EAX, -0DAh
+			CMP EAX, 29h
+			JA short _0052125C
+			XOR EDX, EDX
+			MOV DL, BYTE PTR DS : [EAX + 52169Ch]
+			CMP EDX, 1h
+			JNZ _0052125C
+
+			INC WORD PTR SS : [ESP + 2Eh]
+			JMP _0052125C
+
+
+
+
+			JMP DWORD PTR DS : [EDX * 4 + 521688h]
+			INC DWORD PTR SS : [ESP + 24h]
+			JMP short _0052125C
+			INC DWORD PTR SS : [ESP + 44h]
+			JMP short _0052125C
+			INC DWORD PTR SS : [ESP + 30h]
+			JMP short _0052125C
+			_00521219 :
+		INC DWORD PTR SS : [ESP + 40h] ;  Case 162 of switch 005211AA
+			JMP short _0052125C
+			_0052121F :
+		ADD EAX, -243h
+			CMP EAX, 0Dh
+			JA short _0052125C
+			XOR ECX, ECX
+			MOV CL, BYTE PTR DS : [EAX + 5216D4h]
+			JMP _0052125C //we ignore other res
+			JMP DWORD PTR DS : [ECX * 4h + 5216C8h]
+			INC DWORD PTR SS : [ESP + 2Ch]
+			JMP short _0052125C
+			INC DWORD PTR SS : [ESP + 34h]
+			JMP short _0052125C
+			MOV EDX, DWORD PTR DS : [EBX] ;  Case 15 of switch 00521171
+			MOV ECX, EBX
+			CALL DWORD PTR DS : [EDX + 164h]
+			//JMP _007B9000
+			INC DWORD PTR SS : [ESP + 48h]
+			TEST AL, AL
+			JE short _0052125C
+			INC DWORD PTR SS : [ESP + 4Ch]
+			DEC DWORD PTR SS : [ESP + 48h]
+			JMP short _0052125C
+
+
+			NOP
+			JMP short _0052125C
+			INC DWORD PTR SS : [ESP + 20h] ;  Cases 2, 13 of switch 00521171
+			_0052125C:
+		MOV ECX, DWORD PTR SS : [ESP + 18h] ;  Default case of switch 005211AA
+			MOV EAX, DWORD PTR SS : [ESP + 1Ch]
+			ADD ECX, 4h
+			DEC EAX
+			MOV DWORD PTR SS : [ESP + 18h] , ECX
+			MOV DWORD PTR SS : [ESP + 1Ch] , EAX
+			JNZ _00521168
+			MOV EBX, DWORD PTR SS : [ESP + 14h]
+			_0052127A :
+			//MOV EAX,DWORD PTR SS:[EBP+121Ch]
+			//MOVSX ECX,WORD PTR DS:[EAX+94h]
+			//MOV EDX,DWORD PTR DS:[EAX+4Ch]
+			//MOV EAX,DWORD PTR DS:[EDX+ECX*4h]
+			//0052128D   . 66:83B8 640B00>CMP WORD PTR DS:[EAX+0B64h],0
+			//00521295   . 0F8E 5F010000  JLE age2_x1_.005213FA
+			MOV EAX, 0h
+			MOV AL, BYTE PTR SS : [ESP + 2Eh]//2Ah
+			MOV eachPlayerStoneMiner, EAX
+
+			//save register
+			MOV p_EAX, EAX
+			MOV p_ECX, ECX
+			MOV p_EDX, EDX
+			MOV p_EBX, EBX
+			MOV p_ESP, ESP
+			MOV p_EBP, EBP
+			MOV p_ESI, ESI
+			MOV p_EDI, EDI
+			//we get res 286 for every player 
+			////get current player
+			//MOV ECX, DWORD PTR DS : [07912A0h]
+			//call _7_005E7560
+			MOV EAX, PlarAddresss
+			MOV EAX, dword ptr[EAX + 0A8h]
+			MOV EDX, EAX
+			//Stone miners 286 * 4 -> 478h
+			ADD EDX, 478h
+			push eachPlayerStoneMiner//each player stone miner
+			call floatFromBits
+			//move st0 into eax 
+			sub esp, 4h
+			fstp  DWORD PTR DS : [esp]
+			mov eax, [esp]
+			add esp, 4h
+			MOV  DWORD PTR DS : [EDX] , EAX
+
+			//restaure register
+			MOV EAX, p_EAX
+			MOV ECX, p_ECX
+			MOV EDX, p_EDX
+			MOV EBX, p_EBX
+			MOV ESP, p_ESP
+			MOV EBP, p_EBP
+			MOV ESI, p_ESI
+			MOV EDI, p_EDI
+
+			POP EDI
+			POP ESI
+			POP EBP
+			POP EBX
+			ADD ESP, 244h
+			RETN
+	}
+}
+//0x0602D7E
+DWORD _3_00411460 = 0x0411460;
+DWORD _3_00602D83 = 0x0602D83;
+DWORD vil_ESI;
+void __declspec(naked)  loopGetVillagerPerRessources()
+{
+	__asm {
+		MOV hidev, 1h
+		MOV vil_ESI, ESI
+		MOV EAX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR SS : [EAX + 1820h]
+		MOV ESI, ECX
+		CALL  simulation_00521110//_00521110
+		MOV hidev, 0h
+
+		MOV ESI, vil_ESI
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [EAX + 0Ch]
+		MOV ECX, DWORD PTR DS : [ECX + 8Ch]
+		CALL _3_00411460
+		JMP _3_00602D83
+
+	}
+}
+//0x05C5F1B
+DWORD _005C61B0 = 0x05C61B0;
+DWORD _005C5F20 = 0x05C5F20;
+DWORD vil_ESI1;
+
+void __declspec(naked)  MinesGenerateStone()
+{
+	__asm {
+		CALL _005C61B0
+
+
+		//MOV hidev, 1h
+		MOV vil_ESI1, ESI
+		MOV EAX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR SS : [EAX + 1820h]
+		MOV ESI, ECX
+		CALL  simulation_00521110//_00521110
+		MOV ESI, vil_ESI1
+		JMP _005C5F20
+
+	}
+}
+//when build building (hereminer camp we update nb miner)
+// 
+//void __declspec(naked)  MinesGenerateStone2()
+//{
+//    __asm {
+//        MOV vil_ESI2, ESI
+//        MOV EAX, DWORD PTR DS : [7912A0h]
+//        MOV ECX, DWORD PTR SS : [EAX + 1820h]
+//        MOV ESI, ECX
+//        CALL  simulation_00521110//_00521110
+//        MOV ESI, vil_ESI2
+//        MOV EAX, DWORD PTR DS : [ESI + 1820h]
+//        JMP _2_00440227  
+//
+//    }
+//}
+// here we can over write the event sychronised action for every player online 
+ //0x04673B0
+DWORD _00467827 = 0x0467827;
+DWORD _004673B6 = 0x04673B6;
+void __declspec(naked)  createSyncActionEventJAMiner()
+{
+	__asm
+	{
+		CMP EAX, 12h;  Switch(cases 0..E)
+		JNZ __ja
+		//MOV vil_ESI2, ESI
+		MOV EAX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR SS : [EAX + 1820h]
+		MOV ESI, ECX
+		CALL  simulation_00521110//_00521110
+		//MOV ESI, vil_ESI2
+		MOV EAX, DWORD PTR DS : [ESI + 1820h]
+		JMP _00467827
+
+		__ja :
+		JA __00467827
+			CMP EAX, 0Eh;  Switch(cases 0..E)
+			JA __00467827
+			JMP _004673B6
+
+
+
+		__00467827:
+		JMP _00467827
+	}
+}
+
+//0044023F.E8 4CFB0D00    CALL age2_x1_.0051FD90
+
+WORD iDCreteadUnit;
+DWORD a_0051FD90 = 0x051FD90;
+DWORD _00440244 = 0x0440244;
+DWORD EAX_creat = 0x0440244;
+void __declspec(naked)  getCreatedUnitcCreat()
+{
+	__asm {
+		MOV EAX_creat, EAX
+		MOV AX, WORD PTR DS : [ESP]
+		MOV iDCreteadUnit, AX
+		MOV  EAX, EAX_creat
+		CALL a_0051FD90
+		JMP _00440244
+	}
+
+}
+DWORD _BuildingAddress;
+DWORD _0044DAF3 = 0x044DAF3;
+void __declspec(naked)  pushBuldingSelectionAddress()
+{
+	__asm {
+		//0044DAEC   . 8B50 08        MOV EDX, DWORD PTR DS : [EAX + 8]
+		cmp flagHide, 1h
+		JNZ normale
+		MOV EAX, _BuildingAddress
+		MOV EDX, DWORD PTR DS : [EAX + 8h]
+		CMP BYTE PTR DS : [EDX + 4h] , 50h//if type is building
+		JMP _0044DAF3
+
+		normale :
+		MOV EDX, DWORD PTR DS : [EAX + 8h]
+			CMP BYTE PTR DS : [EDX + 4h] , 50h//if type is building
+			JMP _0044DAF3
+	}
+
+}
+//0044DA96 > 39B5 54080000  CMP DWORD PTR SS : [EBP + 854] , ESI
+//0044DA9C     0F84 F6140000  JE age2_x1_.0044EF98
+DWORD _0044EF98 = 0x044EF98;
+DWORD _0044DAA2 = 0x044DAA2;
+DWORD selectedBuilding_EAX;
+void __declspec(naked)  JumpToBuidlingSelection()
+{
+	__asm {
+		MOV selectedBuilding_EAX, EAX
+		cmp flagHide, 1h
+		JNZ normale
+		MOV EAX, _BuildingAddress
+		MOV DWORD PTR SS : [EBP + 854h] , EAX   //we push obj to this pointer
+		MOV EAX, selectedBuilding_EAX
+		JMP _0044DAA2
+
+		normale :
+		CMP DWORD PTR SS : [EBP + 854h] , ESI
+			JE __0044EF98
+			JMP _0044DAA2
+
+			__0044EF98 :
+		JMP _0044EF98
+	}
+
+}
+
+//void __declspec(naked)  creatButton()
+//{
+//    __asm {
+// 
+//    }
+//
+//}
+//0051936C  |. 8D7C24 28      LEA EDI,DWORD PTR SS:[ESP+28]
+//0051938F     0F1F4400       DD age2_x1_.00441F0F
+// //bug broken instion so strange
+//0051938F | .E8 5C830300    CALL age2_x1.005516F0
+//005213FA  |>-E9 8374727B    JMP v15DE.7BC48882
+
+
+
+DWORD _005516F0 = 0x05516F0;
+DWORD _00519394 = 0x0519394;
+void __declspec(naked)  fixbugCrash()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [ESI + 1110h]
+		CALL _005516F0
+		JMP _00519394
+	}
+
+}
+//00556C50  /$ 8B81 68020000  MOV EAX,DWORD PTR DS:[ECX+268]
+
+//005289E7   . 8B0D A0127900  MOV ECX, DWORD PTR DS : [7912A0]
+//005289ED.E8 6EEB0B00    CALL age2_x1_.005E7560
+//005289F2   . 8BC8           MOV ECX, EAX
+//005289F4.E8 57E20200    CALL age2_x1_.00556C50
+
+//0051DCE4   . 897424 10      MOV DWORD PTR SS : [ESP + stbi__vertically_flip_on_load_lo >
+
+DWORD _00552806 = 0x0552806;
+
+void __declspec(naked)  cleansel()
+{
+	__asm {
+		MOV EBX, DWORD PTR SS : [ESP + 8h]
+
+
+
+		//call cleanFunc
+
+		CMP flagClean, 1h
+		JNZ conti
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		CALL z_005E7560
+		MOV ECX, EAX
+		CALL z_00556C50
+		MOV flagClean, 0h
+
+		conti :
+		PUSH ECX
+			MOV ECX, DWORD PTR SS : [ESP + 18h]
+
+
+			JMP _00552806
+	}
+}
+//007C0E69   8B8E 70100000    MOV ECX,DWORD PTR DS:[ESI+1070]
+
+DWORD _007C0E6F = 0x007C0E6F;
+void __declspec(naked)  fixInterfaceScreen()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [ESI + 1070h]
+		MOV EAX, DWORD PTR DS : [ESI + 18h]//X
+		SUB EAX, 0AFh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ESI + 14h]//Y
+		SUB EDX, 1F4h
+		PUSH EDX
+		PUSH 19h
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1070h]
+		JMP _007C0E6F
+	}
+}
+
+void  __declspec(naked) getVillagerMatrix()//
+{
+	__asm {
+		//      //save register
+		//MOV ma_EAX, EAX
+		//MOV ma_ECX, ECX
+		//MOV ma_EDX, EDX
+		//MOV ma_EBX, EBX
+		//MOV ma_ESP, ESP
+		//MOV ma_EBP, EBP
+		//MOV ma_ESI, ESI
+		MOV ma_EDI, EDI
+
+		//save eax
+		MOV _EAXVilStatus, EAX
+		//we get only for current player
+		//CMP showOnlyCurrrentPlayerVillagerPerRessources, 1h
+		//JNZ restore
+
+		MOV EAX, DWORD PTR SS : [ESP + 50h]
+		MOV IdleVillagers, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 4Ch]
+		MOV IdleFishingShipps, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 48h]
+		MOV FishingShipp, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 44h]
+		MOV Farmer, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 40h]
+		MOV Forage, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 3Ch]
+		MOV Fishermen, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 38h]
+		MOV Hunter, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 34h]
+		MOV sheperds, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 30h]
+		MOV Lumberjack, EAX
+		//MOV EAX,0h
+		MOV AL, BYTE PTR SS : [ESP + 2Ch]//WORD PTR SS : [ESP + 2Ch]
+		MOV GoldMiner, EAX
+		//MOV EAX, 0h
+		MOV AL, BYTE PTR SS : [ESP + 2Eh]//2Ah
+		MOV StoneMiner, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 28h]
+		MOV Builder, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		MOV Repairman, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 20h]
+		MOV TradeUnite, EAX
+
+		MOV onFOOD, 0h
+		MOV EAX, 0h
+		ADD EAX, sheperds
+		ADD EAX, Hunter
+		ADD EAX, Fishermen
+		ADD EAX, Forage
+		ADD EAX, Farmer
+		ADD EAX, FishingShipp
+		MOV onFOOD, EAX
+
+		MOV onGOLD, 0h
+		MOV EAX, 0h
+		ADD EAX, GoldMiner
+		ADD EAX, TradeUnite
+		MOV onGOLD, EAX
+
+		MOV IDLE, 0h
+		MOV EAX, 0h
+		ADD EAX, IdleVillagers
+		ADD EAX, IdleFishingShipps
+		MOV IDLE, EAX
+
+		restore :
+		//restore eax
+
+		MOV  EAX, _EAXVilStatus
+
+
+
+
+
+
+
+
+			////restore register
+			//CMP ma_EAX, 0h
+			//JE __00521403
+			//MOV EAX, ma_EAX
+			//MOV ECX, ma_ECX
+			//MOV EDX, ma_EDX
+			//MOV EBX, ma_EBX
+			//MOV ESP, ma_ESP
+			//MOV EBP, ma_EBP
+			//MOV ESI, ma_ESI
+			//MOV EDI, ma_EDI
+			//////MOV ECX, 0483h
+			MOV ECX, 0483h
+			XOR EAX, EAX
+			SUB ECX, EBX
+
+			__00521403 :
+		JMP _00521403
+	};
+
+}
+void hookAoc()
+{
+	////0051DD01   > 8B8E B8110000  MOV ECX,DWORD PTR DS:[ESI+11B8]
+	////setHook((void*)0x0552801  , cleansel);
+	InjectHook((void*)0x0520A8F, cleanScreenn2,PATCH_JUMP);//case scenario and no villager we put it on score
+	//00602D69   . 8B46 18        MOV EAX,DWORD PTR DS:[ESI+18]
+	//00602D6C   . 83F8 FF        CMP EAX, -1
+
+
+	InjectHook((void*)0x0602D69, cleanScreenn,PATCH_JUMP);
+	////007C0E69   8B8E 70100000    MOV ECX,DWORD PTR DS:[ESI+1070]
+	//setHook((void*)0x07C0E69, fixInterfaceScreen);
+
+
+
+	//0051938F | .E8 5C830300    CALL age2_x1.005516F0
+	//E8 5C 83 03 00
+
+
+	//BYTE fixAssemblyBug[5]{0xE8, 0x5C, 0x83,0x03, 0x00};
+	//writeData(0x051938F, fixAssemblyBug,5);
+	//00519389  |. 8B8E 10110000  MOV ECX,DWORD PTR DS:[ESI+1110]
+	//////////InjectHook((void*)0x0519389, fixbugCrash, PATCH_JUMP);
+
+	InjectHook((void*)0x044231B, getstartedGame, PATCH_JUMP);
+
+	//00521F23  |. 8B86 1C120000  MOV EAX,DWORD PTR DS:[ESI+0x121C]
+	InjectHook((void*)0x0521F23, GetVillagerStatusDisplayressources, PATCH_JUMP);
+	//setHook((void*)0x045291A, getCurentPOP);
+	InjectHook((void*)0x0452914, getCurentPOP, PATCH_JUMP);
+	//0044023F
+	InjectHook((void*)0x044023F, getCreatedUnitcCreat, PATCH_JUMP);
+
+	//we will put sync action on villager for poles stone miner generate gold
+	//we use fu,ctio that show villager per ressources
+	////00521139   . E8 22640C00    CALL age2_x1_.005E7560
+	//InjectHook(0x0521139, geteachPlayer, PATCH_CALL);
+	//0052150B   > 894424 10      MOV DWORD PTR SS:[ESP+10],EAX
+	//InjectHook(0x052150B, showOnlyRessPerVillageOnCurrentPlayer, PATCH_JUMP);
+	//setHook((void*)0x0602D7E, BurgundiansCallRelicTech);
+	////setHook((void*)0x0602D7E, loopGetVillagerPerRessources);
+	//005C5F1B   . E8 90020000    CALL age2_x1_.005C61B0
+	//InjectHook(0x05C5F1B, MinesGenerateStone, PATCH_JUMP);
+	//004673B0   . 0F87 71040000          JA age2_x1_.00467827
+	//setHookJA((void*)0x04673B0, createSyncActionEventJAMiner);
+
+	//00440221   > 8B86 20180000  MOV EAX,DWORD PTR DS:[ESI+1820]
+	//InjectHook(0x0440221, MinesGenerateStone2, PATCH_JUMP);
+
+	/*
+		//manage to hide barre
+		setHook((void*)0x044DB39, hideCreationBarre);
+		////test push select object
+		//setHook((void*)0x044DAEC, pushBuldingSelectionAddress);
+		//aoc considere that you select nothing so we need to force to jump on that condition
+		setHook((void*)0x044DA96, JumpToBuidlingSelection);*/
+
+		//event multi delete
+		//004660FA   > 50             PUSH EAX                                 ;  Case 6A of switch 00466099
+
+		//004C2230   . 8B41 08        MOV EAX,DWORD PTR DS:[ECX+stbi__vertically_flip_on_>
+
+		//004D221C   . 56             PUSH ESI
+		//004D221D.E8 7E4A0800    CALL age2_x1_.00556CA0
+
+		//fix widescreen
+		//007C0E72   2D AF000000      SUB EAX, 0AF
+		//    007C0E77   50               PUSH EAX
+		//    007C0E78   8B56 14          MOV EDX, DWORD PTR DS : [ESI + 14]
+		//    007C0E7B   52               PUSH EDX
+		//    007C0E7C   6A 00            PUSH 0
+
+		//writeByte( 0x07C0E72 + 1, 0xAF);
+		//writeByte( 0x07C0E7C + 1, 0x00);
+		//0051D395 > 8BCD           MOV ECX, EBP;  Case 14 of switch 0051D1F0
+		//    0051D397.E8 A4630000    CALL age2_x1_.00523740
+		//    0051D39C.B8 01000000    MOV EAX, 1
+
+		//    005237DC > 68 10080000    PUSH 810
+		//    005237E1.E8 CAFF0E00    CALL age2_x1_.006137B0
+
+
+}
+
+//DS:[7B15DC4C]=00000000
+//selectall.cpp:2216. && *(void**)(*(size_t*)0x7912A0 + 0x424) != NULL )
+
+void ManageSelection(int i, void* player, int Playerciv)
+{
+	bool flag1 = false;
+	bool arraflag[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	arraflag[0] = selectedIdlVillager;
+	arraflag[1] = selectAllTC;
+	arraflag[2] = selectAllArmy;
+	arraflag[3] = selectAllSiegeWorkshop;
+	arraflag[4] = selectAllMilitaryBuilding;
+	arraflag[5] = selectAllArcheryRange;
+	arraflag[6] = selectAllCastle;
+	arraflag[7] = selectAllDonjon;
+	arraflag[8] = selectAllKrepost;
+	arraflag[9] = selectAllMarket;
+	arraflag[10] = selectAlMonastery;
+	arraflag[11] = selectAlltradeCarte;
+	arraflag[12] = selectAllDock;
+	arraflag[13] = selectAllBarrack;
+	arraflag[14] = selectAllStable;
+	arraflag[15] = deleteAllSelected;
+	int cpt = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		if (arraflag[i])
+			cpt++;
+	}
+	//more than 2 same hotkey we ignore
+	flag1 = cpt >= 2;
+	if (flag1)
+	{
+		selectedIdlVillager = false;
+		selectAllTC = false;
+		selectAllArmy = false;
+		selectAllSiegeWorkshop = false;
+		selectAllMilitaryBuilding = false;
+		selectAllArcheryRange = false;
+		selectAllCastle = false;
+		selectAllDonjon = false;
+		selectAllKrepost = false;
+		selectAllMarket = false;
+		selectAlMonastery = false;
+		selectAlltradeCarte = false;
+		selectAllDock = false;
+		selectAllBarrack = false;
+		selectAllStable = false;
+		for (int i = 0; i < 15; i++)
+		{
+			arraflag[i] = false;
+		}
+		return;
+	}
+	try
+	{
+
+
+
+		if (player != NULL)
+		{
+			//printf("select villager \n");
+			cptIDLEVIllager = 0;
+			cptTCselected = 0;
+			cptArmyselected = 0;
+			cptallSiegeWorkshop = 0;
+			cptallMilitaryBuilding = 0;
+			cptallArcheryRange = 0;
+			cptallCastle = 0;
+			cptallDonjon = 0;
+			cptallKrepost = 0;
+			cptallMarket = 0;
+			cptallMonastery = 0;
+			cptalltradeCarte = 0;
+			cptallDock = 0;
+			cptallBarrack = 0;
+			cptallStable = 0;
+			countUnitDelete = 0;
+			//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+			//dllmain.cpp:2383.  RGE_Object_List* objects = player->objects;
+			void* objects = (void*)((size_t)player + 0x78);//this is list object address care // player->objects
+			 //objects = (void*)((size_t)objects + 0x4);// player->objects
+			//struct  __declspec(align(2)) RGE_Object_List
+			//{
+			//    int vfptr;
+			//    struct RGE_Static_Object** list;
+			//    __int16 number_of_objects;
+			//};
+
+
+			if (!IsBadReadPtr((void*)objects, sizeof(UINT_PTR)) && objects != NULL)
+			{
+
+
+				//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+				//DS:[1C0168A8]=1D7E8400 ESI = 026DF820 dllmain.cpp:2383.  RGE_Object_List * objects = player->objects;
+
+				//DWORD* lstSelectAdd = (DWORD*)(void**)((size_t)player + 0x78);//player->sel_list;
+				//DWORD* lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+				DWORD* lstSelect = (DWORD*)((DWORD)player + 0x1C0);//get the good beging selection addrese
+				//79529EA1   3887 68020000    CMP BYTE PTR DS:[EDI+268],AL
+
+				//7952A881   8887 68020000    MOV BYTE PTR DS:[EDI+268],AL
+				//dllmain.cpp:2917.  *NBSelect = cptIDLEVIllager;
+				BYTE* NBSelect = (BYTE*)(void**)((size_t)player + 0x268);//set select range
+				//BYTE* NBSelect = (BYTE*)(void**)((size_t)lstSelectAdd + 0xA8 + 0x7 + 0x2);//set select range
+				//Address=1C0169F0  EBX = 75690100 (KERNEL32.IsBadReadPtr) dllmain.cpp:2387.  DWORD * lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+				//79529E90   8D9F C0010000    LEA EBX,DWORD PTR DS:[EDI+1C0]
+
+
+				void** sel_list = (void**)(lstSelect);
+
+				if (deleteAllSelected && *NBSelect != 0x0)
+				{
+					/*
+					for (int i = 0; i <= *NBSelect; i++)
+					{
+						INPUT inputs[2] = {};
+						ZeroMemory(inputs, sizeof(inputs));
+
+						inputs[0].type = INPUT_KEYBOARD;
+						inputs[0].ki.wVk = VK_DELETE;
+
+						inputs[1].type = INPUT_KEYBOARD;
+						inputs[1].ki.wVk = VK_DELETE;
+						inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+						UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+						Sleep(50);
+					}*/
+					//for (int i = 0; i <= *NBSelect; i++)
+					//{
+					//    if (countUnitDelete <= *NBSelect && ((*sel_list)->object_class == 70 || (*sel_list)->object_class == 80))
+					//    {
+					//        //you can only delete you unit ans can't delete sheep
+					//        if ((*sel_list)->owner_player == player && (*sel_list)->master_obj->object_group != 58) 
+					//        {
+					//            INPUT inputs[2] = {};
+					//            ZeroMemory(inputs, sizeof(inputs));
+
+					//            inputs[0].type = INPUT_KEYBOARD;
+					//            inputs[0].ki.wVk = VK_DELETE;
+
+					//            inputs[1].type = INPUT_KEYBOARD;
+					//            inputs[1].ki.wVk = VK_DELETE;
+					//            inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+					//            UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+					//            Sleep(50);
+					//            //*sel_list++;
+					//            countUnitDelete++;
+					//        }
+					//    }
+					//}
+				}
+
+
+				//std::cout << "obj list:" << std::hex << (DWORD)lstSelect << std::endl;
+				//std::cout << "obj number_of_objects:" << std::hex << (DWORD)objects->number_of_objects << std::endl;
+				//DS:[1D7E8408]=0062AX = 0000dllmain.cpp:2437.  for (int ono = 0; ono < objects->number_of_objects; ono++)
+				//79529F0D   66:3B46 08      CMP AX,WORD PTR DS:[ESI+8]
+				//__int16	2	short, short int, signed short int	-32 768 à 32 767   -> 7FFF  DWORD size it tkink
+				///*/*/*int number_of_objects = (DWORD)*(void**)((size_t)(void*)((size_t)player + 0x78) + 0x8);*/*/*/
+
+				//MOV EAX,DWORD PTR DS:[ESI+4] -> struct RGE_Static_Object** list;
+				//74884209   8B40 04          MOV EAX,DWORD PTR DS:[EAX+4]
+				 //list =(void*) *(DWORD*)(objects); //(void*)(void**)(*(size_t*)objects + 0x4);
+				if (IsBadReadPtr((void*)objects, sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				void* p = (void*)*(DWORD*)((size_t)objects);
+				if (IsBadReadPtr((void*)((size_t)p + 0x4), sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				void* list = (void*)*(DWORD*)((size_t)p + 0x4); //(void*)(void**)(*(size_t*)objects + 0x4);
+				if (IsBadReadPtr((void*)p, sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				int number_of_objects = (int)*(DWORD*)((size_t)p + 0x8);
+				for (int ono = 0; ono < (int)number_of_objects; ono++)// objects->number_of_objects
+				{
+
+					//79529F2A   8B1488           MOV EDX,DWORD PTR DS:[EAX+ECX*4]
+					//void* obj = (void*)(void**)(*(size_t*)list + 0x4 * ono)  ;
+					void* obj = (void*)(*(DWORD*)((size_t)list + 4 * ono));
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					//*(DWORD*)(*(DWORD*)(v3 + 4) + 4 * v6);
+					//std::cout << "obj number_of_objects:" << std::hex << sel_list << std::endl;
+					//printf("select villager2 \n");
+										//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//void* master_obj = (void*)(void**) *(DWORD*)(*(size_t*)obj + 0x8);
+					////79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+
+					//int id = (int)*idADDR;
+
+					void* master_obj = (void*)*(DWORD*)((size_t)obj + 0x8);
+					//hotfix
+					if (IsBadReadPtr((void*)master_obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+
+					//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+					//MOVZ
+					int id = *(WORD*)((size_t)master_obj + 0x10);//(int)*idADDRG 
+					////7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+					//int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+
+					if (flagClean == 0 && selectedIdlVillager && cptIDLEVIllager < 40 && IdleVillagers != 0x0)
+					{
+						//struct  __declspec(align(1)) RGE_Static_Object
+						//{
+						//    int vfptr;
+						//    int id;
+						//    struct RGE_Master_Static_Object* master_obj;
+						//...
+						// struct RGE_Master_Static_Object
+						//{
+						//    char field_0;
+						//    char field_1;
+						//    char field_2;
+						//    char field_3;
+						//    char master_type;//type ex: combattant
+						//    char field_5;
+						//    char field_6;
+						//    char field_7;
+						//    char* name;
+						//    __int16 string_id;
+						//    __int16 string_id2;
+						//    __int16 id;
+						//    __int16 copy_id;
+						//    __int16 save_id;
+						//    __int16 object_group;
+						// //....
+
+						//MOVZ
+
+						if (
+							id == 83 || id == 293 //normale villager
+							|| id == 123 || id == 218//lumberjack
+							|| id == 56 || id == 57//fisherman   
+							|| id == 124 || id == 220 || id == 1493//stone miner
+							|| id == 579 || id == 581 || id == 1497//gold miner
+							|| id == 122 || id == 216 || id == 1491//hunter
+							|| id == 590 || id == 592 || id == 1498//sherperd
+							|| id == 214 || id == 259 || id == 1192 || id == 1490//farmer
+							|| id == 118 || id == 212 || id == 1192 || id == 1489//builder
+							|| id == 120 || id == 354 || id == 1496//forager
+							|| id == 156 || id == 222 || id == 1494//repairer
+							//less probability to apear so we put at the end
+							|| id == 1310 || id == 1311//fisherman    
+							|| id == 1312 || id == 1313//fisherman    
+							|| id == 1314 || id == 1315//fisherman    
+							|| id == 1316 || id == 1317//fisherman    
+							|| id == 1318 || id == 1319//fisherman    
+							|| id == 1320 || id == 1321//fisherman    
+							|| id == 1322 || id == 1323//fisherman    
+							|| id == 1324 || id == 1325//fisherman    
+							|| id == 1326 || id == 1327//fisherman    
+							|| id == 1328 || id == 1329//fisherman    
+							|| id == 1488 || id == 1499//fisherman    
+							|| id == 1500 || id == 1501//fisherman    
+							|| id == 1502 || id == 1503//fisherman    
+							|| id == 1504 || id == 1505//fisherman    
+							|| id == 1506 || id == 1507 || id == 1508//fisherman    
+							)
+						{
+
+							//005FF6F3   . 8B46 78        MOV EAX, DWORD PTR DS : [ESI + 78]
+							DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+							DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+							DWORD flagIdle2;
+							bool flagisidleres = false;
+							//0xFFFF     -1
+							if ((DWORD)ptr == 0xFFFFFFFF)
+							{
+								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+								if (flagIdle != 0)
+								{
+									//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+									//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+									flagisidleres = true;
+								}
+								if (flagIdle == 0 && !flagisidleres
+									||
+									flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+										|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+										|| flagIdle2 == 0xE))
+								{
+									if (cptIDLEVIllager == 0)
+									{
+
+										//first select need to be on double
+										//7952A2AF   C642 36 01       MOV BYTE PTR DS:[EDX+36],1
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										cptIDLEVIllager++;
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										//cptIDLEVIllager++;
+									}
+									else
+									{
+										//if (!IsBadReadPtr((void*)(*sel_list), sizeof(UINT_PTR)) && IdleVillagers != 0)
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										cptIDLEVIllager++;
+									}
+								}
+							}
+						}
+
+					}
+					//                // //....
+					////79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//                void* master_obj = (void*)(void**)(*(size_t*)obj + 0x8);
+					//                //79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//                WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//(*(DWORD*)((size_t)list  
+					void* master_objG = (void*)*(DWORD*)((size_t)obj + 0x8);
+					//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+					//MOVZ
+					if (IsBadReadPtr((void*)master_objG, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					int idG = *(WORD*)((size_t)master_objG + 0x10);//(int)*idADDRG 
+					//7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+					if ((int)obj == 0x0)
+					{
+						break;
+					}
+
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+					//select all tc
+					if (selectAllTC && flagClean == 0 && cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
+					{
+						if (cptTCselected == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptTCselected++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptTCselected++;
+						}
+					}
+					//master_objG
+					//7952A346   8B42 08          MOV EAX, DWORD PTR DS : [EDX + 8]
+					//7952A349   0FB740 16        MOVZX EAX, WORD PTR DS : [EAX + 16]
+					int object_group = (int)*(WORD*)(void**)((size_t)master_objG + 0x16);
+					//select all army cptArmyselected selectAllArmy
+					if (selectAllArmy && flagClean == 0 && cptArmyselected < 40 && (int)object_class == 70 //combattant
+						&& (
+							(int)object_group == 0//archer
+							|| (int)object_group == 6//infentery
+							|| (int)object_group == 12//cavalery
+							|| (int)object_group == 47//scoute
+							|| (int)object_group == 13//siege weapons
+							|| (int)object_group == 55//Balista
+							|| (int)object_group == 36//cav Archer
+							|| (int)object_group == 18//Monk
+							|| (int)object_group == 54//unpacked unit treb  no work idk
+							|| (int)object_group == 51//packed unit treb  no work idk
+							|| (int)object_group == 35//packed unit treb
+							|| (int)object_group == 23//conquistador
+							|| (int)object_group == 24//war elephants
+							|| (int)object_group == 44//hand canonner
+							)
+						)
+					{
+						//0051D3DD   > 8BCD           MOV ECX,EBP                                                          ;  Cases 2E,2F of switch 0051D1F0
+						//00528A81   . 57             PUSH EDI
+						//00528EDD   > 8B5C24 10      MOV EBX,DWORD PTR SS:[ESP+stbi__vertically_flip_on_load_local]
+						//lol same as villager
+						//005FF6F3   . 8B46 78        MOV EAX,DWORD PTR DS:[ESI+78]
+						DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+						DWORD flagIdle2;
+						bool flagisidleres = false;
+						//0xFFFF     -1
+						if ((DWORD)ptr == 0xFFFFFFFF)
+						{
+							//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+							DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+							if (flagIdle != 0)
+							{
+								//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+								//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+								flagisidleres = true;
+							}
+
+							if (flagIdle == 0 && !flagisidleres
+								||
+								flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+									|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+									|| flagIdle2 == 0xE))
+							{
+								if (cptArmyselected == 0)
+								{
+									//first select need to be on double
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									cptArmyselected++;
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+								}
+								else
+								{
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									cptArmyselected++;
+								}
+							}
+						}
+					}
+
+					//select all siege workshop
+					//idG   -> obj->master_obj->id
+					if (selectAllSiegeWorkshop && flagClean == 0 && (int)object_class == 80 && cptallSiegeWorkshop < 40 &&
+						(idG == 49 || (int)idG == 150))//&& (int)obj->master_obj->hp>1
+					{
+						if (cptallSiegeWorkshop == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallSiegeWorkshop++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallSiegeWorkshop++;
+						}
+					}
+					//select all militarybuilding
+					//bool selectAllMilitaryBuilding = false; cptallMilitaryBuilding
+					//idG   -> obj->master_obj->id
+					if (selectAllMilitaryBuilding && flagClean == 0 && (int)object_class == 80 && cptallMilitaryBuilding < 40 &&
+						(
+							(int)idG == 49 || (int)idG == 150//Siege workshop
+							|| (int)idG == 12 //barrack
+							|| (int)idG == 87 //Archery Range 
+							|| (int)idG == 101 //Stable 
+							|| (int)idG == 82 //castel
+							|| (int)idG == 1476 //|| (int)idG == 1453 || (int)idG == 1454 || (int)idG ==1452  //donjon
+							|| (int)idG == 1245   //krepost
+							)
+						)
+					{
+						if (cptallMilitaryBuilding == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMilitaryBuilding++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMilitaryBuilding++;
+						}
+					}
+					//no work idk why :'(
+					//////select All archery range
+					////selectAllBuilding(selectAllArcheryRange, &cptallArcheryRange, flagClean, &obj,&sel_list, 87);
+					//////select All castle
+					////selectAllBuilding(selectAllCastle, &cptallCastle, flagClean, &obj, &sel_list, 82);
+					//////select All Donjon
+					////selectAllBuilding(selectAllDonjon, &cptallDonjon, flagClean, &obj, &sel_list, 1476);
+					//////select All Krepost
+					////selectAllBuilding(selectAllKrepost,  &cptallKrepost, flagClean, &obj, &sel_list, 1245);
+					//////select All Market
+					////selectAllBuilding(selectAllMarket, &cptallMarket, flagClean,&obj, &sel_list, 84);
+					//select All archery range
+					//idG   -> obj->master_obj->id
+					if (selectAllArcheryRange && flagClean == 0 && (int)object_class == 80 && cptallArcheryRange < 40 && (int)idG == 87) //Archery Range 
+					{
+						if (cptallArcheryRange == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallArcheryRange++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallArcheryRange++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All castle
+					if (selectAllCastle && flagClean == 0 && (int)object_class == 80 && cptallCastle < 40 && (int)idG == 82)//castel  
+					{
+						if (cptallCastle == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallCastle++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallCastle++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Donjon
+					if (selectAllDonjon && flagClean == 0 && (int)object_class == 80 && cptallDonjon < 40 && (int)idG == 1476)//donjon  
+					{
+						if (cptallDonjon == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallDonjon++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallDonjon++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Krepost
+					if (selectAllKrepost && flagClean == 0 && (int)object_class == 80 && cptallKrepost < 40 && (int)idG == 1245)   //krepost
+					{
+						if (cptallKrepost == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallKrepost++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallKrepost++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Market
+					if (selectAllMarket && flagClean == 0 && (int)object_class == 80 && cptallMarket < 40 && (int)idG == 84)
+					{
+						if (cptallMarket == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMarket++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMarket++;
+						}
+					}
+					//select All monastery
+					if (selectAlMonastery && flagClean == 0 && (int)object_class == 80 && cptallMonastery < 40 && (int)idG == 104)
+					{
+						if (cptallMonastery == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMonastery++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallMonastery++;
+						}
+					}
+					//select All trade cart
+					if (selectAlltradeCarte && flagClean == 0 && (int)object_class == 70 && cptalltradeCarte < 40 &&
+						(
+							(int)idG == 108 || (int)idG == 128 || (int)idG == 204
+
+							)
+						)
+					{
+						if (cptalltradeCarte == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptalltradeCarte++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptalltradeCarte++;
+						}
+					}
+					//select All Dock
+					if (selectAllDock && flagClean == 0 && (int)object_class == 80 && cptallDock < 40 &&
+						(
+							(int)idG == 45// || (int)obj->master_obj->id == 806 
+							)
+						)
+					{
+						if (cptallDock == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallDock++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallDock++;
+						}
+					}
+					//select all barack
+					if (selectAllBarrack && flagClean == 0 && (int)object_class == 80 && cptallBarrack < 40 && (int)idG == 12)//barrack
+					{
+						if (cptallBarrack == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallBarrack++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallBarrack++;
+						}
+					}
+
+					//select all stable
+					if (selectAllStable && flagClean == 0 && (int)object_class == 80 && cptallStable < 40 && (int)idG == 101)//Stable  
+					{
+						if (cptallStable == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallStable++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							cptallStable++;
+						}
+					}
+
+				}
+				if (selectedIdlVillager && IdleVillagers != 0 && flagClean == 0)
+					*NBSelect = cptIDLEVIllager;
+				if (selectAllTC && flagClean == 0)
+					*NBSelect = cptTCselected;
+				if (selectAllArmy && flagClean == 0)
+					*NBSelect = cptArmyselected;
+				if (selectAllSiegeWorkshop && flagClean == 0)
+					*NBSelect = cptallSiegeWorkshop;
+				if (selectAllMilitaryBuilding && flagClean == 0)
+					*NBSelect = cptallMilitaryBuilding;
+				if (selectAllArcheryRange && flagClean == 0)
+					*NBSelect = cptallArcheryRange;
+				if (selectAllCastle && flagClean == 0)
+					*NBSelect = cptallCastle;
+				if (selectAllDonjon && flagClean == 0)
+					*NBSelect = cptallDonjon;
+				if (selectAllKrepost && flagClean == 0)
+					*NBSelect = cptallKrepost;
+				if (selectAllMarket && flagClean == 0)
+					*NBSelect = cptallMarket;
+				if (selectAlMonastery && flagClean == 0)
+					*NBSelect = cptallMonastery;
+				if (selectAlltradeCarte && flagClean == 0)
+					*NBSelect = cptalltradeCarte;
+				if (selectAllDock && flagClean == 0)
+					*NBSelect = cptallDock;
+				if (selectAllBarrack && flagClean == 0)
+					*NBSelect = cptallBarrack;
+				if (selectAllStable && flagClean == 0)
+					*NBSelect = cptallStable;
+
+
+				//if (deleteAllSelected && flagClean == 0)
+				//    *NBSelect = 0;
+				if (flagClean == 0)
+				{
+					selectedIdlVillager = false;
+					selectAllTC = false;
+					selectAllArmy = false;
+					selectAllSiegeWorkshop = false;
+					selectAllMilitaryBuilding = false;
+					selectAllArcheryRange = false;
+					selectAllCastle = false;
+					selectAllDonjon = false;
+					selectAllKrepost = false;
+					selectAllMarket = false;
+					selectAlMonastery = false;
+					selectAlltradeCarte = false;
+					selectAllDock = false;
+					selectAllBarrack = false;
+					selectAllStable = false;
+					deleteAllSelected = false;
+				}
+			}
+		}
+	}
+	catch (const std::exception&)
+	{
+		return;
+	}
+
+	//else
+	//printf("player is empty");
+}
+
+
+bool keydown(int key)
+{
+	Sleep(1);
+	return GetAsyncKeyState(key) & 0x8000;// (GetAsyncKeyState(translteGLFW_KEY_IntoWindows(key)) & 0x8000);
+}
+bool keypressed(int a, int b, int c, int d)
+{
+	if (a == 0 && b == 0 && c == 0 && d == 0)
+		return false;
+	else
+		return (a == 0 ? true : keydown(a)) && (b == 0 ? true : keydown(b)) && (c == 0 ? true : keydown(c)) && (d == 0 ? true : keydown(d));
+
+	//if (a > 0 && b == 0 && c == 0 && d == 0)
+	//    return keydown(a);
+	//if (a > 0 && b > 0 && c == 0 && d == 0)
+	//    return keydown(a) && keydown(b);
+	//if (a > 0 && b > 0 && c > 0 && d == 0)
+	//    return keydown(a) && keydown(b) && keydown(c);
+	//if (a > 0 && b > 0 && c > 0 && d>0)
+	//    return keydown(a) && keydown(b) && keydown(c) && keydown(c);
+	//return false;
+}
+//typedef void*  (*fn_get_player)(void*);
+//static inline void* get_player() {
+//    fn_get_player aoc_get_player = (fn_get_player)0x5E7560;
+//    return aoc_get_player(*(void**)0x7912A0);
+//}
+
+int  sub_5E7560(int a)
+{
+	int v1; // eax@1
+	__int16 v2; // dx@2
+	__int16 v3; // cx@3
+	int result; // eax@5
+
+	v1 = *(DWORD*)(a + 1060);
+	if (v1 && (v2 = *(WORD*)(v1 + 72), v2 >= 1) && (v3 = *(WORD*)(v1 + 148), v3 < v2) && v3 >= 0 && !IsBadReadPtr((void*)*(DWORD*)(v1 + 76), sizeof(UINT_PTR)))
+		result = *(DWORD*)(*(DWORD*)(v1 + 76) + 4 * v3);
+	else
+		result = 0;
+	return result;
+}
+
+bool isKeyPress = false;
+bool flagwaitLOAD = true;
+bool noOverlay = false;
+bool checkifsamehotkey(bool flag1, bool flag2)
+{
+	return flag1 && flag2;
+}
+bool arrayConf[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+
+//DWORD* version;
+
+void hotKeyActionelecting()
+{
+	//if (noOverlay)
+	//{
+	//    //Load positions of resource panel elements or revert to defaults
+	//    ConfigData = LoadData();
+	//    //ResetHotkeys(ConfigData);
+	//    hookAoc();
+	//}
+		//idk how to mkae optimisation array is on esp (how to  read the pointer?)
+	//005213FA   > B9 83040000    MOV ECX,0x483
+	InjectHook((void*)0x5213FA, getVillagerMatrix,PATCH_JUMP);
+	bool flag = true;
+	//= ImGui::GetIO(); (void)io;
+	void* player = NULL;
+	BYTE Playerciv = NULL;
+
+	//Sleep(3000);
+
+			//TODO set a condition if key is pressed
+		//To use only when pressing key
+	//void* base_ = (void*)0x007912A0;
+	//void** BaseGame_ = (void**)base_;
+	//void* world_ = NULL;
+	void* world;// = *(void**)(*(size_t*)0x7912A0 + 0x424);
+	//void* player = get_player();
+	while (true)
+	{
+		//version = (DWORD*)0x680A18;
+		//if(*version!=0x11)          
+		//    *version = 0x11;
+		//if(BaseGame_ == NULL)
+		//BaseGame_ = (void**)base_;
+		//if (BaseGame_ != NULL && !IsBadReadPtr((void*)(*BaseGame_), sizeof(UINT_PTR)))//world_ == NULL && (*BaseGame_) != NULL)
+		//    world_ =  (void*)((size_t)BaseGame_ + 0x424); ;//MOV EAX,DWORD PTR DS:[ECX+424]
+		//else //continue;
+
+		//unsigned int* _base = (unsigned int*)*BaseGame + 0x424;
+		//unsigned int IndexCurrentPlayer = (unsigned int)*_base + 0x4C;
+
+
+		if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x7912A0), sizeof(UINT_PTR))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x7912A0 + 0x424), sizeof(UINT_PTR))
+			&& (world = *(void**)(*(size_t*)0x7912A0 + 0x424))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x48), sizeof(UINT_PTR))
+			&& *(void**)(*(size_t*)0x7912A0 + 0x424) != NULL)
+		{
+			/*
+			 world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+			 //MOV DX,WORD PTR DS:[EAX+48]
+				player = get_player();
+				IndexCurrentPlayer = (int)(void*)((size_t)world + 0x94); //005E7574  |. 66:8B88 940000>MOV CX,WORD PTR DS:[EAX+94]
+
+*/
+			player = (void*)sub_5E7560((int)*(void**)0x7912A0);
+			//else
+			//    //continue;
+			//EnterCriticalSection(&cs_Civ);
+			if (player != NULL && !IsBadReadPtr((void*)((size_t)player + 0x15D), sizeof(UINT_PTR)))
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+			//else
+			//{
+			//    //continue;
+			//}
+			//LeaveCriticalSection(&cs_Civ);
+
+
+
+
+			if (keypressed(Hotkeys[0][0], Hotkeys[0][1], Hotkeys[0][2], Hotkeys[0][3]))//0 Select all idle villagers
+			{
+				//printf("villager \n");
+				selectedIdlVillager = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectedIdlVillager)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[3][0], Hotkeys[3][1], Hotkeys[3][2], Hotkeys[3][3]))//3: Select all Town Centers  
+			{
+				selectAllTC = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllTC)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[1][0], Hotkeys[1][1], Hotkeys[1][2], Hotkeys[1][2]))//1: Select all idle army
+			{
+				selectAllArmy = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllArmy)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[7][0], Hotkeys[7][1], Hotkeys[7][2], Hotkeys[7][3]))//7: Select all Siege Workshops 
+			{
+				selectAllSiegeWorkshop = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllSiegeWorkshop)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+
+			if (keypressed(Hotkeys[14][0], Hotkeys[14][1], Hotkeys[14][2], Hotkeys[14][3]))////14: Select all Military buildings (default Ctrl+A)
+			{
+				selectAllMilitaryBuilding = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllMilitaryBuilding)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[5][0], Hotkeys[5][1], Hotkeys[5][2], Hotkeys[5][3]))//5: Select all Archery Ranges 
+			{
+				selectAllArcheryRange = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllArcheryRange)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[11][0], Hotkeys[11][1], Hotkeys[11][2], Hotkeys[11][3]))//11: Select all Castles 
+			{
+				selectAllCastle = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllCastle)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[13][0], Hotkeys[13][1], Hotkeys[13][2], Hotkeys[13][3]))//13: Select all Donjon 
+			{
+				selectAllDonjon = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllDonjon)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[12][0], Hotkeys[12][1], Hotkeys[12][2], Hotkeys[12][3]))//12: Select all Krepost 
+			{
+				selectAllKrepost = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllKrepost)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[9][0], Hotkeys[9][1], Hotkeys[9][2], Hotkeys[9][3]))//9: Select all Markets
+			{
+				selectAllMarket = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllMarket)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[10][0], Hotkeys[10][1], Hotkeys[10][2], Hotkeys[10][3]))//10: Select all Monasteries
+			{
+				selectAlMonastery = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAlMonastery)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[2][0], Hotkeys[2][1], Hotkeys[2][2], Hotkeys[2][3]))//2: Select all trade carts 
+			{
+				selectAlltradeCarte = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAlltradeCarte)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[8][0], Hotkeys[8][1], Hotkeys[8][2], Hotkeys[8][3]))//8: Select all Docks 
+			{
+				selectAllDock = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllDock)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[4][0], Hotkeys[4][1], Hotkeys[4][2], Hotkeys[4][3]))//4: Select all Barracks 
+			{
+				selectAllBarrack = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllBarrack)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(Hotkeys[6][0], Hotkeys[6][1], Hotkeys[6][2], Hotkeys[6][3]))//6: Select all Stables
+			{
+				selectAllStable = true;
+				flagClean = 0x1;
+				isKeyPress = true;
+			}
+			if (isKeyPress && selectAllStable)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			if (keypressed(VK_DELETE, VK_MENU, 0, 0))//&& (GetAsyncKeyState() || GetAsyncKeyState(VK_LSHIFT)))//Alt+delete
+			{
+				deleteAllSelected = true;
+				isKeyPress = true;
+			}
+			if (isKeyPress && deleteAllSelected)
+			{
+				world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+				player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (flagClean == 0) isKeyPress = false;
+			}
+			/*
+			if (isKeyPress)
+			{
+					world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+					player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+					Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+					ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+			}
+
+			if (flagClean == 0) isKeyPress = false;*/
+
+		}
+	}
+}
+//00447B70 / $ 81EC E0000000  SUB ESP, 0E0
+//00447B76 | . 8B8424 E400000 > MOV EAX, DWORD PTR SS : [ESP + E4]
+//00447B7D | . 53             PUSH EBX
+//00447B7E | . 55             PUSH EBP
+
+//004481FE   |. 83C4 18        ADD ESP,18
+
+
+
+//004F7C24    . E8 67780900    CALL age2_x1_.0058F490                                ; \age2_x1_.0058F490
+
+//004F7C46    . 8D4424 24      LEA EAX, DWORD PTR SS : [ESP + 24]
+//004F7C4A    . 50             PUSH EAX
+//004F7C4B.E8 60FC0400    CALL age2_x1_.005478B0
+//004F7C50    . 8B8D 2C080000  MOV ECX, DWORD PTR SS : [EBP + 82C]
+//16784, "Select_all Idle_villagers"
+//16785, "Select all Idle_military"
+//16786, "Select all Trade_carts"
+//16787, "Select all Town_centers"
+//16788, "Select all Barracks"
+//16789, "Select all Archery ranges"
+//16790, "Select all Stables"
+//16791, "Select all Siege_workshops"
+//16792, "Select all Docks"
+//16793, "Select all Markets"
+//16794, "Select all Monasteries"
+//16795, "Select all Castles"
+//16796, "Select all Kreposts"
+//16797, "Select all Donjons"
+//16798, "Select all Military_Buildings"
+//get id item list
+//004F7C24   . E8 67780900    CALL age2_x1_.0058F490                   ; \age2_x1_.0058F490
+DWORD idItemMenu = 0x0;
+DWORD _4_0058F490 = 0x058F490;
+DWORD _004F7C29 = 0x04F7C29;
+
+void __declspec(naked)  getMenuItemid()
+{
+	__asm {
+		MOV idItemMenu, EDX
+		CALL _4_0058F490; \age2_x1_.0058F490
+		JMP _004F7C29
+	}
+}
+//get item id
+// 004F7C3F   . 8B8D 2C080000  MOV ECX, DWORD PTR SS : [EBP + 82C]
+
+DWORD idItem = 0x0;
+DWORD _004F7C45 = 0x04F7C45;
+//00447B76  |. 8B8424 E400000>MOV EAX,DWORD PTR SS:[ESP+E4]
+
+void __declspec(naked)  getItemId()
+{
+	__asm {
+		MOV ECX, DWORD PTR SS : [EBP + 82Ch]
+		MOV idItem, EDX
+		JMP _004F7C45
+	}
+}
+
+void saveInFileConfig()
+{
+	ofstream myfile("Voobly Mods\\AOC\\Patches\\v1.5 RC DE features\\config.ini");
+	if (myfile.is_open())
+	{
+		//myfile << "This is a line.\n";
+		//myfile << "This is another line.\n";
+		for (int i = 0; i < 15; i++) {
+			for (int j = 0; j < 3; j++)
+			{
+				myfile << Hotkeys[i][j] << " ";
+			}
+			myfile << "\n";
+		}
+		myfile.close();
+	}
+
+}
+//0: Select all idle villagers(default Ctrl + .)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+//13: Select all idle villagers(default Ctrl + .)
+
+//0: Select all idle villagers (default Ctrl+.)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+int getRealId(int id)
+{
+	switch (id)
+	{
+	case 0:
+		return 5;//5 : Select all Archery Ranges(default Ctrl + W)
+		break;
+	case 1:
+		return 4;//4 : Select all Barracks(default Ctrl + Q)
+		break;
+	case 2:
+		return 11;//11 : Select all Castles(default Ctrl + C)
+		break;
+	case 3:
+		return 8;//8 : Select all Docks(default Ctrl + T)
+		break;
+	case 4:
+		return 13;//13 : Select all Donjon(default Ctrl + V)
+		break;
+	case 5:
+		return 1;//1 : Select all idle army(default Ctrl + , )
+		break;
+	case 6:
+		return 12;//12 : Select all Krepost(default Ctrl + V)
+		break;
+	case 7:
+		return 9;//9 : Select all Markets(default Ctrl + D)
+		break;
+	case 8:
+		return 14;//14 : Select all Military buildings(default Ctrl + A)
+		break;
+	case 9:
+		return 10;//10 : Select all Monasteries(default Ctrl + F)
+		break;
+	case 10:
+		return 7;//7 : Select all Siege Workshops(default Ctrl + R)
+		break;
+	case 11:
+		return 6;//6 : Select all Stables(default Ctrl + E)
+		break;
+	case 12:
+		return 3;//3 : Select all Town Centers(default Ctrl + H)
+		break;
+	case 13:
+		return 2;//2 : Select all trade carts(default Ctrl + M)
+		break;
+	case 14:
+		return 0;//0: Select all idle villagers (default Ctrl+.)
+		break;
+	default:
+		return 100;
+		break;
+	}
+
+}
+//get keyInout
+//004F7C4B   . E8 60FC0400    CALL age2_x1_.005478B0
+DWORD _005478B0 = 0x05478B0;
+DWORD key = 0x0;
+DWORD EspKey;
+void updateHoteKey()
+{
+	int i = getRealId((int)idItem);
+	Hotkeys[i][0] = 0x0;
+	Hotkeys[i][1] = 0x0;
+	Hotkeys[i][2] = 0x0;
+	Hotkeys[i][0] = key; //au moins une touch de racoursie 
+	if (GetAsyncKeyState(VK_LCONTROL))
+	{
+		Hotkeys[i][1] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_CONTROL))
+	{
+		Hotkeys[i][1] = VK_CONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU))
+	{
+		Hotkeys[i][1] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LSHIFT))
+	{
+		Hotkeys[i][1] = VK_LSHIFT;
+	}
+	if (GetAsyncKeyState(VK_RSHIFT))
+	{
+		Hotkeys[i][1] = VK_RSHIFT;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		Hotkeys[i][1] = VK_CONTROL;
+		Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		Hotkeys[i][1] = VK_LCONTROL;
+		Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		Hotkeys[i][1] = VK_CONTROL;
+		Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		Hotkeys[i][1] = VK_LCONTROL;
+		Hotkeys[i][2] = VK_MENU;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		Hotkeys[i][1] = VK_LSHIFT;
+		Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		Hotkeys[i][1] = VK_LSHIFT;
+		Hotkeys[i][2] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		Hotkeys[i][1] = VK_MENU;
+		Hotkeys[i][2] = VK_RSHIFT;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		Hotkeys[i][1] = VK_LCONTROL;
+		Hotkeys[i][2] = VK_RSHIFT;
+	}
+	//if (GetAsyncKeyState(VK_SCROLL))
+	//{
+	//    Hotkeys[i][1] = VK_SCROLL;
+	//} 
+	//if (GetAsyncKeyState(VK_MBUTTON))
+	//{
+	//    Hotkeys[i][1] = VK_MBUTTON;
+	//}
+	//if (GetAsyncKeyState(VK_XBUTTON1))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON1;
+	//}    
+	//if (GetAsyncKeyState(VK_XBUTTON2))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON2;
+	//}
+
+
+	//if (GetAsyncKeyState(WM_MOUSEHWHEEL) )
+	//{
+	//    Hotkeys[i][2] = WM_MOUSEHWHEEL;
+	//}
+	//if (GetAsyncKeyState(WM_MOUSEWHEEL))
+
+
+	//Hotkeys[i][2]=0;
+
+	////////saveInFileConfig();
+}
+DWORD _updateHoteKey = (DWORD)updateHoteKey;
+DWORD EAXKEY;
+DWORD ECXKEY;
+DWORD EDXKEY;
+DWORD _004F7C50 = 0x04F7C50;
+//0x04F7C4B
+void __declspec(naked)  getKeyInput()
+{
+	__asm {
+		CMP idItemMenu, 011h
+		JNZ normale
+		//MOV flagClean,1h
+		MOV key, EBX
+		MOV EAXKEY, EAX
+		MOV ECXKEY, ECX
+		MOV EDXKEY, EDX
+
+		call _updateHoteKey
+		MOV ECX, ECXKEY
+		MOV EDX, EDXKEY
+		MOV EAX, EAXKEY
+		//MOV flagClean,0
+		normale :
+		CALL _005478B0
+			JMP _004F7C50
+	}
+}
+
+
+//004F74AE  |. E8 BD06F5FF    |CALL age2_x1_.00447B70                             ; \age2_x1_.00447B70
+//004F796A   . 8BF8           MOV EDI,EAX
+
+
+//00519F3B | . 68 31100000    PUSH 1031
+//00519F40 | . 8B01           MOV EAX, DWORD PTR DS : [ECX]
+//00519F42 | .FF50 24        CALL DWORD PTR DS : [EAX + 24]
+
+
+//004F74AE  |. E8 BD06F5FF    |CALL age2_x1_.00447B70                             ; \age2_x1_.00447B70
+//004F796A   . 8BF8           MOV EDI,EAX
+
+//0058F23A.E8 1136FBFF    CALL age2_x1_.00542850; \age2_x1_.00542850
+//0058F23F   . 83C4 0C        ADD ESP, 0C
+DWORD _00542850 = 0x0542850;
+DWORD _0058F23F = 0x058F23F;
+DWORD hki_EDX;
+//02442940  56 00 00 00 | 90 41 00 00  V... A..
+//02442948  00 00 01 00 | 44 00 00 00  ... D...
+//02442950  91 41 00 00 | 00 00 01 00  ‘A.. ...
+//02442958  53 00 00 00 | 92 41 00 00  S... ’A..
+//02442960  00 00 01 00 | 46 00 00 00  ... F...
+//02442968  93 41 00 00 | 00 00 01 00  “A.. ...
+//02442970  58 00 00 00 | 94 41 00 00  X... ”A..
+//02442978  00 00 01 00 | 4C 00 00 00  ... L...
+//02442980  95 41 00 00 | 00 00 00 00  •A.. ....
+//02442988  41 00 00 00 | 96 41 00 00  A... –A..
+//02442990  00 00 01 00 | 5A 00 00 00  ... Z...
+//02442998  97 41 00 00 | 00 00 01 00  —A.. ...
+//024429A0  52 00 00 00 | 98 41 00 00  R... ˜A..
+//024429A8  00 00 01 00 | 54 00 00 00  ... T...
+//024429B0  99 41 00 00 | 00 00 01 00  ™A.. ...
+//024429B8  47 00 00 00 | 9A 41 00 00  G... šA..
+//024429C0  00 00 01 00 | 59 00 00 00  ... Y...
+//024429C8  9B 41 00 00 | 00 00 01 00  ›A.. ...
+//024429D0  4B 00 00 00 | 9C 41 00 00  K... œA..
+//024429D8  00 00 01 00 | 4D 00 00 00  ... M...
+//024429E0  9D 41 00 00 | 00 00 01 00  A... ..
+//024429E8  53 00 00 00 | 9E 41 00 00  S... žA..
+//024429F0  00 00 01 00 | 5C 0D 70 02  ... \.p
+//0244294C‬ - 02442940 = 0C  =12            
+//024429F0 - 02442940 = B0  =176
+//16784, "Select_all Idle_villagers"
+//16785, "Select all Idle_military"
+//16786, "Select all Trade_carts"
+//16787, "Select all Town_centers"
+//16788, "Select all Barracks"
+//16789, "Select all Archery ranges"
+//16790, "Select all Stables"
+//16791, "Select all Siege_workshops"
+//16792, "Select all Docks"
+//16793, "Select all Markets"
+//16794, "Select all Monasteries"
+//16795, "Select all Castles"
+//16796, "Select all Kreposts"
+//16797, "Select all Donjons"
+//16798, "Select all Military_Buildings"
+//}
+//16770, "V"
+//16771, "D"
+//16772, "S"
+//16773, "F"
+//16774, "X"
+//16775, "C"
+//16776, "A"
+//16777, "Z"
+//16778, "R"
+//16779, "T"
+//16780, "G"
+//16781, "Y"
+//16782, "K"
+BYTE* arrHki_EDX = {};//[176] 
+void fillHotKeyArray()
+{
+	arrHki_EDX = (BYTE*)hki_EDX;
+	//arrHki_EDX[0]=0;
+	int cmpt = 0;
+	for (int i = 0; i <= 176; i = i + 0x0C)
+	{
+		Hotkeys[cmpt][0] = 0x0;
+		Hotkeys[cmpt][1] = 0x0;
+		Hotkeys[cmpt][2] = 0x0;
+		Hotkeys[cmpt][3] = 0x0;
+		Hotkeys[cmpt][0] = arrHki_EDX[i];
+		//CTRL-
+		if (arrHki_EDX[i + 0x8] == 0x1)
+		{
+			Hotkeys[cmpt][3] = VK_LCONTROL;
+		}
+		//ALT-
+		if (arrHki_EDX[i + 0x8 + 0x1] == 0x1)
+		{
+			Hotkeys[cmpt][2] = VK_LMENU;
+		}
+		//MAJ-
+		if (arrHki_EDX[i + 0x8 + 0x1 + 0x1] == 0x1)
+		{
+			Hotkeys[cmpt][1] = VK_LSHIFT;
+		}
+		cmpt++;
+		if (cmpt == 15)
+			break;
+	}
+
+
+
+}
+//0x058F23A
+void __declspec(naked)  getKeyOnHkiFile()
+{
+	__asm {
+		CMP EBX, 11h//select all hki
+		JE _hki
+		CALL _00542850
+		JMP _0058F23F
+		_hki :
+		MOV hki_EDX, EDX//pointer that will contain hotkey value
+			CALL _00542850
+			//0058F22B   . 8B4E 0C        MOV ECX,DWORD PTR DS:[ESI+C]
+			MOV ECX, hki_EDX
+			call fillHotKeyArray
+
+
+			JMP _0058F23F
+
+	}
+}
+
+
+
+void keyInputHook()
+{
+	//loadhotkey hki
+	InjectHook((void*)0x058F23A, getKeyOnHkiFile,PATCH_JUMP);
+
+	//update ket
+	InjectHook((void*)0x04F7C24, getMenuItemid, PATCH_JUMP);
+	InjectHook((void*)0x04F7C3F, getItemId, PATCH_JUMP);
+	InjectHook((void*)0x04F7C4B, getKeyInput, PATCH_JUMP);
+}
  
-void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
+DWORD WINAPI hotKeyActionelectingThread(LPVOID lpReserved)
+{
+	//no need we get from .hki file now 
+	//////loadHotKey();
+	hotKeyActionelecting();
+	return 0;
+}
+
+void selectAllProc(HMODULE hModule)
+{
+
+	hookAoc();
+	keyInputHook();
+
+	//all to select double click selecting stone wall and palisade wall
+//0042FC2C     66:837A 16 1B  CMP WORD PTR DS : [EDX + 16] , 1B
+//0042FC31     0F84 06010000  JE age2_x1_.0042FD3D
+//if(isDefeaturePatch)
+// Nop(0x042FC2C, 11);
+	CreateThread(nullptr, 0, hotKeyActionelectingThread, hModule, 0, nullptr);
+}
+
+
+
+//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)  0E = 14
+
+//004BEEB1   . E8 DA050D00    CALL age2_x1.0058F490                    ; \age2_x1.0058F490
+DWORD _0058F490 = 0x058F490;
+DWORD _004BEEB6 = 0x04BEEB6;
+void __declspec(naked)  SetHootKeyList004BEEB1()
+{
+	__asm {
+		CALL _0058F490
+		PUSH 42C5h
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h; | Arg4 = 00000000
+		PUSH 46h; | Arg3 = 00000041
+		PUSH 0h; | Arg2 = 00000000
+		PUSH 7h; | Arg1 = 00000007 //archery range or 7 th item?
+		CALL _0058F490; \age2_x1.0058F490
+		JMP _004BEEB6
+
+	}
+}
+
+//004BC667   . 5E             POP ESI
+//004BC668.C3             RETN
+DWORD arrayUnitkey[] = {
+	//user patch copyed value
+	 0x3F3A,0x4B0C,0x1C,0x3
+	,0x3F1F,0x4A83,0x1D,0x3
+	,0x4021,0x4A58,0x4,0x7
+	,0x403D,0x4A68,0x4,0x9
+	//smith
+	//,0x403D,0x4A68,0x10,0x0
+	,0x415E,0x4A84,0x10,0x0
+	,0x415F,0x4A85,0x10,0x1
+	,0x4035,0x4A86,0x10,0x2
+	,0x4036,0x4A87,0x10,0x3
+	,0x4037,0x4A87,0x10,0x4
+};
+DWORD _0058F6B0 = 0x058F6B0;
+DWORD _004BC0B1 = 0x04BC0B1;
+//004BC0AC  |. E8 FF350D00    CALL age2_x1.0058F6B
+void __declspec(naked)  SetHootKeyList004BC0AC()
+{
+	__asm {
+		CALL _0058F6B0
+		/*//Town center
+		PUSH 4E24h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+		//Black Smith
+		PUSH 4E26h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F6B0
+		//University
+		PUSH 4E33h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL _0058F6B0
+		//select All
+		PUSH 4E34h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F6B0
+		/*//Monastery
+		PUSH 4E2Ch
+		PUSH 12h
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+		JMP _004BC0B1
+	}
+}
+
+//4A82->19074 reseed   4E31->20017 mill
+//004BCE8C  |. E8 DF270D00    CALL age2_x1.0058F670
+DWORD _0058F670 = 0x058F670;
+DWORD _004BCE91 = 0x04BCE91;
+
+void __declspec(naked)  SetHootKeyList004BCE8C()
+{
+	__asm {
+		CALL _0058F670
+
+		//black smith
+		PUSH 4A84h
+		PUSH 0
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A85h
+		PUSH 1h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A86h
+		PUSH 2h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A87h
+		PUSH 3h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A88h
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		//University
+		PUSH 4AB6h
+		PUSH 0h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB7h
+		PUSH 1h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB8h
+		PUSH 2h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABDh
+		PUSH 3h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB9h
+		PUSH 4h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABAh
+		PUSH 5h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABBh
+		PUSH 6h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABCh
+		PUSH 7h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABEh
+		PUSH 8h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4ABFh
+		PUSH 9h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AC0h
+		PUSH 0Ah
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL _0058F670
+		//select ALL
+
+		//16784
+		PUSH 4190h
+		PUSH 0h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4191h
+		PUSH 1h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4192h
+		PUSH 2h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4193h
+		PUSH 3h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4194h
+		PUSH 4h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4195h
+		PUSH 5h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4196h
+		PUSH 6h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4197h
+		PUSH 7h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4198h
+		PUSH 8h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4199h
+		PUSH 9h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 419Ah
+		PUSH 0Ah
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 419Bh
+		PUSH 0Bh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 419Ch
+		PUSH 0Ch
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 419Dh
+		PUSH 0Dh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 419Eh
+		PUSH 0Eh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BCE91
+
+	}
+}
+//004BCD8C  |. E8 DF280D00    CALL age2_x1.0058F670
+
+DWORD _004BCD91 = 0x04BCD91;
+void __declspec(naked)  SetHootKeyList004BCD8CMonastary()
+{
+	__asm {
+		CALL _0058F670
+		//monastary
+		PUSH 4AACh
+		PUSH 2h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AADh
+		PUSH 03h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AAEh
+		PUSH 04h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AAFh
+		PUSH 05h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		/*PUSH 4AAFh
+		PUSH 05h
+		PUSH 12h
+		MOV ECX, ESI
+		CALL _0058F670*/
+		PUSH 4AB0h
+		PUSH 06h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB1h
+		PUSH 07h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB2h
+		PUSH 08h//08h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB3h
+		PUSH 09h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB4h
+		PUSH 0Ah
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4AB5h
+		PUSH 0Bh
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BCD91
+	}
+}
+//004BCBEC  |. E8 7F2A0D00    CALL age2_x1.0058F670
+
+DWORD _004BCBF1 = 0x04BCBF1;
+void __declspec(naked)  SetHootKeyList004BCBECTC()
+{
+	__asm {
+		CALL _0058F670
+		//town center
+		PUSH 4A89h
+		PUSH 2h
+		PUSH 04h// 0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A8Ah
+		PUSH 3h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		PUSH 4A8Bh
+		PUSH 4h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BCBF1
+	}
+}
+//004BCD2C
+DWORD _004BCD31 = 0x04BCD31;
+void __declspec(naked)  SetHootKeyList004BCD2C()
+{
+	__asm {
+		CALL _0058F670
+		//stable step lancer
+		PUSH 16A8h
+		PUSH 3h
+		PUSH 08h
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BCD31
+	}
+}
+//004BCE7C
+DWORD _004BCE81 = 0x04BCE81;
+void __declspec(naked)  SetHootKeyList004BCE7C()
+{
+	__asm {
+		CALL _0058F670
+		//Flaming Camel
+		PUSH 14FFh
+		PUSH 3h
+		PUSH 0Dh
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BCE81
+	}
+}
+//004BC90C  |. E8 5F2D0D00    CALL age2_x1.0058F670
+//game commande go to krepost
+DWORD _004BC911 = 0x04BC911;
+void __declspec(naked)  SetHootKeyListGoToKrepost004BC90C()
+{
+	__asm {
+		CALL _0058F670
+		//Go To Krepost
+		PUSH 4B51h
+		PUSH 42h
+		PUSH 1h
+		MOV ECX, ESI
+		CALL _0058F670
+		//Go To Donjon
+		PUSH 4B81h
+		PUSH 43h
+		PUSH 1h
+		MOV ECX, ESI
+		CALL _0058F670
+		JMP _004BC911
+	}
+}
+//007E4CE2   BB 004E7E00      MOV EBX,age2_x1.007E4E00                 ; ASCII ":?"
+DWORD _007E4CE7 = 0x07E4CE7;
+void __declspec(naked)  SetHootKeyList007E4CE2()
+{
+	__asm {
+		MOV EBX, offset arrayUnitkey
+		JMP _007E4CE7
+	}
+}
+
+//004BBF33     90              NOP
+//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
+DWORD _004BBFDF = 0x04BBFDF;
+DWORD _0058F7A0 = 0x058F7A0;
+void __declspec(naked)  SetHootKeyList004BBFDA()
+{
+	__asm {
+
+		CALL _0058F7A0; \age2_x1.0058F7A0
+		/*//Town center
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+		//Blacksmith
+		//PUSH 5h
+		PUSH 5h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F7A0
+		//University
+		PUSH 11h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL _0058F7A0
+		//Select ALL
+		PUSH 0Fh//15 itmes
+		PUSH 11h
+		MOV ECX, ESI
+		CALL _0058F7A0
+		/*//Monastery
+		PUSH 0Ch
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+
+		JMP _004BBFDF
+	}
+}
+//key 
+//004BC657   . E8 041E0000    CALL age2_x1.004BE460
+DWORD _004BE460 = 0x04BE460;
+DWORD _004BC65C = 0x04BC65C;
+DWORD LTowncenter = 0x2;
+DWORD LBlacksmith = 0x0;
+DWORD LUniversity = 0x0;
+DWORD LSelectAll = 0x0;
+DWORD LMonastery = 0x2;// 0x3;
+void __declspec(naked)  SetHootKeyListhotkey004BC657()
+{
+	__asm {
+		CALL _004BE460
+		//Town center
+		Towncenter :
+		PUSH LTowncenter//0h
+			PUSH 04h//0Fh
+			MOV ECX, ESI
+			CALL _004BE460
+			inc LTowncenter
+			CMP LTowncenter, 6h
+			JNZ Towncenter
+			MOV LTowncenter, 0h
+
+			//Blacksmith
+			Blacksmith :
+		PUSH LBlacksmith//0h
+			PUSH 0Fh
+			MOV ECX, ESI
+			CALL _004BE460
+			inc LBlacksmith
+			CMP LBlacksmith, 5h
+			JNZ Blacksmith
+			MOV LBlacksmith, 0h
+
+
+			//University
+		University:
+		PUSH LUniversity//0h
+			PUSH 10h
+			MOV ECX, ESI
+			CALL _004BE460
+			inc LUniversity
+			CMP LUniversity, 11h
+			JNZ University
+			MOV LUniversity, 0h
+
+			//Select All
+			SelectALL :
+		PUSH LSelectAll//0h
+			PUSH 11h//id
+			MOV ECX, ESI
+			CALL _004BE460
+			inc LSelectAll
+			CMP LSelectAll, 0Fh//nb item
+			JNZ SelectALL
+			MOV LSelectAll, 0h
+
+			//Monastery
+			Monastery :
+		PUSH LMonastery//0h
+			PUSH 0Ah//12h
+			MOV ECX, ESI
+			CALL _004BE460
+			inc LMonastery
+			CMP LMonastery, 0Ch
+			JNZ Monastery
+			MOV LMonastery, 2h
+			//stable
+			//stepLancer :
+			PUSH 3h
+			PUSH 08h
+			MOV ECX, ESI
+			CALL _004BE460
+			//castel
+			//FlamingCamel:
+			PUSH 3h
+			PUSH 0Dh
+			MOV ECX, ESI
+			CALL _004BE460
+			//Game commandes
+			//GoToKrepost
+			PUSH 42h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL _004BE460
+			//GoToDonjon
+			PUSH 43h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL _004BE460
+			JMP _004BC65C
+	}
+
+}
+//004BC28F.E8 CC210000    CALL age2_x1.004BE460
+
+
+
+//0058F4E7 | . 8D4424 0C      LEA EAX, DWORD PTR SS : [ESP + C]
+
+//04BF1E3
+//conncet list box item to hotkey 
+//DWORD _0058F490 = 0x058F490;
+DWORD _rank = 0x60;
+DWORD _lang = 0x0;
+DWORD _EBX;
+void __declspec(naked)  SetHootKeyListhotkey0x04BF1E3()
+{
+	__asm {
+
+
+
+
+		//Monastery:
+		cmp EAX, 0Ah
+		jnz tc//Towncenter
+		MOV _rank, 52h//54h//
+		MOV _EBX, EBX
+		MOV  _lang, 416Dh//416Fh -2h  because it start at 2
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD _lang, EBX
+		MOV EBX, _EBX
+		PUSH _lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD _rank, EBX// 1h
+		//PUSH 60h
+		PUSH _rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL _0058F490; \age2_x1.0058F490
+
+		tc:
+		cmp EAX, 04h//0Fh
+			jnz Blacksmith
+			MOV _rank, 59h
+			MOV _EBX, EBX
+			MOV  _lang, 4178h //417Ah -2
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD _lang, EBX
+			MOV EBX, _EBX
+			PUSH _lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD _rank, EBX//1h
+			//PUSH 60h
+			PUSH _rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			Blacksmith:
+		cmp EAX, 0Fh //10h
+			jnz University//Towncenter
+			MOV _rank, 63h
+			MOV _EBX, EBX
+			MOV  _lang, 415Eh
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD _lang, EBX
+			MOV EBX, _EBX
+			PUSH _lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD _rank, EBX// 1h
+			//PUSH 60h
+			PUSH _rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			University:
+		cmp EAX, 10h//11h
+			jnz  selectALL //steplancer//Towncenter
+			MOV _rank, 69h
+			MOV _EBX, EBX
+			MOV  _lang, 4164h
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD _lang, EBX
+			MOV EBX, _EBX
+			PUSH _lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD _rank, EBX// 1h
+			//PUSH 60h
+			PUSH _rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			selectALL:
+		cmp EAX, 11h
+			jnz steplancer
+			MOV _rank, 7Bh
+			MOV _EBX, EBX
+			MOV  _lang, 4182h// 16784  // 4164h
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD _lang, EBX
+			MOV EBX, _EBX
+			PUSH _lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD _rank, EBX// 1h
+			//PUSH 60h
+			PUSH _rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+
+			steplancer:
+		cmp EAX, 08h
+			jnz FlamingCamel
+			PUSH 417Dh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 81h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			FlamingCamel:
+		cmp EAX, 0Dh
+			jnz GoToKrepost
+			PUSH 417Eh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 82h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			GoToKrepost:
+		cmp EAX, 1h
+			jnz defaultSwitchCase
+			CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+			JNZ GoToDonjon
+			PUSH 417Fh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 83h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+			GoToDonjon:
+		cmp EAX, 1h
+			jnz defaultSwitchCase
+			CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+			JNZ defaultSwitchCase
+			PUSH 4180h
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 84h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL _0058F490; \age2_x1.0058F490
+
+
+
+
+		defaultSwitchCase:
+		RETN 8;  Default case of switch 004BF16F
+
+	}
+}
+//add hot key event  
+//0051DB74.EB 66          JMP SHORT age2_x1.0051DBDC
+//0051DB76 > 8B0D A0127900  MOV ECX, DWORD PTR DS : [7912A0]
+//0051DB7C > 8B8424 6801000 > MOV EAX, DWORD PTR SS : [ESP + 168]
+//0051DB83   . 85C0           TEST EAX, EAX
+//0051DB85   . 8B8424 5C01000 > MOV EAX, DWORD PTR SS : [ESP + 15C]
+//0051DB8C   . 74 16          JE SHORT age2_x1.0051DBA4
+//0051DB8E   . 83F8 7B        CMP EAX, 7B
+//0051DB91   . 75 16          JNZ SHORT age2_x1.0051DBA9
+//0051DB93   . 8B11           MOV EDX, DWORD PTR DS : [ECX]
+//0051DB95.FF52 30        CALL DWORD PTR DS : [EDX + 30]
+//0051DB98   . 8B10           MOV EDX, DWORD PTR DS : [EAX]
+//0051DB9A   . 8BC8           MOV ECX, EAX
+//0051DB9C.FF92 EC000000  CALL DWORD PTR DS : [EDX + EC]
+//0051DBA2.EB 36          JMP SHORT age2_x1.0051DBDA
+//0051DBA4 > 83F8 1B        CMP EAX, 1B
+//0051DBA7   . 74 23          JE SHORT age2_x1.0051DBCC
+//0051DBA9 > -E9 92642A00    JMP age2_x1.007C4040
+
+
+//// Enable keyboard overrides
+//Injection(0x2b2000, "A14C507A0085C08946340F85A148E2FFE93648E2FF9000000000000000000000833D4C507A00000F85A938E2FF85C00F844339E2FFE98D38E2FF00000000000083F8607C1D83F8697F188B9C24680100008BF08BBC246401000083C6A0E9B497D5FF83F8700F85F5040000E93E9BD5FF8B94245C01000085DB0F850490D5FF83FA75743583FA76743783FA770F85E98FD5FFA14C507A004083F8027E0231C08B1550507A0089054C507A00506A0021D2743EE849DFFFFFEB37E8B27B0000EB35A148507A0083CAFF5083F0016A01890548507A0029C28B0DA01279008B416C8B48046A03505050505251FF1594536300E81B0000008B0DA01279006A006A006A01E88A78E2FFB801000000E9CC9AD5FF83EC60578B4424688D7C243083E80119C02574F1FFFF05E63200006A305750E87CEBD9FFB93000000031C0F2AE8947038B44246CC747FF3A20257383F00183F8037505B84905000005FF29000050E87DEBD9FF8BC88D5424308D0424515250E8B702E5FF8D44240C6A0150E8B08BD5FF5F83C46CC20800900000000000000000E82BFED5FF568BCDE8E3FAD5FFE99F96D5FF000000000000000000000000000031DB8B9648010000395C242074148BBE440100008B864001000085FF752C85C0752883FA02750E8BBE1C0100008B86F8000000EB150FBF86020200008BBC861C0100008B8486F8000000837E142875014B8B115783C302505356FF92C40000005F5EB8010000005BC214000000000000000000000000000000000000000000908B4E408B54240C85C9741881FA7F2455008B117414837E1428750E81FA18F3630075065F5E5BC204005357E946E9D8FF83FA70720583FA787605E9688FD5FF8B2DA01279008A9DB10900008D7A9184DB0F84BE00000083FF09720231FF8B95240400008BB520180000663B7A480F83A10000008B8E3811000085C9740C83796C00740657E827C5D8FF8BCDE8A032E2FF8BC8E88929D9FF8B8E701000006A018B11FF52208BCD83B9E401000006751483B9E801000001750B8B016A006A00FF50108BCD8BC78B1150FF52148B8E38110000BB0400000085C9740683796C0075348BCDE84932E2FF8A90A20000008B8E4811000084D2740143899DE001000083EB048B1153FF52148B8EC01100008B116A00FF5214E9848ED5FF90000000000000A1205F7A0021C9740483F001C331C0C3A1A012790085C074578B90E001000038A8B2090000744983FA0475448B0D001279008B44240485C97436F7D8259700000005C3230000C705B85F780041543A20680001000068BC5F780050E800E9D9FF68B85F78008B0D00127900E86023E1FFE96B7AE2FF9000000000000000000000508B4E40A1205F7A0021C974078BD083F001750488D358C3588B0DA01279003C01771F85ED0F9FC0B301FEC06A006A000805F55F7A008B8920180000E81FFAD5FFC3565753E84631E2FF8BF081CBFFFFFFFF8B028B90A01200008B427CBFB2010000A80374208B7A7081FF84030000721581FFE8030000730DB81080560081EF84030000EB05B8607E56006A006A006A0068000080BF68000080BF578B4E78FFD085C074248B50208B0DA012790021D274028BC28B118BD8FF523485C0740A6A01538BC8E847DAC6FF81FFB20100007407BFB2010000EBAE83FBFF75138B0DA01279006A006A006A03E8D274E2FFEB278BCEE88927D9FF6A01538BCEE8EF24D9FF8B533C8B43386A0052508BCEE84E17D9FFC644243C015B5F5EB301C39000008D442478817C246C7F2455007518813829265600751083780C08740F837810040F846A45D6FFE97544D6FF8B0DA01279008B81240400008B504C8B42048A154E855E008B40048B74242885C0750580FA2E740B53E8C9FEFFFF5B89742428C390C705C8507A00FFFFFFFF8B410CC30000A1C8507A0085C00F8C6D96D5FF6AFF8BCDE80A000000B801000000E95C96D5FF8B4424048B15C8507A0085C07C10C704248ED751008905C8507A00C204008954240453568BD957E9A9FED5FF000000008B44243C8905C4507A00E871B7D8FFC705C4507A0000000000E9F0B2D8FF0000A1C4507A008D942424020000A8048B0274233B4204741E8B910C0100008B82740100008B9278010000898374010000899378010000E83662C5FFE934B3D5FF9080FB030F844830D3FF80FB020F854F30D3FF568BF18B892C080000E89033D8FF508BD0C1F81081E2FF0000006AFF6A006A006A006A0052508B8E40080000E83DAEDCFF68788C67008B8E2C080000E84D32D8FF8B8E2C08000050E89131D8FF8B8E2C08000050E85530D8FF5EE9F02FD3FF90000000000000000000000000000083FF01751D8B8EF80000006AFF6A0068B100000051FF15145363005F31C05EC2040083FF16740A83FF03740583FF18750A5FB8010000005EC204008B8650010000E990A2D8FF0000000000000000000021D27469394A0C74648B442430837C24400475598B5A0C3DFEEA4200754FA1A01279008BBB9C0000008BA82018000021FF743A21ED74368B8D3811000021C97426E8EABED8FF85C0741D8BCBE81F25D9FF578BCDC605C4507A0004E8B0FBD5FFC605C4507A00008B8E0C010000E87E23D9FF8B166A018BCEFF52205F5E5DB8010000005B83C418C210000000000000008D44247C817804292656008B5010750A83FA087505C64424080AE96148D6FF908D44247C817804292656008B5010750A83FA087505C644240864E94148D6FF"),
+//Injection(0x5e78bf, "E95CC71D00"),
+//Injection(0x51dba9, "E992642A00"),
+//Injection(0x51d074, "E9F76F2A00"),
+//Injection(0x51d006, "E945752A00"),
+//Injection(0x524450, "E92B012A00"),
+//Injection(0x4f765c, "E9AFCF2C00"),
+//Injection(0x54e960, "E92B5D2700"),
+//Injection(0x5e8839, "0F84C1B71D00C74634010000000F1F440000"),
+//Injection(0x51d8c8, "0F85926C2A00"),
+//Injection(0x51d7f2, "E9CA00000066666690"),
+//Injection(0x51db91, "7516"),
+//Injection(0x4f7b70, "EB656690"),
+//Injection(0x4f7897, "EB656690"),
+//Injection(0x4f7271, "EB656690"),
+//Injection(0x431cbb, "8B4C241025FF000000803C08010F97C059C20C00"),
+//Injection(0x4313ef, "EB626690"),
+//Injection(0x4313d5, "7D"),
+//Injection(0x4313e9, "69"),
+
+//0051D78E   > 8B85 30120000  MOV EAX,DWORD PTR SS:[EBP+1230]                        ;  Default case of switch 0051D1F0
+
+//007E4D80
+//004BD930   $ 51             PUSH ECX
+
+//004BDDE3 > 33C0           XOR EAX, EAX;  Default case of switch 004BD93A
+//004BDDE5   . 59             POP ECX
+//004BDDE6.C2 0400        RETN 4
+//0051DBA9 - E9 92642A00    JMP age2_x1.007C4040
+
+//04BD935
+DWORD _004BD93F = 0x04BD93F;
+DWORD _0058F3F0 = 0x058F3F0;
+void __declspec(naked)  SetHootKeyEvent004BD935()
+{
+	__asm {
+		MOV BYTE PTR SS : [ESP + 3h] , 0h
+		//tc
+		CMP EAX, 417Ah
+		JE TCLoom
+		CMP EAX, 417Bh
+		JE  TownWatch
+		CMP  EAX, 417Ch
+		JE Wheelbarrow
+		//Blacksmith
+		CMP  EAX, 415Eh
+		JE Fletching
+		CMP EAX, 415Fh
+		JE Forging
+		CMP EAX, 4160h
+		JE PaddedArcherArmor
+		CMP EAX, 4162h
+		JE ScaleBarding
+		CMP EAX, 4163h
+		JE ScaleMail
+		//University
+		CMP  EAX, 4164h
+		JE Arrowslits
+		CMP  EAX, 4165h
+		JE Ballistics
+		CMP  EAX, 4166h
+		JE BombardTower
+		CMP  EAX, 4167h
+		JE Chemistry
+		CMP  EAX, 4168h
+		JE FortifiedWall
+		CMP  EAX, 4169h
+		JE GuardTower
+		CMP  EAX, 416Ah
+		JE HeatedShot
+		CMP  EAX, 416Bh
+		JE Masonry
+		CMP  EAX, 416Ch
+		JE MurderHoles
+		CMP  EAX, 416Dh
+		JE SiegeEngineers
+		CMP  EAX, 416Eh
+		JE Treadmill
+		//Monastery
+		CMP EAX, 416Fh
+		JE Atonement
+		CMP EAX, 4170h
+		JE BlockPrinting
+		CMP EAX, 4171h
+		JE Faith
+		CMP EAX, 4172h
+		JE Fervor
+		CMP EAX, 4173h
+		JE HerbalMedicine
+		CMP EAX, 4174h
+		JE Heresy
+		CMP EAX, 4176h
+		JE Illumination
+		CMP EAX, 4177h
+		JE Redemption
+		CMP EAX, 4178h
+		JE Sanctity
+		CMP EAX, 4179h
+		JE Theocracy
+		//step lancer 
+		CMP EAX, 417Dh
+		JE steplancer
+		//Flaming Camel
+		CMP EAX, 417Eh
+		JE FlamingCamel
+		//go to krepost
+		CMP EAX, 417Fh
+		JE GoToKrepost
+		//Go To Donjon key
+		CMP EAX, 4180h
+		JE GoToDonjon
+		CMP EAX, 4180h
+		JE GoToDonjon
+		//todo
+		//16770, "V"
+		//16771, "D"
+		//16772, "S"
+		//16773, "F"
+		//16774, "X"
+		//16775, "C"
+		//16776, "A"
+		//16777, "Z"
+		//16778, "R"
+		//16779, "T"
+		//16780, "G"
+		//16781, "Y"
+		//16782, "K"
+		//16783, "D"
+		//16783, "M"
+		CMP EAX, 4182h
+		JE selectIDLEVillager
+		//normale
+		CMP EAX, 4022h
+		JMP DefaultCase
+
+		//tc
+		TCLoom :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 04h//0fh
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			TownWatch :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 04h//0Fh
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Wheelbarrow :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 04h//0Fh
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			//Black smith
+			Fletching :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 0Fh //10h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Forging :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH  0Fh //10h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			PaddedArcherArmor :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 0Fh //10h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleBarding :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH  0Fh //10h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleMail :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH  0Fh //10h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			//university
+			Arrowslits :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Ballistics :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+
+			BombardTower :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Chemistry :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			FortifiedWall :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			GuardTower :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			HeatedShot :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Masonry :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			MurderHoles :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			SiegeEngineers :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Treadmill :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah
+			PUSH 10h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			//Monastery
+			Atonement :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h//0h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			BlockPrinting :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Faith :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Fervor :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			HerbalMedicine :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h//4h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Heresy :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h//5h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Illumination :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h//6h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Redemption :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h//7h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Sanctity :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah//8h
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			Theocracy :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Bh//0Ah
+			PUSH 0Ah//12h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			steplancer :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//steplancer
+			PUSH 08h//stable
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			FlamingCamel :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//Flaming Camel
+			PUSH 0Dh//castel
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			GoToKrepost :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 042h//Go to krepost
+			PUSH 01h//game commande
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+			GoToDonjon :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 043h//Go to Donjon
+			PUSH 01h//game commande
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+
+			//select all
+			selectIDLEVillager :
+		LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 11h//11h
+			CALL _0058F3F0
+			POP ECX
+			RETN 4h
+
+
+
+		DefaultCase:
+
+		JMP _004BD93F
+
+	}
+}
+//1
+//2
+
+//0x04BE460
+DWORD _004BE467 = 0x0004BE467;
+DWORD _004BF1E3 = 0x04BF1E3;
+void __declspec(naked)  SetHootKeyList004BD935()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		CMP EAX, 04h//tc
+		JNZ checkmona
+		CMP DWORD PTR SS : [ESP + 8h] , 0h//2h
+		JE Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 6h//2h
+		JE Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 7h//2h
+		JE Normale
+		JMP __004BF1E3
+
+		checkmona :
+		CMP EAX, 0Ah //monastar
+			JNZ steplancer// Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 1h
+			Jg __004BF1E3//if is add item then jump default switch case
+
+			steplancer :
+		CMP EAX, 08h
+			JNZ FlamingCamel
+			CMP[ESP + 8h], 3h
+			JE __004BF1E3
+
+			FlamingCamel :
+		CMP EAX, 0Dh
+			JNZ GoToKrepost//Normale
+			CMP[ESP + 8h], 3h
+			JE __004BF1E3
+
+
+			GoToKrepost :
+		cmp EAX, 1h
+			JNZ Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 42h
+			JE __004BF1E3
+			CMP DWORD PTR SS : [ESP + 8h] , 43h
+			JE __004BF1E3
+
+			Normale :
+		CMP EAX, 0Eh
+			JMP _004BE467
+			__004BF1E3 :
+		JMP _004BF1E3
+	}
+}
+//004BD388 | . 33D2           XOR EDX, EDX
+//004BD38A | . 8A90 84D84B00  MOV DL, BYTE PTR DS : [EAX + 4BD884]
+//004BD390 | .FF2495 E4D74B0 > JMP DWORD PTR DS : [EDX * 4 + 4BD7E4]
+//004BD397 | > 8D4424 03      LEA EAX, DWORD PTR SS : [ESP + 3] ;  Case 17 of switch 004BD37A
+//004BD39B | . 8D5424 03      LEA EDX, DWORD PTR SS : [ESP + 3]
+//004BD39F | . 50             PUSH EAX
+//004BD3A0 | . 8D4424 07      LEA EAX, DWORD PTR SS : [ESP + 7]
+//004BD3A4 | . 52             PUSH EDX
+//004BD3A5 | . 50             PUSH EAX
+//004BD3A6 | . 6A 0E          PUSH 0E
+//004BD3A8 | . 6A 00          PUSH 0
+
+//go to key
+//004BD388 | . 33D2           XOR EDX, EDX
+//004BD370 / $ 51             PUSH ECX
+
+//go to krepost
+//005244E5 > 8B0D A0127900  MOV ECX, DWORD PTR DS : [7912A0]
+//005244EB.E8 70300C00    CALL age2_x1.005E7560
+DWORD _00524471 = 0x0524471;
+DWORD _005244E5 = 0x05244E5;
+void __declspec(naked)  SetHootgoToKrepost()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 10h]
+		CMP EAX, 0Fh;  Switch(cases 0..E)
+		JE GoToKrepost
+		CMP EAX, 0Eh
+		JMP _00524471
+		GoToKrepost :
+		MOV EDI, 4DDh//krepost unit id
+			JMP _005244E5
+
+	}
+}
+
+//00524471   . 0F87 AF010000  JA age2_x1.00524626
+void __declspec(naked)  SetHootgoToKrepostDonjonJA()
+{
+	__asm {
+		CMP EAX, 0Fh
+		JE GoToKrepost
+		CMP EAX, 10h
+		JE GoToDonjon
+
+		CMP EAX, 0Eh;  Switch(cases 0..E)
+		JA Default
+
+		GoToKrepost :
+		MOV EDI, 4DDh//krepost unit id
+			JMP _005244E5
+			GoToDonjon :
+		MOV EDI, 5C4h//donjon unit id
+			JMP _005244E5
+
+			Default :
+		POP EDI;  Default case of switch 0052446E
+			POP ESI
+			POP EBX
+			RETN 4h
+
+
+	}
+}
+//0051D1F0   . 83C0 EC        ADD EAX, -14;  Switch(cases 14..41)
+//0051D1F3   . 83F8 2D        CMP EAX, 2D
+//0051D1F6   . 0F87 92050000  JA age2_x1.0051D78E
+
+
+//0051D1F0   . 83C0 EC        ADD EAX, -14;  Switch(cases 14..41)
+
+DWORD _0051D1F6 = 0x051D1F6;
+DWORD _0051DBDC = 0x051DBDC;
+DWORD _00524450 = 0x0524450;
+void __declspec(naked)  SetHootgoToKrepostEvent0051D1F0()
+{
+	__asm {
+		ADD EAX, -14h;  Switch(cases 14..41)
+		CMP EAX, 2Fh
+		JNZ normal
+		PUSH 0Fh;  Case 31 of switch 0051D1F0
+		MOV ECX, EBP
+		CALL _00524450
+		MOV EAX, 1h
+		JMP _0051DBDC
+
+		normal :
+		CMP EAX, 2Dh
+
+			JMP _0051D1F6
+	}
+}
+//0051D1F6   . 0F87 92050000  JA age2_x1.0051D78E
+DWORD _0051D78E = 0x051D78E;
+DWORD _4_005E7560 = 0x05E7560;
+DWORD bulgariansCiv = 34;//Civilization::bulgarians;
+void __declspec(naked)  SetHootgoToKrepostEvent0051D1F0JA()
+{
+	__asm {
+		//to check if bulgarian or sicilian
+		CMP EAX, 2Eh
+		JE Check
+		CMP EAX, 2Fh
+		JE Check
+		//CMP EAX, 2Fh
+		//JE goToDonjon
+		JMP normal
+		Check :
+		//get current player
+		MOV ECX, DWORD PTR DS : [07912A0h]
+		call _4_005E7560
+		MOV EDX, 0h
+		//MOV DX, WORD PTR SS : [EAX + 15Dh]
+		MOV DL, BYTE PTR SS : [EAX + 15Dh]
+		CMP  EDX, bulgariansCiv
+		JE goToKrepost
+		JMP goToDonjon
+		goToKrepost :
+		PUSH 0Fh;  Go to Krepost
+		MOV ECX, EBP
+		CALL _00524450
+		JMP Default
+		goToDonjon :
+		PUSH 10h;  Go to Donjon
+		MOV ECX, EBP
+		CALL _00524450
+
+		normal :
+		CMP EAX, 2Dh
+		JA Default
+
+		Default :
+		//0051D78E   > 8B85 30120000  MOV EAX,DWORD PTR SS:[EBP+1230]          ;  Default case of switch 0051D1F0
+		JMP _0051D78E
+
+	};
+}
+
+//004BCE81  |. 68 824A0000    PUSH 4A82   19074=Reseed Farm
+
+//20005=Mill
+//smith 20006
+void hotkeyHook()
+{
+	//setHook((void*)0x04BC09E, SetHootKeyList);
+	//setHook((void*)0x04BEEB1, SetHootKeyList004BEEB1);
+	//set item number ?
+	// 004BBF33     6A 11           PUSH 11
+	//NumHotkeyGroups
+	writeByte(0x04BBF34, 0x14);
+	//extend game commande key to add go to krepost
+	writeByte(0x04BBF46, 0x44);
+
+	//set monastarysize item
+	//004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
+	writeByte(0x04BBFA9, 0xC);
+	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	//extandestable loop
+	//004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
+	writeByte(0x04BBF93, 0x4);
+	//extend castle item
+	//004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	writeByte(0x04BBFCA, 0x4);
+
+
+
+
+
+	setHook((void*)0x04BE460, SetHootKeyList004BD935);
+
+
+	//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
+	setHook((void*)0x04BBFDA, SetHootKeyList004BBFDA);
+	//0x07E4CE2
+
+	////004BC667   . 5E             POP ESI
+	setHook((void*)0x04BC0AC, SetHootKeyList004BC0AC);
+	//item when clicking
+	setHook((void*)0x04BCE8C, SetHootKeyList004BCE8C);
+	setHook((void*)0x04BCD8C, SetHootKeyList004BCD8CMonastary);
+	setHook((void*)0x04BCBEC, SetHootKeyList004BCBECTC);
+	//6739=X,  5800=Steppe Lancer Stable: 0x8,
+	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
+	setHook((void*)0x04BCD2C, SetHootKeyList004BCD2C);
+	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
+	//004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
+	setHook((void*)0x04BCE7C, SetHootKeyList004BCE7C);
+	setHook((void*)0x04BC90C, SetHootKeyListGoToKrepost004BC90C);
+
+	//key 
+	setHook((void*)0x04BC657, SetHootKeyListhotkey004BC657);
+	setHook((void*)0x04BF1E3, SetHootKeyListhotkey0x04BF1E3);
+
+	//key events
+	setHook((void*)0x04BD935, SetHootKeyEvent004BD935);
+
+	//00447EFF | . 68 F44C0000    PUSH 4CF4
+	//go to castel
+	//00524450   $ - E9 2B012A00    JMP age2_x1.007C4580
+	//0052446E   . 83F8 0E        CMP EAX,0E                                        ;  Switch (cases 0..E)
+	//extend switch case
+	//setHook((void*)0x052446A , SetHootgoToKrepost); -> SetHootgoToKrepostDonjonJA
+
+	//provoque event 
+	////0051D1F3     83F8 42        CMP EAX,  2E   2D
+	//writeByte(0x04BBF34, 0x2E);
+	//setHook((void*)0x051D1F0, SetHootgoToKrepostEvent0051D1F0); ->SetHootgoToKrepostEvent0051D1F0JA
+
+	//go to krepost and donjon
+	//00524471   . 0F87 AF010000  JA age2_x1.00524626
+	setHookJA((void*)0x0524471, SetHootgoToKrepostDonjonJA);
+	setHookJA((void*)0x051D1F6, SetHootgoToKrepostEvent0051D1F0JA);
+
+
+	////007E4CE2   BB 004E7E00      MOV EBX, age2_x1.007E4E00; ASCII ":?"
+	//setHook((void*)0x07E4CE2, SetHootKeyList007E4CE2);
+	////007E4D2C   83FD 05          CMP EBP,5
+	//writeByte(0x07E4D2E, 0x9);
+
+	//BYTE _7E4C0E[10] = { 0x90 ,0x90 ,0x90 ,0x90 ,0x90 ,0x90 ,0x90 ,0x90 ,0x90,0x90 };
+	//writeData(0x07E4C0E, _7E4C0E,10);
+	//0x04BF1E3
+	////connect list box to hot key
+	//setHook((void*)0x04BF1E3, SetHootKeyListhotkey004BF1E3);
+
+	//1D
+	//	00525BA2   . 6A 1D          PUSH 1D
+
+	//	00538A0F     90             NOP
+	//	00538A10   $ 56             PUSH ESI
+	//	00538A11   . 6A 00          PUSH 0
+	//	00538A13   . 6A 00          PUSH 0
+	//	00538A15   . 6A 00          PUSH 0
+
+
+
+}
+//map generatoR????
+//00534C98   . 8B0D A0127900  MOV ECX, DWORD PTR DS : [7912A0]
+
+
+//0055DD20  /$ 81EC 00020000  SUB ESP,200
+
+
+
+//hotkey interface
+//004F62CF     8BCE           MOV ECX, ESI; |
+//4 button
+//004F6321     8B4C24 10      MOV ECX, DWORD PTR SS : [ESP + 10]
+//list box
+//
+//007BF926   E8 B5F0D9FF      CALL age2_x1.0055E9E0
+//004F64CE | .E8 0D850600    CALL age2_x1.0055E9E0; \age2_x1.0055E9E0
+
+//fill list box
+//004F658B | . 85C0           TEST EAX, EAX
+//004F6647     90             NOP
+
+
+//007CEA8E   52               PUSH EDX
+//007CEA8F   52               PUSH EDX
+//007CEA90   E8 46FAFFFF      CALL age2_x1.007CE4DB
+
+// new players
+//0050FF16   . E8 C52D0500    CALL age2_x1.00562CE0
+
+
+//loop that print item
+//004F7580 | . 85ED            TEST EBP, EBP
+
+//DWORD PTR DS : [ESI + 840]
+//genere tate item when click item
+//004F73ED | . 0F8E 37010000   JLE age2_x1.004F752A
+
+
+//0058F163   .-E9 26F92300    JMP age2_x1.007CEA8E
+////check if hki file existe if not je 007CE520
+//007CE507   E8 344BD7FF      CALL age2_x1.00543040
+//007CE50C   83C4 04          ADD ESP, 4
+//007CE50F   84C0             TEST AL, AL
+//007CE511   74 0D            JE SHORT age2_x1.007CE520
+
+//0058F168   . 52             PUSH EDX
+//create hki file
+//0058F169   . E8 C234FBFF    CALL age2_x1.00542630
+
+//file file ?
+//007BF0BA   8BF0             MOV ESI,EAX
+
+
+//007CEA8E   52               PUSH EDX
+
+
+
+
+//007E9740   8B0D A0127900    MOV ECX, DWORD PTR DS : [7912A0]
+//007E9746   E8 1524C5FF      CALL age2_x1.0043BB60
+//007E974B   A1 A0127900      MOV EAX, DWORD PTR DS : [7912A0]
+//007E9750   8B48 20          MOV ECX, DWORD PTR DS : [EAX + 20]
+//007E9753   21C9             AND ECX, ECX
+//007E9755   74 05            JE SHORT age2_x1.007E975C
+//007E9757   E8 E467DBFF      CALL age2_x1.0059FF40
+//007E975C   C3               RETN
+//
+
+
+//Select All   language ini
+//20020 = Select All
+/*
+-Select_all Idle_villagers
+- Select all Idle_military
+- Select all Trade_carts
+- Select all Town_centers
+- Select all Barracks
+- Select all Archery ranges
+- Select all Stables
+- Select all Siege_workshops
+- Select all Docks
+- Select all Markets
+- Select all Monasteries
+- Select all Castles
+- Select all Kreposts
+- Select all Donjons
+- Select all Military_Buildings
+
+//16768 = V\\Go to Donjon
+20020 = Select All
+16770 = V//Select_all Idle_villagers
+16771 = D// Select all Idle_military
+16772 = S// Select all Trade_carts
+16773 = F// Select all Town_centers
+16774 = X// Select all Barracks
+16775 = C// Select all Archery ranges
+16776 = A// Select all Stables
+16777 = Z// Select all Siege_workshops
+16778 = R// Select all Docks
+16779 = T// Select all Markets
+16780 = G// Select all Monasteries
+16781 = Y// Select all Castles
+16782 = K// Select all Kreposts
+16783 = D// Select all Donjons
+16783 = M//Select all Military_Buildings
+
+16784 =Select_all Idle_villagers
+16785 =Select all Idle_military
+16786 =Select all Trade_carts
+16787 =Select all Town_centers
+16788 =Select all Barracks
+16789 =Select all Archery ranges
+16790 =Select all Stables
+16791 =Select all Siege_workshops
+16792 =Select all Docks
+16793 =Select all Markets
+16794 =Select all Monasteries
+16795 =Select all Castles
+16796 =Select all Kreposts
+16797 =Select all Donjons
+16798 =Select all Military_Buildings
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+  20020, 	"Select All"
+
+
+16783,"M"
+
+16784 ,"Select_all Idle_villagers"
+16785 ,"Select all Idle_military"
+16786 ,"Select all Trade_carts"
+16787 ,"Select all Town_centers"
+16788 ,"Select all Barracks"
+16789 ,"Select all Archery ranges"
+16790 ,"Select all Stables"
+16791 ,"Select all Siege_workshops"
+16792 ,"Select all Docks"
+16793 ,"Select all Markets"
+16794 ,"Select all Monasteries"
+16795 ,"Select all Castles"
+16796 ,"Select all Kreposts"
+16797 ,"Select all Donjons"
+16798 ,"Select all Military_Buildings"
+}
+16770,"V"
+16771,"D"
+16772,"S"
+16773,"F"
+16774,"X"
+16775,"C"
+16776,"A"
+16777,"Z"
+16778,"R"
+16779,"T"
+16780,"G"
+16781,"Y"
+16782,"K"
+16783,"D"
+
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+16770,"V"
+16771,"D"
+16772,"S"
+16773,"F"
+16774,"X"
+16775,"C"
+16776,"A"
+16777,"Z"
+16778,"R"
+16779,"T"
+16780,"G"
+16781,"Y"
+16782,"K"
+16783,"D"
+}
+STRINGTABLE
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+14176,"University"
+19208,"University"
+20019,"University"
+20020, 	"Select All"
+}
+*/
+//0xE
+#pragma region  007B0BF0  07B2820
+////////////void __declspec(naked)  f_007B2820()
+////////////{
+////////////	__asm {
+////////////		MOV EAX, DWORD PTR DS : [681A20h]
+////////////		MOV ECX, EAX
+////////////		SHL ECX, 0Dh
+////////////		XOR EAX, ECX
+////////////		MOV ECX, EAX
+////////////		SHR ECX, 11h
+////////////		XOR EAX, ECX
+////////////		MOV ECX, EAX
+////////////		SHL ECX, 5h
+////////////		XOR EAX, ECX
+////////////		MOV DWORD PTR DS : [681A20h] , EAX
+////////////		AND EAX, 7FFFh
+////////////		RETN
+////////////
+////////////
+////////////	};
+////////////}
+//////////////switch case
+//////////////7B0DA0
+//////////////8F 0C 7B 00 // 7B0C8F
+//////////////FC 0C 7B 00 // 7B0CFC
+//////////////FC 0C 7B 00 // 7B0CFC
+//////////////FC 0C 7B 00 // 7B0CFC
+//////////////FC 0C 7B 00 // 7B0CFC
+//////////////FF 0C 7B 00 // 7B0CFF
+//////////////FF 0C 7B 00 // 7B0CFF
+//////////////FF 0C 7B 00 // 7B0CFF
+//////////////FF 0C 7B 00 // 7B0CFF
+//////////////02 0D 7B 00 // 7B0D02
+//////////////02 0D 7B 00 // 7B0D02
+//////////////02 0D 7B 00 // 7B0D02
+//////////////02 0D 7B 00 // 7B0D02
+//////////////F9 0C 7B 00 // 7B0CF9
+//////////////F9 0C 7B 00 // 7B0CF9
+//////////////F9 0C 7B 00 // 7B0CF9
+////////////// 
+//////////////switch case
+//////////////7B0D80
+//////////////1D 0C 7B 00 // 7B0C1D 0x0
+//////////////70 0C 7B 00 // 7B0C70 0x4
+//////////////70 0C 7B 00 // 7B0C70 0x8
+//////////////73 0C 7B 00 // 7B0C73 0xC
+//////////////73 0C 7B 00 // 7B0C73 0x10
+//////////////76 0C 7B 00 // 7B0C76 0x14
+//////////////76 0C 7B 00 // 7B0C76 0x18
+//////////////26 0C 7B 00 // 7B0C26 0x1C
+//////////////8F 0C 7B 00 // 7B0C8F 0x20
+//////////////FC 0C 7B 00 // 7B0CFC 0x24
+//////////////FC 0C 7B 00 // 7B0CFC 0x28
+//////////////FC 0C 7B 00 // 7B0CFC 0x2C
+//////////////FC 0C 7B 00 // 7B0CFC 0x30
+//////////////FF 0C 7B 00 // 7B0CFF 0x34
+//////////////FF 0C 7B 00 // 7B0CFF 0x38
+//////////////FF 0C 7B 00 // 7B0CFF 0x3C
+//////////////FF 0C 7B 00 // 7B0CFF 0x40
+//////////////02 0D 7B 00 // 7B0D02 0x44
+//////////////02 0D 7B 00 // 7B0D02 0x48
+//////////////02 0D 7B 00 // 7B0D02 0x4C
+//////////////02 0D 7B 00 // 7B0D02 0x50
+//////////////F9 0C 7B 00 // 7B0CF9 0x54
+//////////////F9 0C 7B 00 // 7B0CF9 0x58
+//////////////F9 0C 7B 00 // 7B0CF9 0x5C
+//////////// 
+////////////DWORD _7B0D80[23] = {};
+////////////DWORD _7B0DA0 = (DWORD)_7B0D80 + 0x20;
+//////////////DWORD _7B0DA0[15] = {};//= DWORD PTR DS : [_7B0D80 + 20h]
+////////////DWORD hhh;
+////////////void __declspec(naked)  f_007B0BF0()
+////////////{
+////////////	__asm {
+////////////		//initialize array switch case
+////////////		MOV hhh, EAX //we save eax
+////////////		MOV EAX, _007B0C1D
+////////////		MOV DWORD PTR SS : [_7B0D80] , EAX
+////////////		MOV EAX, _007B0C70
+////////////		MOV DWORD PTR SS : [_7B0D80 + 4h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 8h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0C73
+////////////		MOV DWORD PTR SS : [_7B0D80 + 0Ch] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 10h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0C76
+////////////		MOV DWORD PTR SS : [_7B0D80 + 14h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 18h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0C26
+////////////		MOV DWORD PTR SS : [_7B0D80 + 1Ch] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0C8F
+////////////		MOV DWORD PTR SS : [_7B0D80 + 20h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0CFC
+////////////		MOV DWORD PTR SS : [_7B0D80 + 24h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 28h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 2Ch] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 30h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0CFF
+////////////		MOV DWORD PTR SS : [_7B0D80 + 34h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 38h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 3Ch] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 40h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0D02
+////////////		MOV DWORD PTR SS : [_7B0D80 + 44h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 48h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 4Ch] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 50h] , EAX//we fill switch case array 
+////////////		MOV EAX, _007B0CF9
+////////////		MOV DWORD PTR SS : [_7B0D80 + 54h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 58h] , EAX//we fill switch case array 
+////////////		MOV DWORD PTR SS : [_7B0D80 + 5Ch] , EAX//we fill switch case array 
+////////////		MOV EAX, hhh//we restore eax
+////////////
+////////////
+////////////		MOV EAX, DWORD PTR DS : [ECX + 100h]
+////////////		PUSH EBX
+////////////		PUSH EBP
+////////////		PUSH ESI
+////////////		MOV ECX, DWORD PTR DS : [EAX + 5BE0h]
+////////////		PUSH EDI
+////////////		SUB ESP, 10h
+////////////		XOR EDI, EDI
+////////////		MOV EDX, DWORD PTR DS : [ECX + 8Ch]
+////////////		MOV ESI, DWORD PTR DS : [EDX + 34h]
+////////////		MOV EAX, DWORD PTR DS : [ESI + 8h]
+////////////		DEC EAX
+////////////		MOV DWORD PTR SS : [ESP + 8h] , EAX
+////////////		JMP DWORD PTR DS : [EDI * 4 + _7B0D80]
+////////////		_007B0C1D:
+////////////		MOV EAX, DWORD PTR SS : [ESP + 24h]
+////////////		MOV ECX, DWORD PTR SS : [ESP + 28h]
+////////////		DEC EAX
+////////////		_007B0C26:
+////////////		DEC ECX
+////////////		_007B0C27:
+////////////		TEST EAX, EAX
+////////////		JL short _007B0C64
+////////////		TEST ECX, ECX
+////////////		JL short _007B0C64
+////////////		MOV EDX, DWORD PTR SS : [ESP + 8h]
+////////////		CMP EAX, EDX
+////////////		JG short _007B0C64
+////////////		CMP ECX, EDX
+////////////		JG short _007B0C64
+////////////		MOV EDX, DWORD PTR DS : [ESI + 0A214h]
+////////////		MOV EBX, EAX
+////////////		SHL EBX, 5h
+////////////		MOV EBP, DWORD PTR DS : [EDX + ECX * 4h]
+////////////		MOV DL, BYTE PTR DS : [EBX + EBP + 1Fh]
+////////////		CMP DL, 2h
+////////////		JE short _007B0C79
+////////////		CMP DL, 25h
+////////////		JE short _007B0C79
+////////////		INC EDI
+////////////		CMP EDI, 8h
+////////////		JGE short _007B0C64
+////////////		JMP DWORD PTR DS : [EDI * 4h + _7B0D80]
+////////////		_007B0C64:
+////////////		ADD ESP, 10h
+////////////		POP EDI
+////////////		POP ESI
+////////////		POP EBP
+////////////		XOR EAX, EAX
+////////////		POP EBX
+////////////		RETN 8h
+////////////		_007B0C70:
+////////////		INC EAX
+////////////		JMP short _007B0C27
+////////////		_007B0C73:
+////////////		INC ECX
+////////////		JMP short _007B0C27
+////////////		_007B0C76:
+////////////		DEC EAX
+////////////		JMP short _007B0C27
+////////////		_007B0C79:
+////////////		XOR EBX, EBX
+////////////		XOR EDI, EDI
+////////////		MOV DWORD PTR SS : [ESP] , -1h
+////////////		MOV DWORD PTR SS : [ESP + 4h] , EDI
+////////////		JMP DWORD PTR DS : [EDI * 4h + _7B0DA0]
+////////////		_007B0C8F:
+////////////		MOV EAX, DWORD PTR SS : [ESP + 24h]
+////////////		MOV EDX, DWORD PTR SS : [ESP + 28h]
+////////////		LEA EAX, DWORD PTR DS : [EAX - 2h]
+////////////		LEA ECX, DWORD PTR DS : [EDX - 2h]
+////////////		_007B0C9D:
+////////////		TEST EAX, EAX
+////////////		JL short _007B0D05
+////////////		TEST ECX, ECX
+////////////		JL short _007B0D05
+////////////		MOV EDX, DWORD PTR SS : [ESP + 8h]
+////////////		CMP EAX, EDX
+////////////		JG short _007B0D05
+////////////		CMP ECX, EDX
+////////////		JG short _007B0D05
+////////////		MOV EDX, DWORD PTR DS : [ESI + 0A214h]
+////////////		MOV EBP, DWORD PTR DS : [EDX + ECX * 4h]
+////////////		MOV EDX, EAX
+////////////		SHL EDX, 5h
+////////////		MOVZX EDX, BYTE PTR DS : [EDX + EBP + 1Fh]
+////////////		MOVZX EBP, BYTE PTR DS : [EDX + 67B468h]
+////////////		AND EBP, 3h
+////////////		INC EBP
+////////////		SHR EBP, 1h
+////////////		CMP DWORD PTR SS : [ESP] , EBP
+////////////		JE short _007B0CE7
+////////////		MOV DWORD PTR SS : [ESP] , EBP
+////////////		MOV EDX, DWORD PTR SS : [ESP + 4h]
+////////////		INC EDX
+////////////		CMP EDX, 4h
+////////////		JGE short _007B0D05
+////////////		MOV DWORD PTR SS : [ESP + 4h] , EDX
+////////////		_007B0CE7:
+////////////			TEST EBP, EBP
+////////////		JE short _007B0CEC
+////////////		INC EBX
+////////////		_007B0CEC:
+////////////		INC EDI
+////////////		CMP EDI, 10h
+////////////		JGE short _007B0D11
+////////////		JMP DWORD PTR DS : [EDI * 4h + _7B0DA0]
+////////////		_007B0CF9:
+////////////		DEC ECX
+////////////		JMP short _007B0C9D
+////////////		_007B0CFC:
+////////////		INC EAX
+////////////		JMP short _007B0C9D
+////////////		_007B0CFF:
+////////////		INC ECX
+////////////		JMP short _007B0C9D
+////////////		_007B0D02:
+////////////		DEC EAX
+////////////		JMP short _007B0C9D
+////////////		_007B0D05:
+////////////		ADD ESP, 10h
+////////////		POP EDI
+////////////		POP ESI
+////////////		POP EBP
+////////////		XOR EAX, EAX
+////////////		POP EBX
+////////////		RETN 8h
+////////////		_007B0D11:
+////////////		XOR EAX, EAX
+////////////		CMP EBX, 0Ah
+////////////		SETGE AL
+////////////		ADD ESP, 10h
+////////////		POP EDI
+////////////		POP ESI
+////////////		POP EBP
+////////////		POP EBX
+////////////		RETN 8h
+////////////
+////////////	};
+////////////}
+//////////////DWORD bulgariansCiv = 34;//Civilization::bulgarians;
+////////////DWORD _00408EE0 = 0x0408EE0;
+////////////DWORD _007B2820 = (DWORD)f_007B2820;
+////////////DWORD _00416B30 = 0x0416B30;
+////////////DWORD _004089A0 = 0x04089A0;
+////////////DWORD _00408B00 = 0x0408B00;
+////////////DWORD _007B0BF0 = (DWORD)f_007B0BF0;
+////////////DWORD _005FC070 = 0x05FC070;
+////////////DWORD _00493B70 = 0x00493B70;
+////////////DWORD _00493C90 = 0x0493C90;
+////////////DWORD _006137B0 = 0x06137B0;
+////////////DWORD _005FD7C0 = 0x05FD7C0;
+////////////DWORD _00553EA0 = 0x0553EA0;
+////////////DWORD _005FD820 = 0x05FD820;
+////////////DWORD _005FD810 = 0x05FD810;
+////////////DWORD _005FD800 = 0x05FD800;
+////////////DWORD _005FC1B0 = 0x05FC1B0;
+////////////
+////////////void __declspec(naked)  FixStatisticsDisplayhook()
+////////////{
+////////////	__asm {
+////////////		PUSH -1h
+////////////		PUSH 00622DDEh                   ; Entry address
+////////////		MOV EAX,DWORD PTR FS:[0]
+////////////		PUSH EAX
+////////////		MOV DWORD PTR FS:[0],ESP
+////////////		SUB ESP,144h
+////////////		MOV EDX,DWORD PTR DS:[ECX+100h]
+////////////		PUSH EBX
+////////////		PUSH EBP
+////////////		PUSH ESI
+////////////		MOV EAX,DWORD PTR DS:[EDX+5BE0h]
+////////////		MOV EDX,DWORD PTR DS:[EDX+0F0h]
+////////////		PUSH EDI
+////////////		MOV DWORD PTR SS:[ESP+1Ch],ECX
+////////////		MOV EBX,DWORD PTR DS:[EAX+88h]
+////////////		MOV EAX,DWORD PTR DS:[EAX+8Ch]
+////////////		MOV ECX,40h
+////////////		LEA EDI,DWORD PTR SS:[ESP+54h]
+////////////		MOV ESI,DWORD PTR DS:[EAX+34h]
+////////////		OR EAX,0FFFFFFFFh
+////////////		REP STOS DWORD PTR ES:[EDI]
+////////////		MOV ECX,DWORD PTR DS:[EDX+74h]
+////////////		MOV EDX,DWORD PTR DS:[EDX+8Ch]
+////////////		MOV DWORD PTR SS:[ESP+18h],EAX
+////////////		MOV DWORD PTR SS:[ESP+24h],EAX
+////////////		MOV DWORD PTR SS:[ESP+20h],EAX
+////////////		MOV DWORD PTR SS:[ESP+34h],EAX
+////////////		MOV DWORD PTR SS:[ESP+3Ch],EAX
+////////////		MOV EAX,DWORD PTR DS:[ECX+44h]
+////////////		MOV ECX,DWORD PTR DS:[EDX+60h]
+////////////		MOV DWORD PTR SS:[ESP+2Ch],EBX
+////////////		MOVSX EAX,WORD PTR DS:[EAX+6Eh]
+////////////		MOV DWORD PTR SS:[ESP+48h],ESI
+////////////		MOV DWORD PTR SS:[ESP+44h],0BF800000h
+////////////		MOV EAX,DWORD PTR DS:[ECX+EAX*4h]
+////////////		MOV DWORD PTR SS:[ESP+30h],7F7FFFFFh
+////////////		MOVSX ECX,WORD PTR DS:[EDX+5Eh]
+////////////		LEA EDX,DWORD PTR SS:[ESP+50h]
+////////////		PUSH EDX
+////////////		PUSH ECX
+////////////		MOV ECX,DWORD PTR DS:[ESI+0A274h]
+////////////		PUSH EAX
+////////////		CALL _00408EE0
+////////////		MOV EBP,EAX
+////////////		MOV ECX,DWORD PTR SS:[ESP+1Ch]
+////////////		MOV EDX,DWORD PTR DS:[ECX+13A0h]
+////////////		MOV EAX,DWORD PTR DS:[EDX+140h]
+////////////		MOV ECX,DWORD PTR DS:[EDX+148h]
+////////////		MOV DWORD PTR SS:[ESP+170h],EAX
+////////////		MOV EAX,DWORD PTR DS:[EDX+144h]
+////////////		MOV DWORD PTR SS:[ESP+50h],ECX
+////////////		ADD EAX,EAX
+////////////		LEA EAX,DWORD PTR DS:[EAX+EAX*4h]
+////////////		MOV DWORD PTR SS:[ESP+174h],EAX
+////////////		MOV DWORD PTR SS:[ESP+28h],EBP
+////////////		CALL _007B2820
+////////////		CDQ
+////////////		MOV ECX,32h
+////////////		XOR EDI,EDI
+////////////		INC EDI
+////////////		IDIV ECX
+////////////		MOV EAX,DWORD PTR DS:[EBX+14h]
+////////////		MOV DWORD PTR SS:[ESP+40h],EDI
+////////////		ADD EAX,-2h
+////////////		CMP EAX,EDI
+////////////		MOV DWORD PTR SS:[ESP+38h],EDX
+////////////		JLE _007B0BCC
+////////////		_007B0909:
+////////////		MOV EAX,DWORD PTR DS:[EBX+18h]
+////////////		MOV ESI,1h
+////////////		ADD EAX,-2h
+////////////		MOV DWORD PTR SS:[ESP+10h],ESI
+////////////		CMP EAX,ESI
+////////////		JLE _007B0B18
+////////////		_007B0920:
+////////////		PUSH ESI
+////////////		PUSH EDI
+////////////		MOV ECX,EBX
+////////////		CALL _00416B30
+////////////		TEST AL,AL
+////////////		JE _007B0B01
+////////////		MOV EAX,DWORD PTR SS:[ESP+48h]
+////////////		MOV EDX,EDI
+////////////		SHL EDX,5h
+////////////		MOV ECX,DWORD PTR DS:[EAX+0A214h]
+////////////		MOV EAX,DWORD PTR DS:[ECX+ESI*4h]
+////////////		MOVZX EAX,BYTE PTR DS:[EAX+EDX+1Fh]
+////////////		MOV DL,BYTE PTR DS:[EAX+7A57A0h]
+////////////		CMP EAX,1h
+////////////		JE short _007B095B
+////////////		TEST DL,DL
+////////////		JE _007B0B01
+////////////		_007B095B:
+////////////		PUSH ESI
+////////////		PUSH EDI
+////////////		MOV ECX,EBP
+////////////		CALL _004089A0
+////////////		MOV BYTE PTR SS:[ESP+4Ch],AL
+////////////		MOV ECX,EBP
+////////////		MOV EBX,DWORD PTR SS:[ESP+4Ch]
+////////////		PUSH EBX
+////////////		CALL _00408B00
+////////////		MOV EBP,EAX
+////////////		MOV ECX,DWORD PTR SS:[ESP+1Ch]
+////////////		MOV EDX,DWORD PTR DS:[ECX+3298h]
+////////////		CMP EAX,EDX
+////////////		JL _007B0AFD
+////////////		PUSH ESI
+////////////		PUSH EDI
+////////////		CALL _007B0BF0
+////////////		TEST EAX,EAX
+////////////		JE _007B0AFD
+////////////		FILD DWORD PTR SS:[ESP+10h]
+////////////		MOV EDX,DWORD PTR SS:[ESP+1Ch]
+////////////		PUSH ECX
+////////////		FSTP DWORD PTR SS:[ESP+14h]
+////////////		FILD DWORD PTR SS:[ESP+44h]
+////////////		FSTP DWORD PTR SS:[ESP+18h]
+////////////		FLD DWORD PTR SS:[ESP+14h]
+////////////		FADD DWORD PTR DS:[635978h]
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		FLD DWORD PTR SS:[ESP+18h]
+////////////		FADD DWORD PTR DS:[635978h]
+////////////		PUSH ECX
+////////////		LEA ECX,DWORD PTR DS:[EDX-62Ch]
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		CALL _005FC070
+////////////		TEST EAX,EAX
+////////////		JNZ _007B0AFD
+////////////		FLD DWORD PTR SS:[ESP+14h]
+////////////		FSUB DWORD PTR SS:[ESP+168h]
+////////////		FLD DWORD PTR SS:[ESP+10h]
+////////////		FSUB DWORD PTR SS:[ESP+16Ch]
+////////////		MOV EAX,EBX
+////////////		FLD ST
+////////////		FMUL ST,ST(1)
+////////////		FLD ST(2)
+////////////		FMUL ST,ST(3)
+////////////		AND EAX,0FFh
+////////////		MOV CL,BYTE PTR SS:[ESP+EAX+54h]
+////////////		LEA EBX,DWORD PTR SS:[ESP+EAX+54h]
+////////////		FADDP ST(1),ST
+////////////		CMP CL,0FFh
+////////////		FSTP DWORD PTR SS:[ESP+14h]
+////////////		FSTP ST
+////////////		FSTP ST
+////////////		JNZ short _007B0A27
+////////////		MOV ECX,DWORD PTR SS:[ESP+28h]
+////////////		PUSH ECX
+////////////		MOV ECX,DWORD PTR SS:[ESP+20h]
+////////////		PUSH EAX
+////////////		CALL _00493B70
+////////////		MOV BYTE PTR DS:[EBX],AL
+////////////		_007B0A27:
+////////////		MOV EDX,DWORD PTR SS:[ESP+2Ch]
+////////////		MOV EAX,DWORD PTR DS:[EDX+14h]
+////////////		SHR EAX,1h
+////////////		MOV ECX,EAX
+////////////		SUB EAX,EDI
+////////////		SUB ECX,ESI
+////////////		IMUL EAX,EAX
+////////////		IMUL ECX,ECX
+////////////		ADD EAX,ECX
+////////////		IMUL EAX,DWORD PTR SS:[ESP+170h]
+////////////		MOV DWORD PTR SS:[ESP+10h],EAX
+////////////		MOV BL,BYTE PTR DS:[EBX]
+////////////		TEST BL,BL
+////////////		JBE short _007B0A62
+////////////		MOV EAX,EBX
+////////////		AND EAX,0FFh
+////////////		MOV EDX,DWORD PTR SS:[ESP+50h]
+////////////		IMUL EAX,EDX
+////////////		ADD DWORD PTR SS:[ESP+10h],EAX
+////////////		_007B0A62:
+////////////		FILD DWORD PTR SS:[ESP+10h]
+////////////		FADD DWORD PTR SS:[ESP+14h]
+////////////		FSTP DWORD PTR SS:[ESP+14h]
+////////////		CMP EBP,DWORD PTR SS:[ESP+20h]
+////////////		JLE short _007B0A7C
+////////////		TEST BL,BL
+////////////		JNZ short _007B0A7C
+////////////		MOV DWORD PTR SS:[ESP+20h],EBP
+////////////		_007B0A7C:
+////////////		MOV ECX,DWORD PTR SS:[ESP+1Ch]
+////////////		PUSH ESI
+////////////		PUSH EDI
+////////////		CALL _00493C90
+////////////		MOV ECX,EAX
+////////////		CMP ECX,-1h
+////////////		JE short _007B0AAB
+////////////		CMP ECX,6h
+////////////		JL short _007B0AFD
+////////////		MOV EAX,DWORD PTR SS:[ESP+174h]
+////////////		CDQ
+////////////		IDIV ECX
+////////////		MOV DWORD PTR SS:[ESP+10h],EAX
+////////////		FILD DWORD PTR SS:[ESP+10h]
+////////////		FADD DWORD PTR SS:[ESP+14h]
+////////////		JMP short _007B0AAF
+////////////		_007B0AAB:
+////////////		FLD DWORD PTR SS:[ESP+14h]
+////////////		_007B0AAF:
+////////////		CMP DWORD PTR SS:[ESP+50h],0h
+////////////		JL short _007B0AD3
+////////////		CMP EBP,DWORD PTR SS:[ESP+20h]
+////////////		JNZ short _007B0AD3
+////////////		FCOM DWORD PTR SS:[ESP+30h]
+////////////		FSTSW AX
+////////////		TEST AH,1h
+////////////		JE short _007B0AD3
+////////////		FST DWORD PTR SS:[ESP+30h]
+////////////		MOV DWORD PTR SS:[ESP+34h],EDI
+////////////		MOV DWORD PTR SS:[ESP+3Ch],ESI
+////////////		_007B0AD3:
+////////////		CMP DWORD PTR SS:[ESP+18h],-1h
+////////////		JE short _007B0AED
+////////////		FILD DWORD PTR SS:[ESP+38h]
+////////////		FADD DWORD PTR SS:[ESP+44h]
+////////////		FLD ST(1)
+////////////		FCOMPP
+////////////		FSTSW AX
+////////////		TEST AH,1h
+////////////		JE short _007B0AFB
+////////////		_007B0AED:
+////////////		FSTP DWORD PTR SS:[ESP+44h]
+////////////		MOV DWORD PTR SS:[ESP+18h],EDI
+////////////		MOV DWORD PTR SS:[ESP+24h],ESI
+////////////		JMP short _007B0AFD
+////////////		_007B0AFB:
+////////////		FSTP ST
+////////////		_007B0AFD:
+////////////		MOV EBX,DWORD PTR SS:[ESP+2Ch]
+////////////		_007B0B01:
+////////////		MOV EAX,DWORD PTR DS:[EBX+18h]
+////////////		MOV EBP,DWORD PTR SS:[ESP+28h]
+////////////		INC ESI
+////////////		ADD EAX,-2h
+////////////		CMP ESI,EAX
+////////////		MOV DWORD PTR SS:[ESP+10h],ESI
+////////////		JL _007B0920
+////////////		_007B0B18:
+////////////		MOV EAX,DWORD PTR DS:[EBX+14h]
+////////////		INC EDI
+////////////		ADD EAX,-2h
+////////////		MOV DWORD PTR SS:[ESP+40h],EDI
+////////////		CMP EDI,EAX
+////////////		JL _007B0909
+////////////		MOV EAX,DWORD PTR SS:[ESP+34h]
+////////////		CMP EAX,-1h
+////////////		JE short _007B0B40
+////////////		MOV DWORD PTR SS:[ESP+18h],EAX
+////////////		MOV EAX,DWORD PTR SS:[ESP+3Ch]
+////////////		MOV DWORD PTR SS:[ESP+24h],EAX
+////////////		_007B0B40:
+////////////		CMP DWORD PTR SS:[ESP+18h],-1h
+////////////		JE _007B0BCC
+////////////		PUSH 80h
+////////////		CALL _006137B0
+////////////		MOV EDI,EAX
+////////////		ADD ESP,4h
+////////////		MOV DWORD PTR SS:[ESP+38h],EDI
+////////////		TEST EDI,EDI
+////////////		MOV DWORD PTR SS:[ESP+15Ch],0h
+////////////		JE short _007B0BCC
+////////////		MOV ESI,DWORD PTR SS:[ESP+164h]
+////////////		MOV ECX,ESI
+////////////		CALL _005FD7C0
+////////////		PUSH EAX
+////////////		MOV ECX,ESI
+////////////		CALL _00553EA0
+////////////		PUSH EAX
+////////////		MOV ECX,ESI
+////////////		CALL _005FD820
+////////////		PUSH ECX
+////////////		MOV ECX,ESI
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		CALL _005FD810
+////////////		PUSH ECX
+////////////		MOV ECX,ESI
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		CALL _005FD800
+////////////		PUSH ECX
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		FILD DWORD PTR SS:[ESP+38h]
+////////////		PUSH 0h
+////////////		PUSH ECX
+////////////		FADD DWORD PTR DS:[635978h]
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		FILD DWORD PTR SS:[ESP+34h]
+////////////		PUSH ECX
+////////////		MOV ECX,EDI
+////////////		FADD DWORD PTR DS:[635978h]
+////////////		FSTP DWORD PTR SS:[ESP]
+////////////		CALL _005FC1B0
+////////////		JMP short _007B0BCE
+////////////		_007B0BCC:
+////////////		XOR EAX,EAX
+////////////		_007B0BCE:
+////////////		MOV ECX,DWORD PTR SS:[ESP+154h]
+////////////		POP EDI
+////////////		POP ESI
+////////////		POP EBP
+////////////		POP EBX
+////////////		MOV DWORD PTR FS:[0h],ECX
+////////////		ADD ESP,150h
+////////////		RETN 14h
+////////////
+////////////
+////////////
+////////////	};
+////////////}
+
+#pragma endregion
+
+
+//display villager resssources add stone miner like up 1.5 
+//00521110   $ 81EC 44020000  SUB ESP,244
+ // Fix statistics display bugs
+////Injection(0x2a7000, "FF44244884C00F845082D6FFFF44244CFF4C2448E94382D6FF8B0DA012790068E21300008B01FF5024894424108B4424148B4C24108D5424548B448420505168B0917B0052E8E1B3E5FF8B46088B4E048B1683C41083EF0443E9D884D6FF66FF44242EE9F481D6FF8B0DA012790068061400008B11FF5224894424108B4424148B4C24108D5424540FBF44842285C07E45505168B0917B0052E88DB3E5FF8B46088B4E048B1683C41083EF04436A006A006A006A0050518B0F526A008D44247468DFDFDF00506A05E84314D9FF8B0F6A018B11FF52148B0DA0127900686A1500008B11FF5224894424108B4424148B4C24108D5424540FBF44842085C00F8E5C84D6FF505168B0917B0052E81BB3E5FF8B46088B4E048B1683C41083EF0443E91284D6FF000000000000000000000000668954242481E3FF000000807804468A7816720C0FB690B5010000C1E21009D38B505080FB036689542426E9186BC7FF3A98970000000F84446BC7FF3A7816752FF7C30000FFFF8A4804752480F946668B4C242A751A663B485075146683F9FF8A88B5010000740820C90F84106BC7FFE92A6BC7FF900000000000000000000025733A20256400"),
+////Injection(0x52124e, "E9AD7D2900"),
+////Injection(0x5214da, "E93A7B2900"),
+////Injection(0x52145f, "E9047C2900"),
+////Injection(0x42fc70, "E9BB943800"),
+////Injection(0x42fca8, "E9B3943800"),
+////Injection(0x521785, "0FBF81D0110000E9240100009090"),
+////Injection(0x521928, "0FBF81C41100000FBF911C12000001D0E9820000009090"),
+////Injection(0x521a36, "0FBF81DE1100000FBF913212000001D00FBF910A12000001D00FBF91301200000FBF892A120000EB6A9090"),
+////Injection(0x521b44, "0FBF81F01100000FBF91EC11000001D0EB6A9090909090"),
+//
+//
+//
+//0052124E   .-E9 AD7D2900    JMP age2_x1_.007B9000
+//void __declspec(naked)  FixStatisticsDisplayhook0052124E()
+//{
+//	__asm {
+//	};
+//}
+DWORD _0052125C = 0x052125C;
+void __declspec(naked)  FixStatisticsDisplayhook007B905E()
+{
+	__asm {
+		INC WORD PTR SS : [ESP + 2Eh]
+		JMP _0052125C
+	};
+}
+////DWORD _0052125C = 0x052125C;
+void __declspec(naked)  FixStatisticsDisplayhook007B9000()
+{
+	__asm {
+		INC DWORD PTR SS : [ESP + 48h]
+		TEST AL, AL
+		JE __0052125C
+		INC DWORD PTR SS : [ESP + 4Ch]
+		DEC DWORD PTR SS : [ESP + 48h]
+		JMP _0052125C
+
+		__0052125C:
+		JMP _0052125C
+	};
+}
+char _007B91B0[25] = { "%s: %d" };
+DWORD _00521536 = 0x0521536;
+DWORD _0061442B = 0x061442B;
+void __declspec(naked)  FixStatisticsDisplayhook007B9019()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		PUSH 13E2h
+		MOV EAX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EAX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOV EAX, DWORD PTR SS : [ESP + EAX * 4h + 20h]
+		PUSH EAX
+		PUSH ECX
+		PUSH offset _007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL _0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP _00521536
+	};
+}
+DWORD _0054A510 = 0x054A510;
+DWORD _0052155F = 0x052155F;
+void __declspec(naked)  FixStatisticsDisplayhook007B9068()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		PUSH 1406h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 22h]
+		TEST EAX, EAX
+		JLE short _007B90D6
+		PUSH EAX
+		PUSH ECX
+		PUSH offset _007B91B0; ASCII "%s: %d"// age2_x1_.007B91B0
+		PUSH EDX
+		CALL _0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH EDX
+		PUSH 0h
+		LEA EAX, DWORD PTR SS : [ESP + 74h]
+		PUSH 0DFDFDFh
+		PUSH EAX
+		PUSH 5h
+		CALL _0054A510
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH 1h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 14h]
+		_007B90D6:
+		MOV ECX, DWORD PTR DS : [7912A0h]
+		PUSH 156Ah
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 20h]
+		TEST EAX, EAX
+		JLE __0052155F
+		PUSH EAX
+		PUSH ECX
+		PUSH offset _007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL _0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP _00521536
+
+		__0052155F:
+		JMP _0052155F
+	};
+}
+DWORD _0042FC78 = 0x042FC78;
+void __declspec(naked)  FixStatisticsDisplayhook007B9130()
+{
+	__asm {
+			MOV WORD PTR SS:[ESP+24h],DX
+			AND EBX,0FFh
+			CMP BYTE PTR DS:[EAX+4],46h
+			MOV BH,BYTE PTR DS:[EAX+16h]
+			JB short _007B9150
+			MOVZX EDX,BYTE PTR DS:[EAX+1B5h]
+			SHL EDX,10h
+			OR EBX,EDX
+			_007B9150:
+			MOV EDX,DWORD PTR DS:[EAX+50h]
+			CMP BL,3h
+			MOV WORD PTR SS:[ESP+26h],DX
+			JMP _0042FC78
+	};
+}
+DWORD _0042FCCF = 0x042FCCF;
+DWORD _0042FCB0 = 0x042FCB0;
+void __declspec(naked)  FixStatisticsDisplayhook007B9160()
+{
+	__asm {
+			CMP BL,BYTE PTR DS:[EAX+97h]
+			JE __0042FCB0
+			CMP BH,BYTE PTR DS:[EAX+16h]
+			JNZ short _007B91A0
+			TEST EBX,0FFFF0000h
+			MOV CL,BYTE PTR DS:[EAX+4h]
+			JNZ short _007B91A0
+			CMP CL,46h
+			MOV CX,WORD PTR SS:[ESP+2Ah]
+			JNZ short _007B91A0
+			CMP CX,WORD PTR DS:[EAX+50h]
+			JNZ short _007B91A0
+			CMP CX,0FFFFh
+			MOV CL,BYTE PTR DS:[EAX+1B5h]
+			JE short _007B91A0
+			AND CL,CL
+			JE __0042FCB0
+			_007B91A0:
+			JMP _0042FCCF
+			__0042FCB0:
+			JMP _0042FCB0
+	};
+}
+//007B905E
+DWORD _007B905E = (DWORD)FixStatisticsDisplayhook007B905E;
+
+void  FixStatisticsDisplay()
+{
+	////////Injection(0x521c37, "0FBF810C1200000FBF91F211000001D0EB3D9090909090"),
+	//////BYTE _Arr_0x521c37[] = { 0x0 };
+	//////writeData(0x521cfd, _Arr_0x521c37, );
+	////////Injection(0x521cfd, "0FBF81221200000FBF91DC11000001D0E9EE0000009090"),
+	//////BYTE _Arr_0x521cfd[23] = {0x0F,0xBF,0x81,0x22,0x12,0x00,0x00,0x0F,0xBF,0x91,0xDC,0x11,0x00,0x00,0x01,0xD0,0xE9,0xEE,0x00,0x00,0x00,0x90,0x90};
+	//////writeData(0x521cfd, _Arr_0x521cfd, 23 );
+	////////Injection(0x521e77, "0FBF81E81100000FBF891A120000660F1F840000000000"),
+	//////BYTE _Arr_0521e77[23] = {0x0F,0xBF,0x81,0xE8,0x11,0x00,0x00,0x0F,0xBF,0x89,0x1A,0x12,0x00,0x00,0x66,0x0F,0x1F,0x84,0x00,0x00,0x00,0x00,0x00};
+	//////writeData(0x521e77, _Arr_0521e77,23);
+	/**/
+	////Injection(0x52124e, "E9AD7D2900");//JMP 007B9000
+	InjectHook(0x52124e, FixStatisticsDisplayhook007B9000, PATCH_JUMP);
+	////Injection(0x5214da, "E93A7B2900");//JMP 007B9019
+	InjectHook(0x5214da, FixStatisticsDisplayhook007B9019, PATCH_JUMP);
+	////Injection(0x52145f, "E9047C2900");//JMP 007B9068
+	InjectHook(0x52145f, FixStatisticsDisplayhook007B9068, PATCH_JUMP);
+	////Injection(0x42fc70, "E9BB943800");//JMP 007B9130
+	InjectHook(0x42fc70, FixStatisticsDisplayhook007B9130, PATCH_JUMP);
+	////Injection(0x42fca8, "E9B3943800");//JMP 007B9160
+	InjectHook(0x42fca8, FixStatisticsDisplayhook007B9160, PATCH_JUMP);
+
+	////Injection(0x5215d8	, "5E907B00"),//007B905E
+	////Injection(0x52168c, "5E907B00"),//007B905E
+	//over write switch case
+	writeDword(0x5215d8, _007B905E);
+	writeDword(0x52168c, _007B905E);
+writeByte(0x51b121,0x10);
+writeByte(0x51b136,0x10);
+writeByte(0x51b14a,0x10);
+writeByte(0x516c7d,0x11);
+writeByte(0x518a60,0x11);//update score
+writeByte(0x519b61,0x11);
+writeByte(0x51a398,0x11);//0x51a398
+writeByte(0x51b215,0x11);//0x51b215
+writeByte(0x520d8d,0x11);//0x520d8d
+writeByte(0x5210d4,0x11);//0x5210d4
+writeByte(0x5210dc,0x11);//0x5210dc
+writeByte(0x521756,0x11);//0x521756
+writeByte(0x521ef0,0x11);//0x521ef0
+writeByte(0x523f0b,0x11);//0x523f0b
+writeByte(0x521572,0x11);//0x521572/ici
+writeByte(0x5213fb,0x83);
+writeByte(0x5219ea,0x83);
+writeByte(0x521af8,0x83);
+writeByte(0x521beb,0x83);
+writeByte(0x521cb1,0x83);
+writeByte(0x521e2b,0x83);
+writeByte(0x521ebb,0x83);
+writeByte(0x51a2d6,0x54);
+writeByte(0x51a2f6,0x54);
+writeByte(0x51b2c9,0x54);
+writeByte(0x51a2dd,0x5C);
+writeByte(0x5212f4, 0x08);
+writeByte(0x5212f4+1, 0x12);
+writeByte(0x521301, 0x08);
+writeByte(0x521301+1, 0x12);
+writeByte(0x521359, 0x04);
+writeByte(0x521359+1, 0x12);
+writeByte(0x521372, 0x04);
+writeByte(0x521372+1, 0x12);
+writeByte(0x5213de, 0x00);
+writeByte(0x5213de+1, 0x12);
+writeByte(0x5213eb, 0x00);
+writeByte(0x5213eb+1, 0x12);
+writeByte(0x5218fe, 0x08);
+writeByte(0x5218fe+1, 0x12);
+writeByte(0x52190b, 0x08);
+writeByte(0x52190b+1, 0x12);
+writeByte(0x51bf36, 0x08);
+writeByte(0x51bf36+1, 0x12);
+writeByte(0x51b121, 0x10);
+writeByte(0x51b136, 0x10);
+writeByte(0x51b14a, 0x10);
+writeByte(0x516c7d, 0x11);
+writeByte(0x518a60, 0x11);
+writeByte(0x519b61, 0x11);
+writeByte(0x51a398, 0x11);
+writeByte(0x51b215, 0x11);
+writeByte(0x520d8d, 0x11);
+writeByte(0x5210d4, 0x11);
+writeByte(0x5210dc, 0x11);
+writeByte(0x521756, 0x11);
+writeByte(0x521ef0, 0x11);
+writeByte(0x523f0b, 0x11);
+writeByte(0x521572, 0x11);
+writeByte(0x5213fb, 0x83);
+writeByte(0x5219ea, 0x83);
+writeByte(0x521af8, 0x83);
+writeByte(0x521beb, 0x83);
+writeByte(0x521cb1, 0x83);
+writeByte(0x521e2b, 0x83);
+writeByte(0x521ebb, 0x83);
+writeByte(0x51a2d6, 0x54);
+writeByte(0x51a2f6, 0x54);
+writeByte(0x51b2c9, 0x54);
+writeByte(0x51a2dd, 0x5C);
+writeByte(0x52119d, 0x50);
+writeByte(0x521502, 0x20);
+writeByte(0x5214f0, 0x17);
+writeByte(0x521210, 0x44);
+writeByte(0x5214cf, 0x1D);
+writeByte(0x52121c, 0x40);
+writeByte(0x5214c0, 0x1C);
+writeByte(0x5211dc, 0x3C);
+writeByte(0x5214ae, 0x21);
+writeByte(0x5211e2, 0x38);
+writeByte(0x52149f, 0x1B);
+writeByte(0x521241, 0x34);
+writeByte(0x52148d, 0x22);
+writeByte(0x521216, 0x30);
+writeByte(0x52147b, 0x1A);
+writeByte(0x52123b, 0x2C);
+writeByte(0x5211d3, 0x28);
+writeByte(0x521454, 0x1F);
+writeByte(0x52120a, 0x24);
+writeByte(0x52143f, 0x1E);
+writeByte(0x52125b, 0x20);
+writeByte(0x52142d, 0x2B);
+}
+
+
+void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
 
 	//LoadLibraryA("languageini.dll");
@@ -7258,6 +12913,10 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed)
 		autoFarmAnFishTrapReseed();
 		Aoc10c_250pop();
 		Aoc10c_FixRecordingExploreStateBug();
+		FixStatisticsDisplay();
+		hotkeyHook();
+		LoadLibraryA("scout.dll");
+		selectAllProc(hModule);
 	}
 }
 //CTRL + F11

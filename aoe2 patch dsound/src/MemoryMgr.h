@@ -151,4 +151,37 @@ inline void __cdecl writeDword(DWORD addr, DWORD val)
 {
 	WriteProcessMemory(GetCurrentProcess(), (void*)addr, &val, 4, 0);
 }
+
+inline bool Hook(void* toHook, void* ourFunct, int len) {
+	if (len < 5) {
+		return false;
+	}
+
+	DWORD curProtection;
+	VirtualProtect(toHook, len, PAGE_EXECUTE_READWRITE, &curProtection);
+
+	memset(toHook, 0x90, len);
+
+	DWORD relativeAddress = ((DWORD)ourFunct - (DWORD)toHook) - 5;
+
+	*(BYTE*)toHook = 0xE9;
+	*(DWORD*)((DWORD)toHook + 1) = relativeAddress;
+
+	DWORD temp;
+	VirtualProtect(toHook, len, curProtection, &temp);
+
+	return true;
+}
+inline void __cdecl setHook(void* addr, void* newAddr)
+{
+
+	unsigned long c;
+	unsigned char j = 0xE9;
+	WriteProcessMemory(GetCurrentProcess(), addr, &j, 1, (SIZE_T*)&c);
+	char* r = (char*)newAddr - (char*)addr + (char*)-5;
+	WriteProcessMemory(GetCurrentProcess(), (char*)addr + 1, &r, 4, (SIZE_T*)&c);
+
+}
+ 
+ 
 #endif

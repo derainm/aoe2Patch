@@ -98,7 +98,7 @@ inline bool exists_File(const std::string& name) {
 	return (stat(name.c_str(), &buffer) == 0);
 }
 
-void init()
+void init(HINSTANCE hInst)
 {
 	AoK20ab = (*(int*)0x005FB0D3 == 0x042474FF);
 	AoK20 = (*(int*)0x005FB0D3 ==   0x0C24548D);
@@ -107,12 +107,12 @@ void init()
 	//UserPatch15 = (AoC10Ce && *(int*)0x0051A3B8 == 0x002A6674);
 	UserPatch = (AoC10Ce && *(int*)0x0051A3B8 != 0x003D1446);
 	//todo add aofe 
-	bool centredWideScreen = true;
+	bool centredWideScreen = false;
 	if (AoC10Ce && !UserPatch)
 	{
 		if (!exists_File("on.ini"))// !AoC10e&&
 		{
-			Aoc10CPatchHook(centredWideScreen, true);
+			Aoc10CPatchHook(centredWideScreen, true, (HMODULE)hInst);
 		}
 	}
 	if (AoC10)
@@ -140,7 +140,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		{
 			//load patch here + dsound library
 			init_dsound(hInst);
-			init();
+			init(hInst);
 		}
 		else
 		{
