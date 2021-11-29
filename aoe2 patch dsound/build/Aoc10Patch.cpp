@@ -3211,290 +3211,290 @@ void __declspec(naked) AOC10_fixRecordInterfaceCentred()
 		JMP Aoc10_00525690
 		_007C1834 :
 		MOV ECX, DWORD PTR DS : [ESI + 1138h]
-			CMP EDI, 300h
-			PUSH 14h
-			PUSH 0C4h
-			MOV EAX, DWORD PTR DS : [ECX]
-			JL _007C1A01
-			MOV EDI, DWORD PTR DS : [ESI + 14h]
-			SUB EDI, 400h
-			SHR EDI, 1h
-			MOV EDX, DWORD PTR SS : [ESP + 20h]
-			SUB EDX, 90h
-			PUSH EDX
-			PUSH 2Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 112Ch]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 76h
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 53h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1130h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 62h
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 53h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1134h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 4Eh
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 53h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10F8h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 76h
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 2Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10FCh]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 62h
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 2Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1100h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 4Eh
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 2Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10F4h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 65h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 0D0h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1114h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 2Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1118h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 48h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1104h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 6Eh
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 110Ch]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 94h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1110h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 0B2h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1108h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 35h
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 0D0h
-			ADD DWORD PTR SS : [ESP] , EDI
-			JMP Aoc10_00525690
-			_007C1A01 :
+		CMP EDI, 300h
+		PUSH 14h
+		PUSH 0C4h
+		MOV EAX, DWORD PTR DS : [ECX]
+		JL _007C1A01
 		MOV EDI, DWORD PTR DS : [ESI + 14h]
-			SUB EDI, 320h
-			SHR EDI, 1h
-			MOV EDX, DWORD PTR SS : [ESP + 20h]
-			SUB EDX, 86h
-			PUSH EDX
-			PUSH 0Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 112Ch]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 6Eh
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 32h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1130h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 5Ah
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 32h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1134h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 46h
-			PUSH 14h
-			PUSH 64h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 32h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10F8h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 6Eh
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 0Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10FCh]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 5Ah
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 0Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1100h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 46h
-			PUSH 14h
-			PUSH 19h
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 0Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 10F4h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 5Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 0B0h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1114h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 0Ah
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1118h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 28h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1104h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 4Eh
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 110Ch]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 74h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EDX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1110h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EAX, DWORD PTR DS : [ECX]
-			PUSH 92h
-			ADD DWORD PTR SS : [ESP] , EDI
-			CALL DWORD PTR DS : [EAX + 1Ch]
-			MOV ECX, DWORD PTR DS : [ESI + 1108h]
-			MOV EAX, DWORD PTR SS : [ESP + 18h]
-			SUB EAX, 2Ch
-			PUSH 1Eh
-			PUSH 1Eh
-			PUSH EAX
-			MOV EDX, DWORD PTR DS : [ECX]
-			PUSH 0B0h
-			ADD DWORD PTR SS : [ESP] , EDI
-			JMP Aoc10_00525690
+		SUB EDI, 400h
+		SHR EDI, 1h
+		MOV EDX, DWORD PTR SS : [ESP + 20h]
+		SUB EDX, 90h
+		PUSH EDX
+		PUSH 2Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 112Ch]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 76h
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 53h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1130h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 62h
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 53h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1134h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 4Eh
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 53h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10F8h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 76h
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 2Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10FCh]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 62h
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 2Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1100h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 4Eh
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 2Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10F4h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 65h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0D0h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1114h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 2Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1118h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 48h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1104h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 6Eh
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 110Ch]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 94h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1110h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 0B2h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1108h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 35h
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0D0h
+		ADD DWORD PTR SS : [ESP] , EDI
+		JMP Aoc10_00525690
+		_007C1A01 :
+		MOV EDI, DWORD PTR DS : [ESI + 14h]
+		SUB EDI, 320h
+		SHR EDI, 1h
+		MOV EDX, DWORD PTR SS : [ESP + 20h]
+		SUB EDX, 86h
+		PUSH EDX
+		PUSH 0Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 112Ch]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 6Eh
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 32h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1130h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 5Ah
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 32h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1134h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 46h
+		PUSH 14h
+		PUSH 64h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 32h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10F8h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 6Eh
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 0Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10FCh]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 5Ah
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1100h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 46h
+		PUSH 14h
+		PUSH 19h
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 0Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 10F4h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 5Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0B0h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1114h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 0Ah
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1118h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 28h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1104h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 4Eh
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 110Ch]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 74h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EDX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1110h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EAX, DWORD PTR DS : [ECX]
+		PUSH 92h
+		ADD DWORD PTR SS : [ESP] , EDI
+		CALL DWORD PTR DS : [EAX + 1Ch]
+		MOV ECX, DWORD PTR DS : [ESI + 1108h]
+		MOV EAX, DWORD PTR SS : [ESP + 18h]
+		SUB EAX, 2Ch
+		PUSH 1Eh
+		PUSH 1Eh
+		PUSH EAX
+		MOV EDX, DWORD PTR DS : [ECX]
+		PUSH 0B0h
+		ADD DWORD PTR SS : [ESP] , EDI
+		JMP Aoc10_00525690
 
 
 	}
@@ -4449,6 +4449,383 @@ void Aoc10_FixRecordingExploreStateBug()
 	writeData(0x04EDB82, Aoc10C_0525712, 7);
 
 }
+//004E9630  /$ 81EC 44020000  SUB ESP,244
+//004E977C  |> 8B4C24 18      |MOV ECX,DWORD PTR SS:[ESP+18]           ;  Default case of switch 004E96CA
+DWORD Aoc10_004E977C = 0x04E977C;
+void __declspec(naked)  FixStatisticsDisplayhook007B9000Aoc10()
+{
+	__asm {
+		INC DWORD PTR SS : [ESP + 48h]
+		TEST AL, AL
+		JE __0052125C
+		INC DWORD PTR SS : [ESP + 4Ch]
+		DEC DWORD PTR SS : [ESP + 48h]
+		JMP Aoc10_004E977C
+
+		__0052125C :
+		JMP Aoc10_004E977C
+	};
+}
+
+char Aoc10_007B91B0[25] = { "%s: %d" };
+DWORD Aoc10_00521536 = 0x04E9A56;//004E9A56  |. 6A 00          |PUSH 0
+//DWORD Aoc10_0061442B = 0x0613634;//00613634  /$ 55             PUSH EBP
+void __declspec(naked)  FixStatisticsDisplayhook007B9019Aoc10()
+{
+	__asm {
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6833D0h]
+		PUSH 13E2h
+		MOV EAX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EAX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOV EAX, DWORD PTR SS : [ESP + EAX * 4h + 20h]
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aoc10_007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL Aoc10_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP Aoc10_00521536
+	};
+}
+
+DWORD Aoc10_0054A510 = 0x04BDD50;//004BDD50  /$ 53             PUSH EBX
+DWORD Aoc10_0052155F = 0x04E9A7F;//004E9A7F  |> 8B4424 14      |MOV EAX,DWORD PTR SS:[ESP+14]
+void __declspec(naked)  FixStatisticsDisplayhook007B9068Aoc10()
+{
+	__asm {
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6833D0h] ;  Case 3 of switch 004E9936
+		PUSH 1406h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 22h]
+		TEST EAX, EAX
+		JLE short _007B90D6
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aoc10_007B91B0; ASCII "%s: %d"// age2_x1_.007B91B0
+		PUSH EDX
+		CALL Aoc10_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH EDX
+		PUSH 0h
+		LEA EAX, DWORD PTR SS : [ESP + 74h]
+		PUSH 0DFDFDFh
+		PUSH EAX
+		PUSH 5h
+		CALL Aoc10_0054A510
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH 1h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 14h]
+		_007B90D6 :
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6833D0h]
+		PUSH 156Ah
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 20h]
+		TEST EAX, EAX
+		JLE __0052155F
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aoc10_007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL Aoc10_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP Aoc10_00521536
+
+		__0052155F :
+		JMP Aoc10_0052155F
+	};
+}
+DWORD Aoc10_0042FC78 = 0x05DD868;//005DD868   . 74 03          JE SHORT age2_x1.005DD86D
+void __declspec(naked)  FixStatisticsDisplayhook007B9130Aoc10()
+{
+	__asm {
+		MOV WORD PTR SS : [ESP + 24h] , DX
+		AND EBX, 0FFh
+		CMP BYTE PTR DS : [EAX + 4] , 46h
+		MOV BH, BYTE PTR DS : [EAX + 16h]
+		JB short _007B9150
+		MOVZX EDX, BYTE PTR DS : [EAX + 1B5h]
+		SHL EDX, 10h
+		OR EBX, EDX
+		_007B9150 :
+		MOV EDX, DWORD PTR DS : [EAX + 50h]
+		CMP BL, 3h
+		MOV WORD PTR SS : [ESP + 26h] , DX
+		JMP Aoc10_0042FC78
+	};
+}
+DWORD Aoc10_0042FCCF = 0x05DD8BF;//005DD8BF   > 8B4424 2C      MOV EAX,DWORD PTR SS:[ESP+2C]
+DWORD Aoc10_0042FCB0 = 0x05DD8A0;//005DD8A0   > 8B57 04        MOV EDX,DWORD PTR DS:[EDI+4]
+void __declspec(naked)  FixStatisticsDisplayhook007B9160Aoc10()
+{
+	__asm {
+		CMP BL, BYTE PTR DS : [EAX + 97h]
+		JE __0042FCB0
+		CMP BH, BYTE PTR DS : [EAX + 16h]
+		JNZ short _007B91A0
+		TEST EBX, 0FFFF0000h
+		MOV CL, BYTE PTR DS : [EAX + 4h]
+		JNZ short _007B91A0
+		CMP CL, 46h
+		MOV CX, WORD PTR SS : [ESP + 2Ah]
+		JNZ short _007B91A0
+		CMP CX, WORD PTR DS : [EAX + 50h]
+		JNZ short _007B91A0
+		CMP CX, 0FFFFh
+		MOV CL, BYTE PTR DS : [EAX + 1B5h]
+		JE short _007B91A0
+		AND CL, CL
+		JE __0042FCB0
+		_007B91A0 :
+		JMP Aoc10_0042FCCF
+			__0042FCB0 :
+		JMP Aoc10_0042FCB0
+	};
+}
+DWORD Aoc10_0052125C = 0x04E9796;//004E9796  |. 8B5C24 14      MOV EBX,DWORD PTR SS:[ESP+14]
+void __declspec(naked)  FixStatisticsDisplayhook007B905EAoc10()
+{
+	__asm {
+		INC WORD PTR SS : [ESP + 2Eh]
+		JMP Aoc10_0052125C
+	};
+}
+//007B905E
+DWORD Aoc10_007B905E = (DWORD)FixStatisticsDisplayhook007B905EAoc10;
+
+void  FixStatisticsDisplayAoc10()
+{
+	////Injection(0x52124e, "E9AD7D2900");//JMP 007B9000
+	InjectHook(0x04E976E, FixStatisticsDisplayhook007B9000Aoc10, PATCH_JUMP);
+	////Injection(0x5214da, "E93A7B2900");//JMP 007B9019
+	//004E99FA  |> 8B0D D0336800  |MOV ECX,DWORD PTR DS:[6833D0]           ;  Case A of switch 004E9936
+	InjectHook(0x04E99FA, FixStatisticsDisplayhook007B9019Aoc10, PATCH_JUMP);
+	////Injection(0x52145f, "E9047C2900");//JMP 007B9068
+	//004E997F  |> 8B0D D0336800  |MOV ECX,DWORD PTR DS:[6833D0]           ;  Case 3 of switch 004E9936
+	InjectHook(0x04E997F, FixStatisticsDisplayhook007B9068Aoc10, PATCH_JUMP);
+	////Injection(0x42fc70, "E9BB943800");//JMP 007B9130
+	//005DD860   . 80FB 03        CMP BL,3
+	InjectHook(0x05DD860, FixStatisticsDisplayhook007B9130Aoc10, PATCH_JUMP);
+	////Injection(0x42fca8, "E9B3943800");//JMP 007B9160
+	//005DD898   . 3898 97000000  CMP BYTE PTR DS:[EAX+97],BL
+	InjectHook(0x05DD898, FixStatisticsDisplayhook007B9160Aoc10, PATCH_JUMP);
+	//over write switch case
+	writeDword(0x04E9AF8, Aoc10_007B905E);//004E9AF8   . 58974E00       DD age2_x1.004E9758
+	writeDword(0x04E9BAC, Aoc10_007B905E);//004E9BAC   . 58974E00       DD age2_x1.004E9758
+
+	//writeByte(0x51b121, 0x10);
+	writeByte(0x04E3691, 0x10);//004E3690  |. BF 0E000000    MOV EDI,0E
+	//	writeByte(0x51b136, 0x10);
+	writeByte(0x04E36A6, 0x10);//004E36A3  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x51b14a, 0x10);
+	writeByte(0x04E36BA, 0x10);//004E36B7  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x516c7d, 0x11);
+	writeByte(0x04DF1ED, 0x11);//004DF1EC  |. B9 0F000000    MOV ECX,0F
+	//writeByte(0x518a60, 0x11);//update score
+	writeByte(0x04E0FD0, 0x11);//004E0FCE  |. 83FD 0F        |CMP EBP,0F
+	//writeByte(0x519b61, 0x11);
+	writeByte(0x04E20D1, 0x11);//004E20D0  |. BB 0F000000    MOV EBX,0F
+	//writeByte(0x51a398, 0x11); 
+	writeByte(0x04E2908, 0x11);//004E2907  |. BD 0F000000    MOV EBP,0F
+	//writeByte(0x51b215, 0x11);//0x51b215
+	writeByte(0x04E3785, 0x11);//004E3784  |. BD 0F000000    MOV EBP,0F
+	//writeByte(0x520d8d, 0x11);//0x520d8d
+	writeByte(0x04E92AD, 0x11);//004E92AC  |> B8 0F000000    MOV EAX,0F
+	//writeByte(0x5210d4, 0x11);//0x5210d4
+	writeByte(0x04E95F4, 0x11);//004E95F2  |> 83FB 0F        CMP EBX,0F
+	//writeByte(0x5210dc, 0x11);//0x5210dc
+	writeByte(0x04E95FC, 0x11);//004E95FB  |. BE 0F000000    MOV ESI,0F
+	//writeByte(0x521756, 0x11);//0x521756
+	writeByte(0x04E9C76, 0x11);//004E9C72 
+	//writeByte(0x521ef0, 0x11);//0x521ef0
+	writeByte(0x04EA410, 0x11);//004EA40F  |> B8 0F000000    MOV EAX,0F
+	//writeByte(0x523f0b, 0x11);//0x523f0b
+	//writeByte(0x523f0b, 0x11);//0x523f0b
+	writeByte(0x04EC3DB, 0x11);//004EC3DA  |. BD 0F000000    MOV EBP,0F
+	//writeByte(0x521572, 0x11);//0x521572/ici
+	writeByte(0x04E9A92, 0x11);//004E9A91  |. BE 0F000000    MOV ESI,0F
+	//writeByte(0x5213fb, 0x83);
+	writeByte(0x04E991B, 0x83);//004E991A  |> B9 81040000    MOV ECX,481
+	//writeByte(0x5219ea, 0x83);
+	writeByte(0x04E9F0A, 0x83);//004E9F09  |. B9 81040000    MOV ECX,481
+	//writeByte(0x521af8, 0x83);
+	writeByte(0x04EA018, 0x83);//004EA017  |. B9 81040000    MOV ECX,481
+	//writeByte(0x521beb, 0x83);
+	writeByte(0x04EA10B, 0x83);//004EA10A  |. B9 81040000    MOV ECX,481
+	//writeByte(0x521cb1, 0x83);
+	writeByte(0x04EA1D1, 0x83);//004EA1D0  |. B9 81040000    MOV ECX,481
+	//writeByte(0x521e2b, 0x83);
+	writeByte(0x04EA34B, 0x83);//004EA34A  |. B9 81040000    MOV ECX,481
+	//writeByte(0x521ebb, 0x83);
+	writeByte(0x04EA3DB, 0x83);//004EA3DA  |. B9 81040000    MOV ECX,481
+	//writeByte(0x51a2d6, 0x54);
+	writeByte(0x04E2846, 0x54); //004E2844 | . 83EC 48        SUB ESP, 48
+	//writeByte(0x51a2f6, 0x54);
+	writeByte(0x04E2866, 0x54);//004E2864  |. 83C4 48        ADD ESP,48
+	//writeByte(0x51b2c9, 0x54);
+	writeByte(0x04E3839, 0x54);//004E3837  |. 83C4 48        ADD ESP,48
+	//writeByte(0x51a2dd, 0x5C);
+	writeByte(0x04E284D, 0x5C);//004E284A  |. 8B4C24 50      MOV ECX,DWORD PTR SS:[ESP+50]
+	//writeByte(0x5212f4, 0x08);
+	writeByte(0x04E9814, 0x08);//004E9812  |. 8B8D 00120000  MOV ECX,DWORD PTR SS:[EBP+1200]
+	writeByte(0x04E9814 + 1, 0x12);
+	//writeByte(0x521301, 0x08);
+	writeByte(0x04E9821, 0x08);//004E981F  |. 8B8D 00120000  MOV ECX,DWORD PTR SS:[EBP+1200]
+	writeByte(0x04E9821 + 1, 0x12);
+	//writeByte(0x521359, 0x04);
+	writeByte(0x04E9879, 0x04);//004E9877  |. 8B8D FC110000  MOV ECX,DWORD PTR SS:[EBP+11FC]
+	writeByte(0x04E9879 + 1, 0x12);
+	//writeByte(0x521372, 0x04);
+	writeByte(0x04E9892, 0x04);//004E9890  |. 8B8D FC110000  MOV ECX,DWORD PTR SS:[EBP+11FC]
+	writeByte(0x04E9892 + 1, 0x12);
+	//writeByte(0x5213de, 0x00);
+	writeByte(0x04E98FE, 0x00);//004E98FC  |. 8B8D F8110000  MOV ECX,DWORD PTR SS:[EBP+11F8]
+	writeByte(0x04E98FE + 1, 0x12);
+	//writeByte(0x5213eb, 0x00);
+	writeByte(0x04E990b, 0x00);//004E9909  |. 8B8D F8110000  MOV ECX,DWORD PTR SS:[EBP+11F8]
+	writeByte(0x04E990b + 1, 0x12);
+	//writeByte(0x5218fe, 0x08);
+	writeByte(0x04E9E1E, 0x08);//004E9E1C  |. 8B8F 00120000  MOV ECX,DWORD PTR DS:[EDI+1200]
+	writeByte(0x04E9E1E + 1, 0x12);
+	//writeByte(0x52190b, 0x08);
+	writeByte(0x04E9E2b, 0x08);//004E9E29  |. 8B8F 00120000  MOV ECX,DWORD PTR DS:[EDI+1200]
+	writeByte(0x04E9E2b + 1, 0x12);
+	//writeByte(0x51bf36, 0x08);
+	writeByte(0x04E4468, 0x08);//004E4466  |> 8B86 00120000  MOV EAX,DWORD PTR DS:[ESI+1200]
+	writeByte(0x04E4468 + 1, 0x12);
+	//writeByte(0x51b121, 0x10);
+	writeByte(0x04E3691, 0x10);//004E3690  |. BF 0E000000    MOV EDI,0E
+	//writeByte(0x51b136, 0x10);
+	writeByte(0x04E36A6, 0x10);//004E36A3  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x51b14a, 0x10);
+	writeByte(0x04E36BA, 0x10);//004E36B7  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x516c7d, 0x11);
+	writeByte(0x04DF1Ed, 0x11);//004DF1EC  |. B9 0F000000    MOV ECX,0F
+	//writeByte(0x518a60, 0x11);
+	writeByte(0x04E0FD0, 0x11);//004E0FCE  |. 83FD 0F        |CMP EBP,0F
+	//writeByte(0x519b61, 0x11);
+	writeByte(0x04E20D1, 0x11);//004E20D0  |. BB 0F000000    MOV EBX,0F
+	//writeByte(0x51a398, 0x11);
+	writeByte(0x04E2908, 0x11);//004E2907   . BD 11000000    MOV EBP,11
+	//writeByte(0x51b215, 0x11);
+	writeByte(0x04E3785, 0x11);//004E3784   . BD 11000000    MOV EBP,11
+	//writeByte(0x520d8d, 0x11);
+	writeByte(0x04E92AD, 0x11);//004E92AC  |> B8 11000000    MOV EAX,11
+	//writeByte(0x5210d4, 0x11);
+	writeByte(0x04E95F4, 0x11);//004E95F2  |> 83FB 11        CMP EBX,11
+	//writeByte(0x5210dc, 0x11);
+	writeByte(0x04E95FC, 0x11);//004E95FB  |. BE 11000000    MOV ESI,11
+	//writeByte(0x521756, 0x11);
+	writeByte(0x04E9C76, 0x11);//004E9C72  |. C74424 10 1100>MOV DWORD PTR SS:[ESP+10],11
+	//writeByte(0x521ef0, 0x11);
+	writeByte(0x04EA410, 0x11);//004EA40F  |> B8 11000000    MOV EAX,11
+	//writeByte(0x523f0b, 0x11);
+	writeByte(0x04EC3DB, 0x11);//004EC3DA  |. BD 11000000    MOV EBP,11
+	//writeByte(0x521572, 0x11);
+	writeByte(0x04E9A92, 0x11);//004E9A91   . BE 11000000    MOV ESI,11
+	//writeByte(0x5213fb, 0x83);
+	writeByte(0x04E991B, 0x83);//004E991A   > B9 83040000    MOV ECX,483
+	//writeByte(0x5219ea, 0x83);
+	writeByte(0x04E9F0A, 0x83);//004E9F09  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521af8, 0x83);
+	writeByte(0x04EA018, 0x83);//004EA017  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521beb, 0x83);
+	writeByte(0x04EA10B, 0x83);//004EA10A  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521cb1, 0x83);
+	writeByte(0x04EA1D1, 0x83);//004EA1D0  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521e2b, 0x83);
+	//writeByte(0x521e2b, 0x83);
+	//writeByte(0x521ebb, 0x83);
+	//writeByte(0x51a2d6, 0x54);
+	//writeByte(0x51a2f6, 0x54);
+	//writeByte(0x51b2c9, 0x54);
+	//writeByte(0x51a2dd, 0x5C);
+	//writeByte(0x52119d, 0x50); 
+	writeByte(0x04E96BD, 0x50);//004E96BA   . FF4424 44      INC DWORD PTR SS:[ESP+44]
+	//writeByte(0x521502, 0x20);
+	writeByte(0x04E9A22, 0x20);//004E9A21  |. 68 2B500000    |PUSH 502B
+	//writeByte(0x5214f0, 0x17);
+	writeByte(0x04E9A10, 0x17);//004E9A0F  |. 68 22500000    |PUSH 5022
+	//writeByte(0x521210, 0x44);
+	writeByte(0x04E9730, 0x44);//004E972D  |> FF4424 38      |INC DWORD PTR SS:[ESP+38]               ;  Cases D6,103 of switch 004E96CA
+	//writeByte(0x5214cf, 0x1D);
+	writeByte(0x04E99EF, 0x1D);//004E99EE  |. 68 20500000    |PUSH 5020
+	//writeByte(0x52121c, 0x40);
+	writeByte(0x04E973C, 0x40);//004E9739  |> FF4424 34      |INC DWORD PTR SS:[ESP+34]               ;  Cases 78,162 of switch 004E96CA
+	//writeByte(0x5214c0, 0x1C);
+	writeByte(0x04E99E0, 0x1C);//004E99DF  |. 68 1F500000    |PUSH 501F
+	//writeByte(0x5211dc, 0x3C);
+	writeByte(0x04E96FC, 0x3C);//004E96F9  |> FF4424 48      |INC DWORD PTR SS:[ESP+48]               ;  Cases 38,39 of switch 004E96CA
+	//writeByte(0x5214ae, 0x21);
+	writeByte(0x04E99CE, 0x21);//004E99CD  |. 68 1E500000    |PUSH 501E
+	//writeByte(0x5211e2, 0x38);
+	writeByte(0x4E9702, 0x38);//004E96FF  |> FF4424 30      |INC DWORD PTR SS:[ESP+30]               ;  Cases 7A,D8 of switch 004E96CA
+	//writeByte(0x52149f, 0x1B);
+	writeByte(0x04E99BF, 0x1B);//004E99BE  |. 68 1D500000    |PUSH 501D
+	//writeByte(0x521241, 0x34);
+	writeByte(0x04E9761, 0x34);//004E975E  |> FF4424 4C      |INC DWORD PTR SS:[ESP+4C]               ;  Cases 24E,250 of switch 004E96CA
+	//writeByte(0x52148d, 0x22);
+	writeByte(0x04E99AD, 0x22);//004E99AC  |. 68 1C500000    |PUSH 501C
+	//writeByte(0x521216, 0x30);
+	writeByte(0x04E9736, 0x30);//004E9733  |> FF4424 2C      |INC DWORD PTR SS:[ESP+2C]               ;  Cases 7B,DA of switch 004E96CA
+	//writeByte(0x52147b, 0x1A);
+	writeByte(0x04E999B, 0x1A);//004E999A  |. 68 1B500000    |PUSH 501B
+	//writeByte(0x52123b, 0x2C);
+	writeByte(0x04E975B, 0x2C);//004E9758  |> FF4424 28      |INC DWORD PTR SS:[ESP+28]               ;  Cases 7C,DC,243,245 of switch 004E96CA
+	//writeByte(0x5211d3, 0x28);
+	writeByte(0x04E96F3, 0x28);//004E96F0  |> FF4424 40      |INC DWORD PTR SS:[ESP+40]               ;  Cases 76,D4 of switch 004E96CA
+	//writeByte(0x521454, 0x1F);
+	writeByte(0x04E9974, 0x1F);//004E9973  |. 68 19500000    |PUSH 5019
+	//writeByte(0x52120a, 0x24);
+	writeByte(0x04E972A, 0x24);//004E9727  |> FF4424 3C      |INC DWORD PTR SS:[ESP+3C]               ;  Cases 9C,DE of switch 004E96CA
+	//writeByte(0x52143f, 0x1E);
+	writeByte(0x04E995F, 0x1E);//004E995E  |. 68 18500000    |PUSH 5018
+	//writeByte(0x52125b, 0x20);
+	writeByte(0x04E977B, 0x20);//004E9778  |> FF4424 50      |INC DWORD PTR SS:[ESP+50]               ;  Cases 2,13 of switch 004E9691
+	//writeByte(0x52142d, 0x2B);
+	writeByte(0x04E994D, 0x2B);//004E994C  |. 68 17500000    |PUSH 5017
+
+}
+
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
 	Aoc10Widescreen(wideScreenCentred);
@@ -4458,4 +4835,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 	Aoc10AutoFarms();
 	Aoc10_250pop();
 	Aoc10_FixRecordingExploreStateBug();
+	FixStatisticsDisplayAoc10();
 }
