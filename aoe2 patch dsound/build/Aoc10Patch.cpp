@@ -6202,6 +6202,72 @@ void Aoc10_hotkeyHook()
 	////setHookJA((void*)0x04EC941, Aoc10_SetHootgoToKrepostDonjonJA);//004EC941  |. 0F87 AF010000  JA age2_x1.004ECAF6
 	////setHookJA((void*)0x051D1F6, SetHootgoToKrepostEvent0051D1F0JA);//004E5726   . 0F87 92050000  JA age2_x1.004E5CBE
 }
+//load language dll
+//0043AFF0   >-E9 BD613E7B     JMP scout.7B8211B2
+char aocc10_lang[100] = {"language_default.dll"};
+//0043AFD4 > 68 FCF56600    PUSH age2_x1.0066F5FC;  ASCII "language_x1_p1.dll"
+//0043AFD9.FFD6           CALL ESI
+DWORD _005C7545 = 0x05C7545;
+DWORD _005C69FC = 0x05C69FC;
+DWORD _695388 = 0x05C69F7;
+void __declspec(naked)  Aoc10_language_dllhook()
+{
+	__asm {
+			//MOV DWORD PTR SS:[EBP+64],1
+			//JMP age2_x1_.0043BB43
+			//JNZ  __005C69F7
+			//MOV DWORD PTR SS : [EBP + 64h] , 1h
+			//JMP _005C7545
+			PUSH offset aocc10_lang;  ASCII "language_x1_p1.dll"//age2_x1_.0066F5FC                         
+			CALL DWORD PTR DS : [6341E0h]//loadlibA
+			//get pointer MOV DWORD PTR DS:[77EE94],EAX
+			//CMP EAX,EBX
+			MOV DWORD PTR DS:[_695388],EAX//get language pointer 
+			//JNZ short __005C69F7
+			//MOV DWORD PTR SS:[EBP+64h],1
+			//JMP __005C69F7
+
+			//__005C69F7 :
+			LEA EAX,DWORD PTR SS:[ESP+24h]
+			PUSH EAX
+			JMP _005C69FC 
+	};
+}
+//0043CF10.A1 88536900    MOV EAX, DWORD PTR DS : [695388]//celui là
+
+
+//005C69D9   . 8D95 A0160000  LEA EDX, DWORD PTR SS : [EBP + 16A0]
+//005C69DF   . 52             PUSH EDX; / FileName
+//005C69E0.FF15 E0416300  CALL DWORD PTR DS : [<&KERNEL32.LoadLibraryA>] ; \LoadLibraryA
+
+//005C892B   . E8 1019EBFF    CALL age2_x1.0047A240
+
+DWORD _0047A240=0x047A240;
+DWORD _005C893E = 0x05C893E;
+DWORD _005C8930 = 0x05C8930;
+void __declspec(naked)  Aoc10_language_dllhook2()
+{
+	__asm {
+		CALL _0047A240
+		TEST EAX, EAX
+		JNZ __005C893E
+		MOV EAX, _695388//move pointer here
+		PUSH EDI
+		PUSH ESI
+		PUSH EBP
+		MOV EBX,ECX
+		PUSH EAX
+		CALL _0047A240
+		JMP _005C8930  
+		__005C893E:
+		JMP _005C893E
+	};
+}
+void Aoc10_language_dll()
+{
+	InjectHook(0x05C69F7 , Aoc10_language_dllhook, PATCH_JUMP);
+	InjectHook(0x05C892B , Aoc10_language_dllhook2, PATCH_JUMP);
+}
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
 	Aoc10Widescreen(wideScreenCentred);
@@ -6213,4 +6279,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 	Aoc10_FixRecordingExploreStateBug();
 	FixStatisticsDisplayAoc10();
 	Aoc10_hotkeyHook();
+	Aoc10_language_dll();
 }
