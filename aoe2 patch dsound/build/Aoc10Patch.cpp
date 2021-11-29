@@ -4512,7 +4512,7 @@ void __declspec(naked)  FixStatisticsDisplayhook007B9068Aoc10()
 		MOV EAX, DWORD PTR SS : [ESP + 14h]
 		MOV ECX, DWORD PTR SS : [ESP + 10h]
 		LEA EDX, DWORD PTR SS : [ESP + 54h]
-		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 22h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 22h]//get nb stone miner
 		TEST EAX, EAX
 		JLE short _007B90D6
 		PUSH EAX
@@ -4554,7 +4554,7 @@ void __declspec(naked)  FixStatisticsDisplayhook007B9068Aoc10()
 		MOV EAX, DWORD PTR SS : [ESP + 14h]
 		MOV ECX, DWORD PTR SS : [ESP + 10h]
 		LEA EDX, DWORD PTR SS : [ESP + 54h]
-		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 20h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 20h]//get nb stone miner
 		TEST EAX, EAX
 		JLE __0052155F
 		PUSH EAX
@@ -4621,7 +4621,7 @@ void __declspec(naked)  FixStatisticsDisplayhook007B9160Aoc10()
 		JMP Aoc10_0042FCB0
 	};
 }
-DWORD Aoc10_0052125C = 0x04E9796;//004E9796  |. 8B5C24 14      MOV EBX,DWORD PTR SS:[ESP+14]
+DWORD Aoc10_0052125C = 0x04E977C;//004E977C 
 void __declspec(naked)  FixStatisticsDisplayhook007B905EAoc10()
 {
 	__asm {
