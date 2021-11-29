@@ -1,7 +1,10 @@
 #include "Aoc10Patch.h"
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
-
+#include <assert.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 DWORD Aoc10_H;
 DWORD Aoc10_V;
 void Aoc10_interfaceId()
@@ -6268,7 +6271,1988 @@ void Aoc10_language_dll()
 	InjectHook(0x05C69F7 , Aoc10_language_dllhook, PATCH_JUMP);
 	InjectHook(0x05C892B , Aoc10_language_dllhook2, PATCH_JUMP);
 }
-void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
+
+float Aoc10_ratioLogoUnitTech = 1.0f;
+int Aoc10_translationX = 0;
+bool Aoc10_selectedIdlVillager = false;
+bool Aoc10_selectAllTC = false;
+bool Aoc10_selectAllArmy = false;
+bool Aoc10_selectAllSiegeWorkshop = false;
+bool Aoc10_selectAllMilitaryBuilding = false;
+bool Aoc10_selectAllArcheryRange = false;
+bool Aoc10_selectAllCastle = false;
+bool Aoc10_selectAllDonjon = false;
+bool Aoc10_selectAllKrepost = false;
+bool Aoc10_selectAllMarket = false;
+bool Aoc10_selectAlMonastery = false;
+bool Aoc10_selectAlltradeCarte = false;
+bool Aoc10_selectAllDock = false;
+bool Aoc10_selectAllBarrack = false;
+bool Aoc10_selectAllStable = false;
+bool Aoc10_deleteAllSelected = false;
+
+int Aoc10_cptIDLEVIllager = 0;
+int Aoc10_cptTCselected = 0;
+int Aoc10_cptArmyselected = 0;
+int Aoc10_cptallSiegeWorkshop = 0;
+int Aoc10_cptallMilitaryBuilding = 0;
+int Aoc10_cptallArcheryRange = 0;
+int Aoc10_cptallCastle = 0;
+int Aoc10_cptallDonjon = 0;
+int Aoc10_cptallKrepost = 0;
+int Aoc10_cptallMarket = 0;
+int Aoc10_cptallMonastery = 0;
+int Aoc10_cptalltradeCarte = 0;
+int Aoc10_cptallDock = 0;
+int Aoc10_cptallBarrack = 0;
+int Aoc10_cptallStable = 0;
+int Aoc10_countUnitDelete = 0;
+
+char Aoc10_strWood[50];
+char Aoc10_strFood[50];
+char Aoc10_strGold[50];
+char Aoc10_strStone[50];
+char Aoc10_strNBVillager[50];
+char Aoc10_strIDLE[50];
+char Aoc10_strCiv[100];
+char Aoc10_strAge[100];
+
+char Aoc10_strResWood[50];
+char Aoc10_strResFood[50];
+char Aoc10_strResGold[50];
+char Aoc10_strResStone[50];
+char Aoc10_strResPOP[50];
+
+DWORD Aoc10_flagClean = 0x0;
+int Aoc10_Hotkeys[15][4] =
+{
+	{0x56 , 0xA0, 0x0, 0x0}, //0: Select all idle villagers (default Ctrl+.)
+	{0x44 , 0xA0, 0x0, 0x0},    //1: Select all idle army (default Ctrl+,)
+	{0x53 , 0xA0, 0x0, 0x0},    //2: Select all trade carts (default Ctrl+M)
+	{0x46 , 0xA0, 0x0, 0x0},    //3: Select all Town Centers (default Ctrl+H)
+	{0x58 , 0xA0, 0x0, 0x0},    //4: Select all Barracks (default Ctrl+Q)
+	{0x43 , 0xA0, 0x0, 0x0},    //5: Select all Archery Ranges (default Ctrl+W)
+	{0x41 , 0xA0, 0x0, 0x0},    //6: Select all Stables (default Ctrl+E)
+	{0x5A , 0xA0, 0x0, 0x0},    //7: Select all Siege Workshops (default Ctrl+R)
+	{0x52 , 0xA0, 0x0, 0x0},    //8: Select all Docks (default Ctrl+T)
+	{0x54 , 0xA0, 0x0, 0x0},    //9: Select all Markets (default Ctrl+D)
+	{0x47 , 0xA0, 0x0, 0x0},    //10: Select all Monasteries (default Ctrl+F)
+	{0x59 , 0xA0, 0x0, 0x0},    //11: Select all Castles (default Ctrl+C)
+	{0x4B , 0xA0, 0x0, 0x0},    //12: Select all Krepost (default Ctrl+V)
+	{0x44 , 0xA0, 0x0, 0x0},    //13: Select all Donjon (default Ctrl+V)
+	{0x4D , 0xA0, 0x0, 0x0}     //14: Select all Military buildings (default Ctrl+A)
+};
+
+DWORD Aoc10_Pop_stats_EAX;
+DWORD Aoc10_Pop_stats_ECX;
+DWORD Aoc10_Pop_stats_EDX;
+DWORD Aoc10_Pop_stats_EBX;
+DWORD Aoc10_Pop_stats_ESP;
+DWORD Aoc10_Pop_stats_EBP;
+DWORD Aoc10_Pop_stats_ESI;
+DWORD Aoc10_Pop_stats_EDI;
+//DWORD _00520A96 = 0x0520A96;
+
+DWORD Aoc10_00556C50 = 0x04B4540;
+DWORD Aoc10_005E7560 = 0x0420970;
+DWORD Aoc10_00602D6F = 0x0404C7F;//00404C7F   . 74 22          JE SHORT age2_x1.00404CA3
+void __declspec(naked)  Aoc10_cleanScreenn()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP Aoc10_flagClean, 1h
+		JNZ conti
+		//save register
+		MOV Aoc10_Pop_stats_EAX, EAX
+		MOV Aoc10_Pop_stats_ECX, ECX
+		MOV Aoc10_Pop_stats_EDX, EDX
+		MOV Aoc10_Pop_stats_EBX, EBX
+		MOV Aoc10_Pop_stats_ESP, ESP
+		MOV Aoc10_Pop_stats_EBP, EBP
+		MOV Aoc10_Pop_stats_ESI, ESI
+		MOV Aoc10_Pop_stats_EDI, EDI
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6833D0h]
+		CALL Aoc10_005E7560
+		MOV ECX, EAX
+		CALL Aoc10_00556C50
+		MOV Aoc10_flagClean, 0h
+
+		//restore register
+		MOV EAX, Aoc10_Pop_stats_EAX
+		MOV ECX, Aoc10_Pop_stats_ECX
+		MOV EDX, Aoc10_Pop_stats_EDX
+		MOV EBX, Aoc10_Pop_stats_EBX
+		MOV ESP, Aoc10_Pop_stats_ESP
+		MOV EBP, Aoc10_Pop_stats_EBP
+		MOV ESI, Aoc10_Pop_stats_ESI
+		MOV EDI, Aoc10_Pop_stats_EDI
+		conti :
+		MOV EAX, DWORD PTR DS : [ESI + 18h]
+		CMP EAX, -1h
+
+
+		//JMP _00520A96
+		JMP Aoc10_00602D6F
+	};
+}
+DWORD Aoc10_00520A96 = 0x04E8FB6;//004E8FB6  |. B9 09000000    MOV ECX,9
+//DWORD _00602D6F = 0x0602D6F;
+void __declspec(naked)   Aoc10_cleanScreenn2()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP Aoc10_flagClean, 1h
+		JNZ conti
+		//save register
+		MOV Aoc10_Pop_stats_EAX, EAX
+		MOV Aoc10_Pop_stats_ECX, ECX
+		MOV Aoc10_Pop_stats_EDX, EDX
+		MOV Aoc10_Pop_stats_EBX, EBX
+		MOV Aoc10_Pop_stats_ESP, ESP
+		MOV Aoc10_Pop_stats_EBP, EBP
+		MOV Aoc10_Pop_stats_ESI, ESI
+		MOV Aoc10_Pop_stats_EDI, EDI
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6833D0h]
+		CALL Aoc10_005E7560
+		MOV ECX, EAX
+		CALL Aoc10_00556C50
+		MOV Aoc10_flagClean, 0h
+		//restore register
+		MOV EAX, Aoc10_Pop_stats_EAX
+		MOV ECX, Aoc10_Pop_stats_ECX
+		MOV EDX, Aoc10_Pop_stats_EDX
+		MOV EBX, Aoc10_Pop_stats_EBX
+		MOV ESP, Aoc10_Pop_stats_ESP
+		MOV EBP, Aoc10_Pop_stats_EBP
+		MOV ESI, Aoc10_Pop_stats_ESI
+		MOV EDI, Aoc10_Pop_stats_EDI
+		conti :
+
+		LEA EAX, DWORD PTR SS : [ESP + 9Ch]
+
+
+			JMP Aoc10_00520A96
+			//JMP _00602D6F
+	};
+}
+
+//0051BF0C   . 8B0D A0127900  MOV ECX,DWORD PTR DS:[0x7912A0]
+DWORD Aoc10_00521110 = 0x04E9630;//004E9630   $ 81EC 44020000  SUB ESP,244
+DWORD Aoc10_00521F29 = 0x04EA449;//004EA449  |. 8A88 14020000  MOV CL,BYTE PTR DS:[EAX+214]
+
+
+DWORD Aoc10_stats_EAX;
+DWORD Aoc10_stats_ECX;
+DWORD Aoc10_stats_EDX;
+DWORD Aoc10_stats_EBX;
+DWORD Aoc10_stats_ESP;
+DWORD Aoc10_stats_EBP;
+DWORD Aoc10_stats_ESI;
+DWORD Aoc10_stats_EDI;
+//0x0521F23
+DWORD Aoc10_FLAGShowPanelVilStatus = 0x0;
+
+void __declspec(naked)  Aoc10_GetVillagerStatusDisplayressources()
+{
+	__asm {
+		//save register
+		MOV Aoc10_stats_EAX, EAX
+		MOV Aoc10_stats_ECX, ECX
+		MOV Aoc10_stats_EDX, EDX
+		MOV Aoc10_stats_EBX, EBX
+		MOV Aoc10_stats_ESP, ESP
+		MOV Aoc10_stats_EBP, EBP
+		MOV Aoc10_stats_ESI, ESI
+		MOV Aoc10_stats_EDI, EDI
+		//CMP Starting, 1h
+		//JNZ restore
+
+
+		//MOV EAX, DWORD PTR DS : [07912A0h]
+		MOV EAX, DWORD PTR DS : [6833D0h]
+		TEST EAX, EAX
+		JE restore
+		//00446397   > 8B8D 20180000  MOV ECX,DWORD PTR SS:[EBP+0x1820]
+
+		MOV Aoc10_FLAGShowPanelVilStatus, 1h
+		MOV ECX, DWORD PTR SS : [EAX + 01820h]
+		TEST ECX, ECX
+		JE restore
+		MOV ECX, ESI
+		CALL Aoc10_00521110
+		MOV Aoc10_FLAGShowPanelVilStatus, 0h
+		//ECX
+		// 00521F29  |. 8A88 14020000  MOV CL,BYTE PTR DS:[EAX+0x214]
+		//loop_ :
+		// //?????
+		//////MOV EAX, DWORD PTR SS : [ECX + 50h]
+		//////TEST EAX, EAX
+		//////JE restore
+
+
+
+		restore:
+		//restaure register
+		MOV EAX, Aoc10_stats_EAX
+		MOV ECX, Aoc10_stats_ECX
+		MOV EDX, Aoc10_stats_EDX
+		MOV EBX, Aoc10_stats_EBX
+		MOV ESP, Aoc10_stats_ESP
+		MOV EBP, Aoc10_stats_EBP
+		MOV ESI, Aoc10_stats_ESI
+		MOV EDI, Aoc10_stats_EDI
+		//normale
+		MOV EAX, DWORD PTR DS : [ESI + 0121Ch]
+		JMP Aoc10_00521F29
+	};
+}
+
+void Aoc10_hookAoc()
+{
+
+
+	InjectHook((void*)0x0404C79, Aoc10_cleanScreenn, PATCH_JUMP);//00404C79   . 8B46 18        MOV EAX,DWORD PTR DS:[ESI+18]
+
+
+	////0051DD01   > 8B8E B8110000  MOV ECX,DWORD PTR DS:[ESI+11B8]
+	//004E8FAF  |. 8D8424 9C00000>LEA EAX,DWORD PTR SS:[ESP+9C]
+	InjectHook((void*)0x04E8FAF, Aoc10_cleanScreenn2, PATCH_JUMP);//case scenario and no villager we put it on score
+		//00521F23  |. 8B86 1C120000  MOV EAX,DWORD PTR DS:[ESI+0x121C]
+	InjectHook((void*)0x04EA443, Aoc10_GetVillagerStatusDisplayressources, PATCH_JUMP);//004EA443  |. 8B86 1C120000  MOV EAX,DWORD PTR DS:[ESI+121C]
+
+}
+DWORD Aoc10_hki_EDX;
+
+BYTE* Aoc10_arrHki_EDX = {};//[176] 
+void Aoc10_fillHotKeyArray()
+{
+	Aoc10_arrHki_EDX = (BYTE*)Aoc10_hki_EDX;
+	//arrHki_EDX[0]=0;
+	int  Aoc10_cmpt = 0;
+	for (int i = 0; i <= 176; i = i + 0x0C)
+	{
+		 Aoc10_Hotkeys[ Aoc10_cmpt][0] = 0x0;
+		 Aoc10_Hotkeys[ Aoc10_cmpt][1] = 0x0;
+		 Aoc10_Hotkeys[ Aoc10_cmpt][2] = 0x0;
+		 Aoc10_Hotkeys[ Aoc10_cmpt][3] = 0x0;
+		 Aoc10_Hotkeys[ Aoc10_cmpt][0] = Aoc10_arrHki_EDX[i];
+		//CTRL-
+		if (Aoc10_arrHki_EDX[i + 0x8] == 0x1)
+		{
+			Aoc10_Hotkeys[Aoc10_cmpt][3] = VK_LCONTROL;
+		}
+		//ALT-
+		if (Aoc10_arrHki_EDX[i + 0x8 + 0x1] == 0x1)
+		{
+			Aoc10_Hotkeys[Aoc10_cmpt][2] = VK_LMENU;
+		}
+		//MAJ-
+		if (Aoc10_arrHki_EDX[i + 0x8 + 0x1 + 0x1] == 0x1)
+		{
+			Aoc10_Hotkeys[Aoc10_cmpt][1] = VK_LSHIFT;
+		}
+		Aoc10_cmpt++;
+		if (Aoc10_cmpt == 15)
+			break;
+	}
+
+
+
+}
+//004793FA  |. E8 21C60400    |CALL age2_x1.004C5A20                   ; \age2_x1.004C5A20
+
+DWORD Aoc10_004C5A20 = 0x04C5A20;
+DWORD Aoc10_0058F23F = 0x04793FF;//004793FF  |. 83C4 0C        |ADD ESP,0C
+
+void __declspec(naked)  Aoc10_getKeyOnHkiFile()
+{
+	__asm {
+			CMP EBX, 11h//select all hki
+			JE _hki
+			CALL Aoc10_004C5A20
+			JMP Aoc10_0058F23F
+			_hki :
+			MOV Aoc10_hki_EDX, EDX//pointer that will contain hotkey value
+			CALL Aoc10_004C5A20
+			//0058F22B   . 8B4E 0C        MOV ECX,DWORD PTR DS:[ESI+C]
+			MOV ECX, Aoc10_hki_EDX
+			call Aoc10_fillHotKeyArray
+
+
+			JMP Aoc10_0058F23F
+
+	}
+}
+
+DWORD Aoc10_idItemMenu = 0x0;
+DWORD  Aoc10__4_0058F490 = 0x0479650;
+DWORD Aoc10_004F7C29 = 0x0512239;//00512239   . 8B0D D0336800  MOV ECX,DWORD PTR DS:[6833D0]
+
+void __declspec(naked)   Aoc10_getMenuItemid()
+{
+	__asm {
+		MOV Aoc10_idItemMenu, EDX
+		CALL  Aoc10__4_0058F490; \age2_x1_.0058F490
+		JMP Aoc10_004F7C29
+	}
+}
+
+DWORD Aoc10_idItem = 0x0;
+DWORD Aoc10_004F7C45 = 0x0512255;//00512255   . 50             PUSH EAX
+//00447B76  |. 8B8424 E400000>MOV EAX,DWORD PTR SS:[ESP+E4]
+
+void __declspec(naked)  Aoc10_getItemId()
+{
+	__asm {
+		MOV ECX, DWORD PTR SS : [EBP + 82Ch]
+		MOV Aoc10_idItem, EDX
+		JMP Aoc10_004F7C45
+	}
+}
+//0: Select all idle villagers(default Ctrl + .)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+//13: Select all idle villagers(default Ctrl + .)
+
+//0: Select all idle villagers (default Ctrl+.)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+int Aoc10_getRealId(int id)
+{
+	switch (id)
+	{
+	case 0:
+		return 5;//5 : Select all Archery Ranges(default Ctrl + W)
+		break;
+	case 1:
+		return 4;//4 : Select all Barracks(default Ctrl + Q)
+		break;
+	case 2:
+		return 11;//11 : Select all Castles(default Ctrl + C)
+		break;
+	case 3:
+		return 8;//8 : Select all Docks(default Ctrl + T)
+		break;
+	case 4:
+		return 13;//13 : Select all Donjon(default Ctrl + V)
+		break;
+	case 5:
+		return 1;//1 : Select all idle army(default Ctrl + , )
+		break;
+	case 6:
+		return 12;//12 : Select all Krepost(default Ctrl + V)
+		break;
+	case 7:
+		return 9;//9 : Select all Markets(default Ctrl + D)
+		break;
+	case 8:
+		return 14;//14 : Select all Military buildings(default Ctrl + A)
+		break;
+	case 9:
+		return 10;//10 : Select all Monasteries(default Ctrl + F)
+		break;
+	case 10:
+		return 7;//7 : Select all Siege Workshops(default Ctrl + R)
+		break;
+	case 11:
+		return 6;//6 : Select all Stables(default Ctrl + E)
+		break;
+	case 12:
+		return 3;//3 : Select all Town Centers(default Ctrl + H)
+		break;
+	case 13:
+		return 2;//2 : Select all trade carts(default Ctrl + M)
+		break;
+	case 14:
+		return 0;//0: Select all idle villagers (default Ctrl+.)
+		break;
+	default:
+		return 100;
+		break;
+	}
+
+}
+DWORD Aoc10_key = 0x0;
+void Aoc10_updateHoteKey()
+{
+	int i = Aoc10_getRealId((int)Aoc10_idItem);
+	Aoc10_Hotkeys[i][0] = 0x0;
+	Aoc10_Hotkeys[i][1] = 0x0;
+	Aoc10_Hotkeys[i][2] = 0x0;
+	Aoc10_Hotkeys[i][0] = Aoc10_key; //au moins une touch de racoursie 
+	if (GetAsyncKeyState(VK_LCONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_CONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_CONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU))
+	{
+		Aoc10_Hotkeys[i][1] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		Aoc10_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		Aoc10_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LSHIFT;
+	}
+	if (GetAsyncKeyState(VK_RSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_RSHIFT;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_CONTROL;
+		Aoc10_Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LCONTROL;
+		Aoc10_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_CONTROL;
+		Aoc10_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LCONTROL;
+		Aoc10_Hotkeys[i][2] = VK_MENU;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LSHIFT;
+		Aoc10_Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LSHIFT;
+		Aoc10_Hotkeys[i][2] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_MENU;
+		Aoc10_Hotkeys[i][2] = VK_RSHIFT;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		Aoc10_Hotkeys[i][1] = VK_LCONTROL;
+		Aoc10_Hotkeys[i][2] = VK_RSHIFT;
+	}
+	//if (GetAsyncKeyState(VK_SCROLL))
+	//{
+	//    Hotkeys[i][1] = VK_SCROLL;
+	//} 
+	//if (GetAsyncKeyState(VK_MBUTTON))
+	//{
+	//    Hotkeys[i][1] = VK_MBUTTON;
+	//}
+	//if (GetAsyncKeyState(VK_XBUTTON1))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON1;
+	//}    
+	//if (GetAsyncKeyState(VK_XBUTTON2))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON2;
+	//}
+
+
+	//if (GetAsyncKeyState(WM_MOUSEHWHEEL) )
+	//{
+	//    Hotkeys[i][2] = WM_MOUSEHWHEEL;
+	//}
+	//if (GetAsyncKeyState(WM_MOUSEWHEEL))
+
+
+	//Hotkeys[i][2]=0;
+
+	////////saveInFileConfig();
+}
+DWORD Aoc10__updateHoteKey = (DWORD)Aoc10_updateHoteKey;
+DWORD Aoc10_EAXKEY;
+DWORD Aoc10_ECXKEY;
+DWORD Aoc10_EDXKEY;
+DWORD Aoc10_005478B0= 0x04C4380;
+DWORD Aoc10_004F7C50 = 0x0512260;//00512260   . 8B8D 2C080000  MOV ECX,DWORD PTR SS:[EBP+82C]
+
+
+//0x04F7C4B
+void __declspec(naked)  Aoc10_getKeyInput()
+{
+	__asm {
+		CMP  Aoc10_idItemMenu, 011h
+		JNZ normale
+		//MOV flagClean,1h
+		MOV Aoc10_key, EBX
+		MOV Aoc10_EAXKEY, EAX
+		MOV Aoc10_ECXKEY, ECX
+		MOV Aoc10_EDXKEY, EDX
+
+		call Aoc10__updateHoteKey
+		MOV ECX, Aoc10_ECXKEY
+		MOV EDX, Aoc10_EDXKEY
+		MOV EAX, Aoc10_EAXKEY
+		//MOV flagClean,0
+		normale :
+		CALL Aoc10_005478B0
+		JMP Aoc10_004F7C50
+	}
+}
+
+
+void  Aoc10_keyInputHook()
+{
+	//loadhotkey hki
+	InjectHook((void*)0x04793FA, Aoc10_getKeyOnHkiFile, PATCH_JUMP);//004793FA  |. E8 21C60400    |CALL age2_x1.004C5A20                   ; \age2_x1.004C5A20
+
+	//update ket
+	InjectHook((void*)0x0512234, Aoc10_getMenuItemid, PATCH_JUMP);//00512234   . E8 1774F6FF    CALL age2_x1.00479650                    ; \age2_x1.00479650
+
+	InjectHook((void*)0x051224F, Aoc10_getItemId, PATCH_JUMP);//0051224F   . 8B8D 2C080000  MOV ECX,DWORD PTR SS:[EBP+82C]
+	InjectHook((void*)0x051225B, Aoc10_getKeyInput, PATCH_JUMP);//0051225B   . E8 2021FBFF    CALL age2_x1.004C4380
+
+
+
+
+}
+DWORD Aoc10_TradeUnite;
+DWORD Aoc10_Repairman;
+DWORD Aoc10_Builder;
+DWORD Aoc10_StoneMiner;
+DWORD Aoc10_GoldMiner;
+DWORD Aoc10_Lumberjack;
+DWORD Aoc10_sheperds;
+DWORD Aoc10_Hunter;
+DWORD Aoc10_Fishermen;
+DWORD Aoc10_Forage;
+DWORD Aoc10_Farmer;
+DWORD Aoc10_FishingShipp;
+DWORD Aoc10_IdleFishingShipps;
+DWORD Aoc10_IdleVillagers;
+DWORD Aoc10_onFOOD;
+DWORD Aoc10_onGOLD;
+DWORD Aoc10_IDLE;
+
+DWORD Aoc10_IndexCurrentPlayer;
+
+DWORD Aoc10_ma_EAX;
+DWORD Aoc10_ma_ECX;
+DWORD Aoc10_ma_EDX;
+DWORD Aoc10_ma_EBX;
+DWORD Aoc10_ma_ESP;
+DWORD Aoc10_ma_EBP;
+DWORD Aoc10_ma_ESI;
+DWORD Aoc10_ma_EDI;
+DWORD Aoc10__EAXVilStatus;
+DWORD Aoc10__00521403 = 0x0521403;
+DWORD Aoc10__GetPlayerColor;
+void Aoc10_ManageSelection(int i, void* player, int Playerciv)
+{
+	bool flag1 = false;
+	bool arraflag[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	arraflag[0] = Aoc10_selectedIdlVillager;
+	arraflag[1] = Aoc10_selectAllTC;
+	arraflag[2] = Aoc10_selectAllArmy;
+	arraflag[3] = Aoc10_selectAllSiegeWorkshop;
+	arraflag[4] = Aoc10_selectAllMilitaryBuilding;
+	arraflag[5] = Aoc10_selectAllArcheryRange;
+	arraflag[6] = Aoc10_selectAllCastle;
+	arraflag[7] = Aoc10_selectAllDonjon;
+	arraflag[8] = Aoc10_selectAllKrepost;
+	arraflag[9] = Aoc10_selectAllMarket;
+	arraflag[10] = Aoc10_selectAlMonastery;
+	arraflag[11] = Aoc10_selectAlltradeCarte;
+	arraflag[12] = Aoc10_selectAllDock;
+	arraflag[13] = Aoc10_selectAllBarrack;
+	arraflag[14] = Aoc10_selectAllStable;
+	arraflag[15] = Aoc10_deleteAllSelected;
+	int cpt = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		if (arraflag[i])
+			cpt++;
+	}
+	//more than 2 same hotkey we ignore
+	flag1 = cpt >= 2;
+	if (flag1)
+	{
+		Aoc10_selectedIdlVillager = false;
+		Aoc10_selectAllTC = false;
+		Aoc10_selectAllArmy = false;
+		Aoc10_selectAllSiegeWorkshop = false;
+		Aoc10_selectAllMilitaryBuilding = false;
+		Aoc10_selectAllArcheryRange = false;
+		Aoc10_selectAllCastle = false;
+		Aoc10_selectAllDonjon = false;
+		Aoc10_selectAllKrepost = false;
+		Aoc10_selectAllMarket = false;
+		Aoc10_selectAlMonastery = false;
+		Aoc10_selectAlltradeCarte = false;
+		Aoc10_selectAllDock = false;
+		Aoc10_selectAllBarrack = false;
+		Aoc10_selectAllStable = false;
+		for (int i = 0; i < 15; i++)
+		{
+			arraflag[i] = false;
+		}
+		return;
+	}
+	try
+	{
+
+
+
+		if (player != NULL)
+		{
+			//printf("select villager \n");
+			Aoc10_cptIDLEVIllager = 0;
+			Aoc10_cptTCselected = 0;
+			Aoc10_cptArmyselected = 0;
+			Aoc10_cptallSiegeWorkshop = 0;
+			Aoc10_cptallMilitaryBuilding = 0;
+			Aoc10_cptallArcheryRange = 0;
+			Aoc10_cptallCastle = 0;
+			Aoc10_cptallDonjon = 0;
+			Aoc10_cptallKrepost = 0;
+			Aoc10_cptallMarket = 0;
+			Aoc10_cptallMonastery = 0;
+			Aoc10_cptalltradeCarte = 0;
+			Aoc10_cptallDock = 0;
+			Aoc10_cptallBarrack = 0;
+			Aoc10_cptallStable = 0;
+			Aoc10_countUnitDelete = 0;
+			//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+			//dllmain.cpp:2383.  RGE_Object_List* objects = player->objects;
+			void* objects = (void*)((size_t)player + 0x78);//this is list object address care // player->objects
+			 //objects = (void*)((size_t)objects + 0x4);// player->objects
+			//struct  __declspec(align(2)) RGE_Object_List
+			//{
+			//    int vfptr;
+			//    struct RGE_Static_Object** list;
+			//    __int16 number_of_objects;
+			//};
+
+
+			if (!IsBadReadPtr((void*)objects, sizeof(UINT_PTR)) && objects != NULL)
+			{
+
+
+				//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+				//DS:[1C0168A8]=1D7E8400 ESI = 026DF820 dllmain.cpp:2383.  RGE_Object_List * objects = player->objects;
+
+				//DWORD* lstSelectAdd = (DWORD*)(void**)((size_t)player + 0x78);//player->sel_list;
+				//DWORD* lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+				DWORD* lstSelect = (DWORD*)((DWORD)player + 0x1C0);//get the good beging selection addrese
+				//79529EA1   3887 68020000    CMP BYTE PTR DS:[EDI+268],AL
+
+				//7952A881   8887 68020000    MOV BYTE PTR DS:[EDI+268],AL
+				//dllmain.cpp:2917.  *NBSelect = cptIDLEVIllager;
+				BYTE* NBSelect = (BYTE*)(void**)((size_t)player + 0x268);//set select range
+				//BYTE* NBSelect = (BYTE*)(void**)((size_t)lstSelectAdd + 0xA8 + 0x7 + 0x2);//set select range
+				//Address=1C0169F0  EBX = 75690100 (KERNEL32.IsBadReadPtr) dllmain.cpp:2387.  DWORD * lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+				//79529E90   8D9F C0010000    LEA EBX,DWORD PTR DS:[EDI+1C0]
+
+
+				void** sel_list = (void**)(lstSelect);
+
+				if (Aoc10_deleteAllSelected && *NBSelect != 0x0)
+				{
+					/*
+					for (int i = 0; i <= *NBSelect; i++)
+					{
+						INPUT inputs[2] = {};
+						ZeroMemory(inputs, sizeof(inputs));
+
+						inputs[0].type = INPUT_KEYBOARD;
+						inputs[0].ki.wVk = VK_DELETE;
+
+						inputs[1].type = INPUT_KEYBOARD;
+						inputs[1].ki.wVk = VK_DELETE;
+						inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+						UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+						Sleep(50);
+					}*/
+					//for (int i = 0; i <= *NBSelect; i++)
+					//{
+					//    if (countUnitDelete <= *NBSelect && ((*sel_list)->object_class == 70 || (*sel_list)->object_class == 80))
+					//    {
+					//        //you can only delete you unit ans can't delete sheep
+					//        if ((*sel_list)->owner_player == player && (*sel_list)->master_obj->object_group != 58) 
+					//        {
+					//            INPUT inputs[2] = {};
+					//            ZeroMemory(inputs, sizeof(inputs));
+
+					//            inputs[0].type = INPUT_KEYBOARD;
+					//            inputs[0].ki.wVk = VK_DELETE;
+
+					//            inputs[1].type = INPUT_KEYBOARD;
+					//            inputs[1].ki.wVk = VK_DELETE;
+					//            inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+					//            UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+					//            Sleep(50);
+					//            //*sel_list++;
+					//            countUnitDelete++;
+					//        }
+					//    }
+					//}
+				}
+
+
+				//std::cout << "obj list:" << std::hex << (DWORD)lstSelect << std::endl;
+				//std::cout << "obj number_of_objects:" << std::hex << (DWORD)objects->number_of_objects << std::endl;
+				//DS:[1D7E8408]=0062AX = 0000dllmain.cpp:2437.  for (int ono = 0; ono < objects->number_of_objects; ono++)
+				//79529F0D   66:3B46 08      CMP AX,WORD PTR DS:[ESI+8]
+				//__int16	2	short, short int, signed short int	-32 768 à 32 767   -> 7FFF  DWORD size it tkink
+				///*/*/*int number_of_objects = (DWORD)*(void**)((size_t)(void*)((size_t)player + 0x78) + 0x8);*/*/*/
+
+				//MOV EAX,DWORD PTR DS:[ESI+4] -> struct RGE_Static_Object** list;
+				//74884209   8B40 04          MOV EAX,DWORD PTR DS:[EAX+4]
+				 //list =(void*) *(DWORD*)(objects); //(void*)(void**)(*(size_t*)objects + 0x4);
+				if (IsBadReadPtr((void*)objects, sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				void* p = (void*)*(DWORD*)((size_t)objects);
+				if (IsBadReadPtr((void*)((size_t)p + 0x4), sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				void* list = (void*)*(DWORD*)((size_t)p + 0x4); //(void*)(void**)(*(size_t*)objects + 0x4);
+				if (IsBadReadPtr((void*)p, sizeof(UINT_PTR)))
+				{
+					return;
+				}
+				int number_of_objects = (int)*(DWORD*)((size_t)p + 0x8);
+				for (int ono = 0; ono < (int)number_of_objects; ono++)// objects->number_of_objects
+				{
+
+					//79529F2A   8B1488           MOV EDX,DWORD PTR DS:[EAX+ECX*4]
+					//void* obj = (void*)(void**)(*(size_t*)list + 0x4 * ono)  ;
+					void* obj = (void*)(*(DWORD*)((size_t)list + 4 * ono));
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					//*(DWORD*)(*(DWORD*)(v3 + 4) + 4 * v6);
+					//std::cout << "obj number_of_objects:" << std::hex << sel_list << std::endl;
+					//printf("select villager2 \n");
+										//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//void* master_obj = (void*)(void**) *(DWORD*)(*(size_t*)obj + 0x8);
+					////79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+
+					//int id = (int)*idADDR;
+
+					void* master_obj = (void*)*(DWORD*)((size_t)obj + 0x8);
+					//hotfix
+					if (IsBadReadPtr((void*)master_obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+
+					//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+					//MOVZ
+					int id = *(WORD*)((size_t)master_obj + 0x10);//(int)*idADDRG 
+					////7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+					//int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+
+					if (Aoc10_flagClean == 0 && Aoc10_selectedIdlVillager && Aoc10_cptIDLEVIllager < 40 && Aoc10_IdleVillagers != 0x0)
+					{
+						//struct  __declspec(align(1)) RGE_Static_Object
+						//{
+						//    int vfptr;
+						//    int id;
+						//    struct RGE_Master_Static_Object* master_obj;
+						//...
+						// struct RGE_Master_Static_Object
+						//{
+						//    char field_0;
+						//    char field_1;
+						//    char field_2;
+						//    char field_3;
+						//    char master_type;//type ex: combattant
+						//    char field_5;
+						//    char field_6;
+						//    char field_7;
+						//    char* name;
+						//    __int16 string_id;
+						//    __int16 string_id2;
+						//    __int16 id;
+						//    __int16 copy_id;
+						//    __int16 save_id;
+						//    __int16 object_group;
+						// //....
+
+						//MOVZ
+
+						if (
+							id == 83 || id == 293 //normale villager
+							|| id == 123 || id == 218//lumberjack
+							|| id == 56 || id == 57//fisherman   
+							|| id == 124 || id == 220 || id == 1493//stone miner
+							|| id == 579 || id == 581 || id == 1497//gold miner
+							|| id == 122 || id == 216 || id == 1491//hunter
+							|| id == 590 || id == 592 || id == 1498//sherperd
+							|| id == 214 || id == 259 || id == 1192 || id == 1490//farmer
+							|| id == 118 || id == 212 || id == 1192 || id == 1489//builder
+							|| id == 120 || id == 354 || id == 1496//forager
+							|| id == 156 || id == 222 || id == 1494//repairer
+							//less probability to apear so we put at the end
+							|| id == 1310 || id == 1311//fisherman    
+							|| id == 1312 || id == 1313//fisherman    
+							|| id == 1314 || id == 1315//fisherman    
+							|| id == 1316 || id == 1317//fisherman    
+							|| id == 1318 || id == 1319//fisherman    
+							|| id == 1320 || id == 1321//fisherman    
+							|| id == 1322 || id == 1323//fisherman    
+							|| id == 1324 || id == 1325//fisherman    
+							|| id == 1326 || id == 1327//fisherman    
+							|| id == 1328 || id == 1329//fisherman    
+							|| id == 1488 || id == 1499//fisherman    
+							|| id == 1500 || id == 1501//fisherman    
+							|| id == 1502 || id == 1503//fisherman    
+							|| id == 1504 || id == 1505//fisherman    
+							|| id == 1506 || id == 1507 || id == 1508//fisherman    
+							)
+						{
+
+							//005FF6F3   . 8B46 78        MOV EAX, DWORD PTR DS : [ESI + 78]
+							DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+							DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+							DWORD flagIdle2;
+							bool flagisidleres = false;
+							//0xFFFF     -1
+							if ((DWORD)ptr == 0xFFFFFFFF)
+							{
+								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+								if (flagIdle != 0)
+								{
+									//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+									//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+									flagisidleres = true;
+								}
+								if (flagIdle == 0 && !flagisidleres
+									||
+									flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+										|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+										|| flagIdle2 == 0xE))
+								{
+									if (Aoc10_cptIDLEVIllager == 0)
+									{
+
+										//first select need to be on double
+										//7952A2AF   C642 36 01       MOV BYTE PTR DS:[EDX+36],1
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										Aoc10_cptIDLEVIllager++;
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										//cptIDLEVIllager++;
+									}
+									else
+									{
+										//if (!IsBadReadPtr((void*)(*sel_list), sizeof(UINT_PTR)) && IdleVillagers != 0)
+										//obj->selected = true;
+										*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+										*sel_list = obj;
+										*sel_list++;
+										Aoc10_cptIDLEVIllager++;
+									}
+								}
+							}
+						}
+
+					}
+					//                // //....
+					////79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//                void* master_obj = (void*)(void**)(*(size_t*)obj + 0x8);
+					//                //79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//                WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+					//(*(DWORD*)((size_t)list  
+					void* master_objG = (void*)*(DWORD*)((size_t)obj + 0x8);
+					//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+					//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+					//MOVZ
+					if (IsBadReadPtr((void*)master_objG, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					int idG = *(WORD*)((size_t)master_objG + 0x10);//(int)*idADDRG 
+					//7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+					if ((int)obj == 0x0)
+					{
+						break;
+					}
+
+					if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+					{
+						break;
+					}
+					int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+					//select all tc
+					if (Aoc10_selectAllTC && Aoc10_flagClean == 0 && Aoc10_cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
+					{
+						if (Aoc10_cptTCselected == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptTCselected++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptTCselected++;
+						}
+					}
+					//master_objG
+					//7952A346   8B42 08          MOV EAX, DWORD PTR DS : [EDX + 8]
+					//7952A349   0FB740 16        MOVZX EAX, WORD PTR DS : [EAX + 16]
+					int object_group = (int)*(WORD*)(void**)((size_t)master_objG + 0x16);
+					//select all army cptArmyselected selectAllArmy
+					if (Aoc10_selectAllArmy && Aoc10_flagClean == 0 && Aoc10_cptArmyselected < 40 && (int)object_class == 70 //combattant
+						&& (
+							(int)object_group == 0//archer
+							|| (int)object_group == 6//infentery
+							|| (int)object_group == 12//cavalery
+							|| (int)object_group == 47//scoute
+							|| (int)object_group == 13//siege weapons
+							|| (int)object_group == 55//Balista
+							|| (int)object_group == 36//cav Archer
+							|| (int)object_group == 18//Monk
+							|| (int)object_group == 54//unpacked unit treb  no work idk
+							|| (int)object_group == 51//packed unit treb  no work idk
+							|| (int)object_group == 35//packed unit treb
+							|| (int)object_group == 23//conquistador
+							|| (int)object_group == 24//war elephants
+							|| (int)object_group == 44//hand canonner
+							)
+						)
+					{
+						//0051D3DD   > 8BCD           MOV ECX,EBP                                                          ;  Cases 2E,2F of switch 0051D1F0
+						//00528A81   . 57             PUSH EDI
+						//00528EDD   > 8B5C24 10      MOV EBX,DWORD PTR SS:[ESP+stbi__vertically_flip_on_load_local]
+						//lol same as villager
+						//005FF6F3   . 8B46 78        MOV EAX,DWORD PTR DS:[ESI+78]
+						DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+						DWORD flagIdle2;
+						bool flagisidleres = false;
+						//0xFFFF     -1
+						if ((DWORD)ptr == 0xFFFFFFFF)
+						{
+							//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+							DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+							if (flagIdle != 0)
+							{
+								//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+								//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+								flagisidleres = true;
+							}
+
+							if (flagIdle == 0 && !flagisidleres
+								||
+								flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+									|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+									|| flagIdle2 == 0xE))
+							{
+								if (Aoc10_cptArmyselected == 0)
+								{
+									//first select need to be on double
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									Aoc10_cptArmyselected++;
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+								}
+								else
+								{
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									Aoc10_cptArmyselected++;
+								}
+							}
+						}
+					}
+
+					//select all siege workshop
+					//idG   -> obj->master_obj->id
+					if (Aoc10_selectAllSiegeWorkshop && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallSiegeWorkshop < 40 &&
+						(idG == 49 || (int)idG == 150))//&& (int)obj->master_obj->hp>1
+					{
+						if (Aoc10_cptallSiegeWorkshop == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallSiegeWorkshop++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallSiegeWorkshop++;
+						}
+					}
+					//select all militarybuilding
+					//bool selectAllMilitaryBuilding = false; cptallMilitaryBuilding
+					//idG   -> obj->master_obj->id
+					if (Aoc10_selectAllMilitaryBuilding && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallMilitaryBuilding < 40 &&
+						(
+							(int)idG == 49 || (int)idG == 150//Siege workshop
+							|| (int)idG == 12 //barrack
+							|| (int)idG == 87 //Archery Range 
+							|| (int)idG == 101 //Stable 
+							|| (int)idG == 82 //castel
+							|| (int)idG == 1476 //|| (int)idG == 1453 || (int)idG == 1454 || (int)idG ==1452  //donjon
+							|| (int)idG == 1245   //krepost
+							)
+						)
+					{
+						if (Aoc10_cptallMilitaryBuilding == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMilitaryBuilding++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMilitaryBuilding++;
+						}
+					}
+					//no work idk why :'(
+					//////select All archery range
+					////selectAllBuilding(selectAllArcheryRange, &cptallArcheryRange, flagClean, &obj,&sel_list, 87);
+					//////select All castle
+					////selectAllBuilding(selectAllCastle, &cptallCastle, flagClean, &obj, &sel_list, 82);
+					//////select All Donjon
+					////selectAllBuilding(selectAllDonjon, &cptallDonjon, flagClean, &obj, &sel_list, 1476);
+					//////select All Krepost
+					////selectAllBuilding(selectAllKrepost,  &cptallKrepost, flagClean, &obj, &sel_list, 1245);
+					//////select All Market
+					////selectAllBuilding(selectAllMarket, &cptallMarket, flagClean,&obj, &sel_list, 84);
+					//select All archery range
+					//idG   -> obj->master_obj->id
+					if (Aoc10_selectAllArcheryRange && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallArcheryRange < 40 && (int)idG == 87) //Archery Range 
+					{
+						if (Aoc10_cptallArcheryRange == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallArcheryRange++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallArcheryRange++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All castle
+					if (Aoc10_selectAllCastle && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallCastle < 40 && (int)idG == 82)//castel  
+					{
+						if (Aoc10_cptallCastle == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallCastle++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallCastle++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Donjon
+					if (Aoc10_selectAllDonjon && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallDonjon < 40 && (int)idG == 1476)//donjon  
+					{
+						if (Aoc10_cptallDonjon == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallDonjon++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallDonjon++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Krepost
+					if (Aoc10_selectAllKrepost && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallKrepost < 40 && (int)idG == 1245)   //krepost
+					{
+						if (Aoc10_cptallKrepost == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallKrepost++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallKrepost++;
+						}
+					}
+					//idG   -> obj->master_obj->id
+					//select All Market
+					if (Aoc10_selectAllMarket && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallMarket < 40 && (int)idG == 84)
+					{
+						if (Aoc10_cptallMarket == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMarket++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMarket++;
+						}
+					}
+					//select All monastery
+					if (Aoc10_selectAlMonastery && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallMonastery < 40 && (int)idG == 104)
+					{
+						if (Aoc10_cptallMonastery == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMonastery++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallMonastery++;
+						}
+					}
+					//select All trade cart
+					if (Aoc10_selectAlltradeCarte && Aoc10_flagClean == 0 && (int)object_class == 70 && Aoc10_cptalltradeCarte < 40 &&
+						(
+							(int)idG == 108 || (int)idG == 128 || (int)idG == 204
+
+							)
+						)
+					{
+						if (Aoc10_cptalltradeCarte == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptalltradeCarte++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptalltradeCarte++;
+						}
+					}
+					//select All Dock
+					if (Aoc10_selectAllDock && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallDock < 40 &&
+						(
+							(int)idG == 45// || (int)obj->master_obj->id == 806 
+							)
+						)
+					{
+						if (Aoc10_cptallDock == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallDock++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallDock++;
+						}
+					}
+					//select all barack
+					if (Aoc10_selectAllBarrack && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallBarrack < 40 && (int)idG == 12)//barrack
+					{
+						if (Aoc10_cptallBarrack == 0)
+						{
+							//first select need to be on double
+						   //obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallBarrack++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallBarrack++;
+						}
+					}
+
+					//select all stable
+					if (Aoc10_selectAllStable && Aoc10_flagClean == 0 && (int)object_class == 80 && Aoc10_cptallStable < 40 && (int)idG == 101)//Stable  
+					{
+						if (Aoc10_cptallStable == 0)
+						{
+							//first select need to be on double
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallStable++;
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+						}
+						else
+						{
+							//obj->selected = true;
+							*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+							*sel_list = obj;
+							*sel_list++;
+							Aoc10_cptallStable++;
+						}
+					}
+
+				}
+				if (Aoc10_selectedIdlVillager && Aoc10_IdleVillagers != 0 && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptIDLEVIllager;
+				if (Aoc10_selectAllTC && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptTCselected;
+				if (Aoc10_selectAllArmy && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptArmyselected;
+				if (Aoc10_selectAllSiegeWorkshop && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallSiegeWorkshop;
+				if (Aoc10_selectAllMilitaryBuilding && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallMilitaryBuilding;
+				if (Aoc10_selectAllArcheryRange && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallArcheryRange;
+				if (Aoc10_selectAllCastle && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallCastle;
+				if (Aoc10_selectAllDonjon && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallDonjon;
+				if (Aoc10_selectAllKrepost && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallKrepost;
+				if (Aoc10_selectAllMarket && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallMarket;
+				if (Aoc10_selectAlMonastery && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallMonastery;
+				if (Aoc10_selectAlltradeCarte && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptalltradeCarte;
+				if (Aoc10_selectAllDock && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallDock;
+				if (Aoc10_selectAllBarrack && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallBarrack;
+				if (Aoc10_selectAllStable && Aoc10_flagClean == 0)
+					*NBSelect = Aoc10_cptallStable;
+
+
+				//if (deleteAllSelected && flagClean == 0)
+				//    *NBSelect = 0;
+				if (Aoc10_flagClean == 0)
+				{
+					Aoc10_selectedIdlVillager = false;
+					Aoc10_selectAllTC = false;
+					Aoc10_selectAllArmy = false;
+					Aoc10_selectAllSiegeWorkshop = false;
+					Aoc10_selectAllMilitaryBuilding = false;
+					Aoc10_selectAllArcheryRange = false;
+					Aoc10_selectAllCastle = false;
+					Aoc10_selectAllDonjon = false;
+					Aoc10_selectAllKrepost = false;
+					Aoc10_selectAllMarket = false;
+					Aoc10_selectAlMonastery = false;
+					Aoc10_selectAlltradeCarte = false;
+					Aoc10_selectAllDock = false;
+					Aoc10_selectAllBarrack = false;
+					Aoc10_selectAllStable = false;
+					Aoc10_deleteAllSelected = false;
+				}
+			}
+		}
+	}
+	catch (const std::exception&)
+	{
+		return;
+	}
+
+	//else
+	//printf("player is empty");
+}
+
+DWORD Aoc10_00521403 = 0x04E9923;
+void  __declspec(naked) Aoc10_getVillagerMatrix()//
+{
+	__asm {
+		//      //save register
+		//MOV ma_EAX, EAX
+		//MOV ma_ECX, ECX
+		//MOV ma_EDX, EDX
+		//MOV ma_EBX, EBX
+		//MOV ma_ESP, ESP
+		//MOV ma_EBP, EBP
+		//MOV ma_ESI, ESI
+		MOV Aoc10_ma_EDI, EDI
+
+		//save eax
+		MOV Aoc10__EAXVilStatus, EAX
+		//we get only for current player
+		//CMP showOnlyCurrrentPlayerVillagerPerRessources, 1h
+		//JNZ restore
+
+		MOV EAX, DWORD PTR SS : [ESP + 50h]
+		MOV Aoc10_IdleVillagers, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 4Ch]
+		MOV Aoc10_IdleFishingShipps, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 48h]
+		MOV Aoc10_FishingShipp, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 44h]
+		MOV Aoc10_Farmer, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 40h]
+		MOV Aoc10_Forage, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 3Ch]
+		MOV Aoc10_Fishermen, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 38h]
+		MOV Aoc10_Hunter, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 34h]
+		MOV Aoc10_sheperds, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 30h]
+		MOV Aoc10_Lumberjack, EAX
+		//MOV EAX,0h
+		MOV AL, BYTE PTR SS : [ESP + 2Ch]//WORD PTR SS : [ESP + 2Ch]
+		MOV Aoc10_GoldMiner, EAX
+		//MOV EAX, 0h
+		MOV AL, BYTE PTR SS : [ESP + 2Eh]//2Ah
+		MOV Aoc10_StoneMiner, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 28h]
+		MOV Aoc10_Builder, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		MOV Aoc10_Repairman, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 20h]
+		MOV Aoc10_TradeUnite, EAX
+
+		MOV Aoc10_onFOOD, 0h
+		MOV EAX, 0h
+		ADD EAX, Aoc10_sheperds
+		ADD EAX, Aoc10_Hunter
+		ADD EAX, Aoc10_Fishermen
+		ADD EAX, Aoc10_Forage
+		ADD EAX, Aoc10_Farmer
+		ADD EAX, Aoc10_FishingShipp
+		MOV Aoc10_onFOOD, EAX
+
+		MOV Aoc10_onGOLD, 0h
+		MOV EAX, 0h
+		ADD EAX, Aoc10_GoldMiner
+		ADD EAX, Aoc10_TradeUnite
+		MOV Aoc10_onGOLD, EAX
+
+		MOV Aoc10_IDLE, 0h
+		MOV EAX, 0h
+		ADD EAX, Aoc10_IdleVillagers
+		ADD EAX, Aoc10_IdleFishingShipps
+		MOV Aoc10_IDLE, EAX
+
+		restore :
+		//restore eax
+
+		MOV  EAX, Aoc10__EAXVilStatus
+
+
+
+
+
+
+
+
+			////restore register
+			//CMP ma_EAX, 0h
+			//JE __00521403
+			//MOV EAX, ma_EAX
+			//MOV ECX, ma_ECX
+			//MOV EDX, ma_EDX
+			//MOV EBX, ma_EBX
+			//MOV ESP, ma_ESP
+			//MOV EBP, ma_EBP
+			//MOV ESI, ma_ESI
+			//MOV EDI, ma_EDI
+			//////MOV ECX, 0483h
+			MOV ECX, 0483h
+			XOR EAX, EAX
+			SUB ECX, EBX
+
+			__00521403 :
+		JMP Aoc10_00521403//004E9923   . 894424 14      MOV DWORD PTR SS:[ESP+14],EAX
+
+
+	};
+
+}
+//get player
+int  Aoc10_sub_5E7560(int a)
+{
+	int v1; // eax@1
+	__int16 v2; // dx@2
+	__int16 v3; // cx@3
+	int result; // eax@5
+
+	v1 = *(DWORD*)(a + 1060);
+	if (v1 && (v2 = *(WORD*)(v1 + 72), v2 >= 1) && (v3 = *(WORD*)(v1 + 148), v3 < v2) && v3 >= 0 && !IsBadReadPtr((void*)*(DWORD*)(v1 + 76), sizeof(UINT_PTR)))
+		result = *(DWORD*)(*(DWORD*)(v1 + 76) + 4 * v3);
+	else
+		result = 0;
+	return result;
+}
+
+
+bool Aoc10_keydown(int key)
+{
+	Sleep(1);
+	return GetAsyncKeyState(key) & 0x8000;// (GetAsyncKeyState(translteGLFW_KEY_IntoWindows(key)) & 0x8000);
+}
+bool Aoc10_keypressed(int a, int b, int c, int d)
+{
+	if (a == 0 && b == 0 && c == 0 && d == 0)
+		return false;
+	else
+		return (a == 0 ? true : Aoc10_keydown(a)) && (b == 0 ? true : Aoc10_keydown(b)) && (c == 0 ? true : Aoc10_keydown(c)) && (d == 0 ? true : Aoc10_keydown(d));
+
+	//if (a > 0 && b == 0 && c == 0 && d == 0)
+	//    return keydown(a);
+	//if (a > 0 && b > 0 && c == 0 && d == 0)
+	//    return keydown(a) && keydown(b);
+	//if (a > 0 && b > 0 && c > 0 && d == 0)
+	//    return keydown(a) && keydown(b) && keydown(c);
+	//if (a > 0 && b > 0 && c > 0 && d>0)
+	//    return keydown(a) && keydown(b) && keydown(c) && keydown(c);
+	//return false;
+}
+bool Aoc10_isKeyPress = false;
+bool Aoc10_flagwaitLOAD = true;
+bool Aoc10_noOverlay = false;
+bool Aoc10_checkifsamehotkey(bool flag1, bool flag2)
+{
+	return flag1 && flag2;
+}
+bool Aoc10_arrayConf[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+
+
+void Aoc10_hotKeyActionelecting()
+{
+	//if (noOverlay)
+	//{
+	//    //Load positions of resource panel elements or revert to defaults
+	//    ConfigData = LoadData();
+	//    //ResetHotkeys(ConfigData);
+	//    hookAoc();
+	//}
+		//idk how to mkae optimisation array is on esp (how to  read the pointer?)
+	//005213FA   > B9 83040000    MOV ECX,0x483
+	InjectHook((void*)0x04E991A, Aoc10_getVillagerMatrix, PATCH_JUMP);//004E991A   > B9 83040000    MOV ECX,483
+	bool flag = true;
+	//= ImGui::GetIO(); (void)io;
+	void* player = NULL;
+	BYTE Playerciv = NULL;
+
+	//Sleep(3000);
+
+			//TODO set a condition if key is pressed
+		//To use only when pressing key
+	//void* base_ = (void*)0x007912A0;
+	//void** BaseGame_ = (void**)base_;
+	//void* world_ = NULL;
+	void* world;// = *(void**)(*(size_t*)0x7912A0 + 0x424);
+	//void* player = get_player();
+	while (true)
+	{
+		//version = (DWORD*)0x680A18;
+		//if(*version!=0x11)          
+		//    *version = 0x11;
+		//if(BaseGame_ == NULL)
+		//BaseGame_ = (void**)base_;
+		//if (BaseGame_ != NULL && !IsBadReadPtr((void*)(*BaseGame_), sizeof(UINT_PTR)))//world_ == NULL && (*BaseGame_) != NULL)
+		//    world_ =  (void*)((size_t)BaseGame_ + 0x424); ;//MOV EAX,DWORD PTR DS:[ECX+424]
+		//else //continue;
+
+		//unsigned int* _base = (unsigned int*)*BaseGame + 0x424;
+		//unsigned int IndexCurrentPlayer = (unsigned int)*_base + 0x4C;
+
+
+		//if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x7912A0), sizeof(UINT_PTR))
+		if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x6833D0), sizeof(UINT_PTR))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x6833D0 + 0x424), sizeof(UINT_PTR))
+			//&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x7912A0 + 0x424), sizeof(UINT_PTR))
+			&& (world = *(void**)(*(size_t*)0x6833D0 + 0x424))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x48), sizeof(UINT_PTR))
+			//&& *(void**)(*(size_t*)0x7912A0 + 0x424) != NULL)
+			&& *(void**)(*(size_t*)0x6833D0 + 0x424) != NULL)
+		{
+			/*
+			 world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+			 //MOV DX,WORD PTR DS:[EAX+48]
+				player = get_player();
+				IndexCurrentPlayer = (int)(void*)((size_t)world + 0x94); //005E7574  |. 66:8B88 940000>MOV CX,WORD PTR DS:[EAX+94]
+
+*/
+			//player = (void*)Aoc10_sub_5E7560((int)*(void**)0x7912A0);
+			player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0);
+			//else
+			//    //continue;
+			//EnterCriticalSection(&cs_Civ);
+			if (player != NULL && !IsBadReadPtr((void*)((size_t)player + 0x15D), sizeof(UINT_PTR)))
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+			//else
+			//{
+			//    //continue;
+			//}
+			//LeaveCriticalSection(&cs_Civ);
+
+
+
+
+			if (Aoc10_keypressed(Aoc10_Hotkeys[0][0], Aoc10_Hotkeys[0][1], Aoc10_Hotkeys[0][2], Aoc10_Hotkeys[0][3]))//0 Select all idle villagers
+			{
+				//printf("villager \n");
+				Aoc10_selectedIdlVillager = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectedIdlVillager)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[3][0], Aoc10_Hotkeys[3][1], Aoc10_Hotkeys[3][2], Aoc10_Hotkeys[3][3]))//3: Select all Town Centers  
+			{
+				Aoc10_selectAllTC = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllTC)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[1][0], Aoc10_Hotkeys[1][1], Aoc10_Hotkeys[1][2], Aoc10_Hotkeys[1][2]))//1: Select all idle army
+			{
+				Aoc10_selectAllArmy = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllArmy)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[7][0], Aoc10_Hotkeys[7][1], Aoc10_Hotkeys[7][2], Aoc10_Hotkeys[7][3]))//7: Select all Siege Workshops 
+			{
+				Aoc10_selectAllSiegeWorkshop = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllSiegeWorkshop)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+
+			if (Aoc10_keypressed(Aoc10_Hotkeys[14][0], Aoc10_Hotkeys[14][1], Aoc10_Hotkeys[14][2], Aoc10_Hotkeys[14][3]))////14: Select all Military buildings (default Ctrl+A)
+			{
+				Aoc10_selectAllMilitaryBuilding = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllMilitaryBuilding)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[5][0], Aoc10_Hotkeys[5][1], Aoc10_Hotkeys[5][2], Aoc10_Hotkeys[5][3]))//5: Select all Archery Ranges 
+			{
+				Aoc10_selectAllArcheryRange = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllArcheryRange)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[11][0], Aoc10_Hotkeys[11][1], Aoc10_Hotkeys[11][2], Aoc10_Hotkeys[11][3]))//11: Select all Castles 
+			{
+				Aoc10_selectAllCastle = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllCastle)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[13][0], Aoc10_Hotkeys[13][1], Aoc10_Hotkeys[13][2], Aoc10_Hotkeys[13][3]))//13: Select all Donjon 
+			{
+				Aoc10_selectAllDonjon = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllDonjon)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[12][0], Aoc10_Hotkeys[12][1], Aoc10_Hotkeys[12][2], Aoc10_Hotkeys[12][3]))//12: Select all Krepost 
+			{
+				Aoc10_selectAllKrepost = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllKrepost)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[9][0], Aoc10_Hotkeys[9][1], Aoc10_Hotkeys[9][2], Aoc10_Hotkeys[9][3]))//9: Select all Markets
+			{
+				Aoc10_selectAllMarket = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllMarket)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[10][0], Aoc10_Hotkeys[10][1], Aoc10_Hotkeys[10][2], Aoc10_Hotkeys[10][3]))//10: Select all Monasteries
+			{
+				Aoc10_selectAlMonastery = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAlMonastery)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[2][0], Aoc10_Hotkeys[2][1], Aoc10_Hotkeys[2][2], Aoc10_Hotkeys[2][3]))//2: Select all trade carts 
+			{
+				Aoc10_selectAlltradeCarte = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAlltradeCarte)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[8][0], Aoc10_Hotkeys[8][1], Aoc10_Hotkeys[8][2], Aoc10_Hotkeys[8][3]))//8: Select all Docks 
+			{
+				Aoc10_selectAllDock = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllDock)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[4][0], Aoc10_Hotkeys[4][1], Aoc10_Hotkeys[4][2], Aoc10_Hotkeys[4][3]))//4: Select all Barracks 
+			{
+				Aoc10_selectAllBarrack = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllBarrack)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(Aoc10_Hotkeys[6][0], Aoc10_Hotkeys[6][1], Aoc10_Hotkeys[6][2], Aoc10_Hotkeys[6][3]))//6: Select all Stables
+			{
+				Aoc10_selectAllStable = true;
+				Aoc10_flagClean = 0x1;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_selectAllStable)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			if (Aoc10_keypressed(VK_DELETE, VK_MENU, 0, 0))//&& (GetAsyncKeyState() || GetAsyncKeyState(VK_LSHIFT)))//Alt+delete
+			{
+				Aoc10_deleteAllSelected = true;
+				Aoc10_isKeyPress = true;
+			}
+			if (Aoc10_isKeyPress && Aoc10_deleteAllSelected)
+			{
+				world = *(void**)(*(size_t*)0x6833D0 + 0x424);
+				player = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				Aoc10_ManageSelection((int)Aoc10_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (Aoc10_flagClean == 0) Aoc10_isKeyPress = false;
+			}
+			/*
+			if (isKeyPress)
+			{
+					world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+					player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+					Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+					ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+			}
+
+			if (flagClean == 0) isKeyPress = false;*/
+
+		}
+	}
+}
+DWORD WINAPI  Aoc10_hotKeyActionelectingThread(LPVOID lpReserved)
+{
+	//no need we get from .hki file now 
+	//////loadHotKey();
+	Aoc10_hotKeyActionelecting();
+	return 0;
+}
+void Aoc10_selectAllProc(HMODULE hModule)
+{
+
+	Aoc10_hookAoc();
+	Aoc10_keyInputHook();
+
+	//all to select double click selecting stone wall and palisade wall
+//0042FC2C     66:837A 16 1B  CMP WORD PTR DS : [EDX + 16] , 1B
+//0042FC31     0F84 06010000  JE age2_x1_.0042FD3D
+//if(isDefeaturePatch)
+// Nop(0x042FC2C, 11);
+	CreateThread(nullptr, 0, Aoc10_hotKeyActionelectingThread, hModule, 0, nullptr);
+}
+void Aoc10PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 {
 	Aoc10Widescreen(wideScreenCentred);
 	AOC10_windowedMod(windowed);
@@ -6280,4 +8264,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 	FixStatisticsDisplayAoc10();
 	Aoc10_hotkeyHook();
 	Aoc10_language_dll();
+	Aoc10_selectAllProc(hModule);
 }
