@@ -4826,6 +4826,1382 @@ void  FixStatisticsDisplayAoc10()
 
 }
 
+//0x04BE460
+DWORD Aoc10_004BE467 = 0x054B547;//0054B547  |. 0F87 760D0000  JA age2_x1.0054C2C3
+DWORD Aoc10_004BF1E3 = 0x054C2C3;//0054C2C3  \> C2 0800        RETN 8                                   ;  Default case of switch 0054C24F
+void __declspec(naked)  Aoc10_SetHootKeyList004BD935()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		CMP EAX, 04h//tc
+		JNZ checkmona
+		CMP DWORD PTR SS : [ESP + 8h] , 0h//2h
+		JE Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 6h//2h
+		JE Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 7h//2h
+		JE Normale
+		JMP __004BF1E3
+
+		checkmona :
+		CMP EAX, 0Ah //monastar
+		JNZ steplancer// Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 1h
+		Jg __004BF1E3//if is add item then jump default switch case
+
+		steplancer :
+		CMP EAX, 08h
+		JNZ FlamingCamel
+		CMP[ESP + 8h], 3h
+		JE __004BF1E3
+
+		FlamingCamel :
+		CMP EAX, 0Dh
+		JNZ GoToKrepost//Normale
+		CMP[ESP + 8h], 3h
+		JE __004BF1E3
+
+
+		GoToKrepost :
+		cmp EAX, 1h
+		JNZ Normale
+		CMP DWORD PTR SS : [ESP + 8h] , 42h
+		JE __004BF1E3
+		CMP DWORD PTR SS : [ESP + 8h] , 43h
+		JE __004BF1E3
+
+		Normale :
+		CMP EAX, 0Eh
+		JMP Aoc10_004BE467
+		__004BF1E3 :
+		JMP Aoc10_004BF1E3
+	};
+}
+
+//004BBF33     90              NOP
+//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
+DWORD Aoc10_004BBFDF = 0x05490BF;// 005490BF | . 68 204E0000    PUSH 4E20
+DWORD Aoc10__0058F7A0 = 0x0479960;
+void __declspec(naked)  Aoc10_SetHootKeyList004BBFDA()
+{
+	__asm {
+
+		CALL Aoc10__0058F7A0; \age2_x1.0058F7A0
+		/*//Town center
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+		//Blacksmith
+		//PUSH 5h
+		PUSH 5h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10__0058F7A0
+		//University
+		PUSH 11h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL Aoc10__0058F7A0
+		//Select ALL
+		PUSH 0Fh//15 itmes
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10__0058F7A0
+		/*//Monastery
+		PUSH 0Ch
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+
+		JMP Aoc10_004BBFDF
+	}
+}
+
+DWORD Aoc10_0058F6B0 = 0x0479870;
+DWORD Aoc10_004BC0B1 = 0x0549191;//00549191   . 8B4424 08      MOV EAX,DWORD PTR SS:[ESP+8]
+
+
+
+//004BC0AC  |. E8 FF350D00    CALL age2_x1.0058F6B
+void __declspec(naked)  Aoc10_SetHootKeyList004BC0AC()
+{
+	__asm {
+		CALL Aoc10_0058F6B0
+		/*//Town center
+		PUSH 4E24h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+		//Black Smith
+		PUSH 4E26h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F6B0
+		//University
+		PUSH 4E33h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL Aoc10_0058F6B0
+		//select All
+		PUSH 4E34h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F6B0
+		/*//Monastery
+		PUSH 4E2Ch
+		PUSH 12h
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+		JMP Aoc10_004BC0B1
+	}
+}
+
+//4A82->19074 reseed   4E31->20017 mill
+//004BCE8C  |. E8 DF270D00    CALL age2_x1.0058F670
+DWORD Aoc10_0058F670 = 0x0479830;
+DWORD Aoc10_004BCE91 = 0x0549F71;//00549F71  |. 5E             POP ESI
+
+
+
+void __declspec(naked)  Aoc10_SetHootKeyList004BCE8C()
+{
+	__asm {
+		CALL Aoc10_0058F670
+
+		//black smith
+		PUSH 4A84h
+		PUSH 0
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A85h
+		PUSH 1h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A86h
+		PUSH 2h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A87h
+		PUSH 3h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A88h
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		//University
+		PUSH 4AB6h
+		PUSH 0h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB7h
+		PUSH 1h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB8h
+		PUSH 2h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABDh
+		PUSH 3h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB9h
+		PUSH 4h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABAh
+		PUSH 5h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABBh
+		PUSH 6h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABCh
+		PUSH 7h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABEh
+		PUSH 8h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4ABFh
+		PUSH 9h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AC0h
+		PUSH 0Ah
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		//select ALL
+
+		//16784
+		PUSH 4190h
+		PUSH 0h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4191h
+		PUSH 1h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4192h
+		PUSH 2h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4193h
+		PUSH 3h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4194h
+		PUSH 4h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4195h
+		PUSH 5h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4196h
+		PUSH 6h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4197h
+		PUSH 7h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4198h
+		PUSH 8h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4199h
+		PUSH 9h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 419Ah
+		PUSH 0Ah
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 419Bh
+		PUSH 0Bh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 419Ch
+		PUSH 0Ch
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 419Dh
+		PUSH 0Dh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 419Eh
+		PUSH 0Eh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BCE91
+
+	}
+}
+DWORD Aoc10_004BCD91 = 0x0549E71;//00549E71  |. 68 564B0000    PUSH 4B56
+
+void __declspec(naked)  Aoc10_SetHootKeyList004BCD8CMonastary()
+{
+	__asm {
+		CALL Aoc10_0058F670
+		//monastary
+		PUSH 4AACh
+		PUSH 2h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AADh
+		PUSH 03h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AAEh
+		PUSH 04h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AAFh
+		PUSH 05h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		/*PUSH 4AAFh
+		PUSH 05h
+		PUSH 12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670*/
+		PUSH 4AB0h
+		PUSH 06h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB1h
+		PUSH 07h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB2h
+		PUSH 08h//08h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB3h
+		PUSH 09h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB4h
+		PUSH 0Ah
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4AB5h
+		PUSH 0Bh
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BCD91
+	}
+}
+
+DWORD Aoc10_004BCBF1 = 0x0549CD1;//00549CD1   . 68 654A0000    PUSH 4A65
+void __declspec(naked)  Aoc10_SetHootKeyList004BCBECTC()
+{
+	__asm {
+		CALL Aoc10_0058F670
+		//town center
+		PUSH 4A89h
+		PUSH 2h
+		PUSH 04h// 0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A8Ah
+		PUSH 3h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		PUSH 4A8Bh
+		PUSH 4h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BCBF1
+	}
+}
+//004BCD2C
+DWORD Aoc10_004BCD31 = 0x0549E11;//00549E11  |. 68 704A0000    PUSH 4A70
+void __declspec(naked) AOC10_SetHootKeyList004BCD2C()
+{
+	__asm {
+		CALL Aoc10_0058F670
+		//stable step lancer
+		PUSH 16A8h
+		PUSH 3h
+		PUSH 08h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BCD31
+	}
+}
+//004BCE7C
+DWORD Aoc10_004BCE81 = 0x0549F61;//00549F61  |. 68 824A0000    PUSH 4A82
+void __declspec(naked)  Aoc10_SetHootKeyList004BCE7C()
+{
+	__asm {
+		CALL Aoc10_0058F670
+		//Flaming Camel
+		PUSH 14FFh
+		PUSH 3h
+		PUSH 0Dh
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BCE81
+	}
+}
+//game commande go to krepost
+DWORD Aoc10_004BC911 = 0x05499F1;//005499F1  |. 68 0E4B0000    PUSH 4B0E
+void __declspec(naked)  Aoc10_SetHootKeyListGoToKrepost004BC90C()
+{
+	__asm {
+		CALL Aoc10_0058F670
+		//Go To Krepost
+		PUSH 4B51h
+		PUSH 42h
+		PUSH 1h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		//Go To Donjon
+		PUSH 4B81h
+		PUSH 43h
+		PUSH 1h
+		MOV ECX, ESI
+		CALL Aoc10_0058F670
+		JMP Aoc10_004BC911
+	}
+}
+//key 
+//004BC657   . E8 041E0000    CALL age2_x1.004BE460
+DWORD Aoc10_004BE460 = 0x054B540;
+DWORD Aoc10_004BC65C = 0x054973C;//0054973C  |. 6A 00          PUSH 0
+DWORD Aoc10_LTowncenter = 0x2;
+DWORD Aoc10_LBlacksmith = 0x0;
+DWORD Aoc10_LUniversity = 0x0;
+DWORD Aoc10_LSelectAll = 0x0;
+DWORD Aoc10_LMonastery = 0x2;// 0x3;
+void __declspec(naked)  Aoc10_SetHootKeyListhotkey004BC657()
+{
+	__asm {
+			CALL Aoc10_004BE460
+			//Town center
+			Towncenter :
+			PUSH Aoc10_LTowncenter//0h
+			PUSH 04h//0Fh
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			inc Aoc10_LTowncenter
+			CMP Aoc10_LTowncenter, 6h
+			JNZ Towncenter
+			MOV Aoc10_LTowncenter, 0h
+
+			//Blacksmith
+			Blacksmith :
+			PUSH Aoc10_LBlacksmith//0h
+			PUSH 0Fh
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			inc Aoc10_LBlacksmith
+			CMP Aoc10_LBlacksmith, 5h
+			JNZ Blacksmith
+			MOV Aoc10_LBlacksmith, 0h
+
+
+			//University
+			University:
+			PUSH Aoc10_LUniversity//0h
+			PUSH 10h
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			inc Aoc10_LUniversity
+			CMP Aoc10_LUniversity, 11h
+			JNZ University
+			MOV Aoc10_LUniversity, 0h
+
+			//Select All
+			SelectALL :
+			PUSH Aoc10_LSelectAll//0h
+			PUSH 11h//id
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			inc Aoc10_LSelectAll
+			CMP Aoc10_LSelectAll, 0Fh//nb item
+			JNZ SelectALL
+			MOV Aoc10_LSelectAll, 0h
+
+			//Monastery
+			Monastery :
+			PUSH Aoc10_LMonastery//0h
+			PUSH 0Ah//12h
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			inc Aoc10_LMonastery
+			CMP Aoc10_LMonastery, 0Ch
+			JNZ Monastery
+			MOV Aoc10_LMonastery, 2h
+			//stable
+			//stepLancer :
+			PUSH 3h
+			PUSH 08h
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			//castel
+			//FlamingCamel:
+			PUSH 3h
+			PUSH 0Dh
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			//Game commandes
+			//GoToKrepost
+			PUSH 42h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			//GoToDonjon
+			PUSH 43h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL Aoc10_004BE460
+			JMP Aoc10_004BC65C
+	}
+
+}
+
+DWORD HootKeyAOC10_rank = 0x60;
+DWORD HootKeyAOC10_lang = 0x0;
+DWORD HootKeyAOC10HootKeyAOC10_EBX;
+DWORD HootKeyAOC10_00479650 = 0x0479650;// 0058F490
+void __declspec(naked)   Aoc10_SetHootKeyListhotkey0x04BF1E3()
+{
+	__asm {
+		//Monastery:
+		cmp EAX, 0Ah
+		jnz tc//Towncenter
+		MOV HootKeyAOC10_rank, 52h//54h//
+		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		MOV  HootKeyAOC10_lang, 416Dh//416Fh -2h  because it start at 2
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD HootKeyAOC10_lang, EBX
+		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD HootKeyAOC10_rank, EBX// 1h
+		//PUSH 60h
+		PUSH HootKeyAOC10_rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		tc:
+		cmp EAX, 04h//0Fh
+		jnz Blacksmith
+		MOV HootKeyAOC10_rank, 59h
+		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		MOV  HootKeyAOC10_lang, 4178h //417Ah -2
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD HootKeyAOC10_lang, EBX
+		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD HootKeyAOC10_rank, EBX//1h
+		//PUSH 60h
+		PUSH HootKeyAOC10_rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		Blacksmith:
+		cmp EAX, 0Fh //10h
+		jnz University//Towncenter
+		MOV HootKeyAOC10_rank, 63h
+		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		MOV  HootKeyAOC10_lang, 415Eh
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD HootKeyAOC10_lang, EBX
+		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD HootKeyAOC10_rank, EBX// 1h
+		//PUSH 60h
+		PUSH HootKeyAOC10_rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		University:
+		cmp EAX, 10h//11h
+		jnz  selectALL //steplancer//Towncenter
+		MOV HootKeyAOC10_rank, 69h
+		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		MOV  HootKeyAOC10_lang, 4164h
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD HootKeyAOC10_lang, EBX
+		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD HootKeyAOC10_rank, EBX// 1h
+		//PUSH 60h
+		PUSH HootKeyAOC10_rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		selectALL:
+		cmp EAX, 11h
+		jnz steplancer
+		MOV HootKeyAOC10_rank, 7Bh
+		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		MOV  HootKeyAOC10_lang, 4182h// 16784  // 4164h
+		MOV EBX, DWORD PTR DS : [ESP + 8h]
+		ADD HootKeyAOC10_lang, EBX
+		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		ADD HootKeyAOC10_rank, EBX// 1h
+		//PUSH 60h
+		PUSH HootKeyAOC10_rank
+		//PUSH 0h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH 0Fh
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+
+		steplancer:
+		cmp EAX, 08h
+		jnz FlamingCamel
+		PUSH 417Dh
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 81h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		FlamingCamel:
+		cmp EAX, 0Dh
+		jnz GoToKrepost
+		PUSH 417Eh
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 82h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		GoToKrepost:
+		cmp EAX, 1h
+		jnz defaultSwitchCase
+		CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+		JNZ GoToDonjon
+		PUSH 417Fh
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 83h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+		GoToDonjon:
+		cmp EAX, 1h
+		jnz defaultSwitchCase
+		CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+		JNZ defaultSwitchCase
+		PUSH 4180h
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 84h
+		PUSH  DWORD PTR DS : [ESP + 1Ch]
+		PUSH EAX
+		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+
+
+
+
+		defaultSwitchCase:
+		RETN 8;  Default case of switch 004BF16F
+
+	};
+}
+
+DWORD Aoc10_004BD93F = 0x054AA1F;//0054AA1F  |. 0F8F 05020000  JG age2_x1.0054AC2A
+DWORD Aoc10_0058F3F0 = 0x04795B0;
+void __declspec(naked)  Aoc10_SetHootKeyEvent004BD935()
+{
+	__asm {
+			MOV BYTE PTR SS : [ESP + 3h] , 0h
+			//tc
+			CMP EAX, 417Ah
+			JE TCLoom
+			CMP EAX, 417Bh
+			JE  TownWatch
+			CMP  EAX, 417Ch
+			JE Wheelbarrow
+			//Blacksmith
+			CMP  EAX, 415Eh
+			JE Fletching
+			CMP EAX, 415Fh
+			JE Forging
+			CMP EAX, 4160h
+			JE PaddedArcherArmor
+			CMP EAX, 4162h
+			JE ScaleBarding
+			CMP EAX, 4163h
+			JE ScaleMail
+			//University
+			CMP  EAX, 4164h
+			JE Arrowslits
+			CMP  EAX, 4165h
+			JE Ballistics
+			CMP  EAX, 4166h
+			JE BombardTower
+			CMP  EAX, 4167h
+			JE Chemistry
+			CMP  EAX, 4168h
+			JE FortifiedWall
+			CMP  EAX, 4169h
+			JE GuardTower
+			CMP  EAX, 416Ah
+			JE HeatedShot
+			CMP  EAX, 416Bh
+			JE Masonry
+			CMP  EAX, 416Ch
+			JE MurderHoles
+			CMP  EAX, 416Dh
+			JE SiegeEngineers
+			CMP  EAX, 416Eh
+			JE Treadmill
+			//Monastery
+			CMP EAX, 416Fh
+			JE Atonement
+			CMP EAX, 4170h
+			JE BlockPrinting
+			CMP EAX, 4171h
+			JE Faith
+			CMP EAX, 4172h
+			JE Fervor
+			CMP EAX, 4173h
+			JE HerbalMedicine
+			CMP EAX, 4174h
+			JE Heresy
+			CMP EAX, 4176h
+			JE Illumination
+			CMP EAX, 4177h
+			JE Redemption
+			CMP EAX, 4178h
+			JE Sanctity
+			CMP EAX, 4179h
+			JE Theocracy
+			//step lancer 
+			CMP EAX, 417Dh
+			JE steplancer
+			//Flaming Camel
+			CMP EAX, 417Eh
+			JE FlamingCamel
+			//go to krepost
+			CMP EAX, 417Fh
+			JE GoToKrepost
+			//Go To Donjon key
+			CMP EAX, 4180h
+			JE GoToDonjon
+			CMP EAX, 4180h
+			JE GoToDonjon
+			//todo
+			//16770, "V"
+			//16771, "D"
+			//16772, "S"
+			//16773, "F"
+			//16774, "X"
+			//16775, "C"
+			//16776, "A"
+			//16777, "Z"
+			//16778, "R"
+			//16779, "T"
+			//16780, "G"
+			//16781, "Y"
+			//16782, "K"
+			//16783, "D"
+			//16783, "M"
+			CMP EAX, 4182h
+			JE selectIDLEVillager
+			//normale
+			CMP EAX, 4022h
+			JMP DefaultCase
+
+			//tc
+			TCLoom :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 04h//0fh
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			TownWatch :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 04h//0Fh
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Wheelbarrow :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 04h//0Fh
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			//Black smith
+			Fletching :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 0Fh //10h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Forging :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH  0Fh //10h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			PaddedArcherArmor :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 0Fh //10h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleBarding :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH  0Fh //10h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleMail :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH  0Fh //10h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			//university
+			Arrowslits :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Ballistics :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+
+			BombardTower :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Chemistry :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			FortifiedWall :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			GuardTower :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			HeatedShot :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Masonry :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			MurderHoles :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			SiegeEngineers :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Treadmill :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah
+			PUSH 10h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			//Monastery
+			Atonement :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h//0h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			BlockPrinting :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Faith :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Fervor :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			HerbalMedicine :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h//4h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Heresy :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h//5h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Illumination :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h//6h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Redemption :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h//7h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Sanctity :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah//8h
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			Theocracy :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Bh//0Ah
+			PUSH 0Ah//12h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			steplancer :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//steplancer
+			PUSH 08h//stable
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			FlamingCamel :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//Flaming Camel
+			PUSH 0Dh//castel
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			GoToKrepost :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 042h//Go to krepost
+			PUSH 01h//game commande
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+			GoToDonjon :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 043h//Go to Donjon
+			PUSH 01h//game commande
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+
+			//select all
+			selectIDLEVillager :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 11h//11h
+			CALL Aoc10_0058F3F0
+			POP ECX
+			RETN 4h
+
+
+
+			DefaultCase:
+
+			JMP Aoc10_004BD93F
+
+	};
+}
+
+
+//00524471   . 0F87 AF010000  JA age2_x1.00524626
+DWORD Aoc10_005244E5 = 0x04EC9B5;
+void __declspec(naked)  Aoc10_SetHootgoToKrepostDonjonJA()
+{
+	__asm {
+			CMP EAX, 0Fh
+			JE GoToKrepost
+			CMP EAX, 10h
+			JE GoToDonjon
+
+			CMP EAX, 0Eh;  Switch(cases 0..E)
+			JA Default
+
+			GoToKrepost :
+			MOV EDI, 4DDh//krepost unit id
+			JMP Aoc10_005244E5
+			GoToDonjon :
+			MOV EDI, 5C4h//donjon unit id
+			JMP Aoc10_005244E5
+
+			Default :
+			POP EDI;  Default case of switch 0052446E
+			POP ESI
+			POP EBX
+			RETN 4h
+	};
+}
+//DWORD _0051D78E = 0x051D78E;
+//DWORD _4_005E7560 = 0x05E7560;
+//DWORD bulgariansCiv = 34;//Civilization::bulgarians;
+//void __declspec(naked)  SetHootgoToKrepostEvent0051D1F0JA()
+//{
+//	__asm {
+//		//to check if bulgarian or sicilian
+//		CMP EAX, 2Eh
+//		JE Check
+//		CMP EAX, 2Fh
+//		JE Check
+//		//CMP EAX, 2Fh
+//		//JE goToDonjon
+//		JMP normal
+//		Check :
+//		//get current player
+//		MOV ECX, DWORD PTR DS : [07912A0h]
+//		call _4_005E7560
+//		MOV EDX, 0h
+//		//MOV DX, WORD PTR SS : [EAX + 15Dh]
+//		MOV DL, BYTE PTR SS : [EAX + 15Dh]
+//		CMP  EDX, bulgariansCiv
+//		JE goToKrepost
+//		JMP goToDonjon
+//		goToKrepost :
+//		PUSH 0Fh;  Go to Krepost
+//		MOV ECX, EBP
+//		CALL _00524450
+//		JMP Default
+//		goToDonjon :
+//		PUSH 10h;  Go to Donjon
+//		MOV ECX, EBP
+//		CALL _00524450
+//
+//		normal :
+//		CMP EAX, 2Dh
+//		JA Default
+//
+//		Default :
+//		//0051D78E   > 8B85 30120000  MOV EAX,DWORD PTR SS:[EBP+1230]          ;  Default case of switch 0051D1F0
+//		JMP _0051D78E
+//
+//	};
+//}
+void Aoc10_hotkeyHook()
+{
+	//setHook((void*)0x04BC09E, SetHootKeyList);
+	//setHook((void*)0x04BEEB1, SetHootKeyList004BEEB1);
+	//set item number ?
+	// 004BBF33     6A 11           PUSH 11
+	//NumHotkeyGroups
+	writeByte(0x0549014, 0x14);//00549013  |. 6A 0F          PUSH 0F
+	//extend game commande key to add go to krepost
+	writeByte(0x0549026, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
+
+	//set monastarysize item
+	//004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
+	writeByte(0x0549089, 0xC);//00549088  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
+	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	//extandestable loop
+	//004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
+	writeByte(0x0549073, 0x4);//00549072  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//extend castle item
+	//004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	writeByte(0x05490AA, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+
+	setHook((void*)0x054B540, Aoc10_SetHootKeyList004BD935);//0054B540  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
+	//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
+	setHook((void*)0x05490BA, Aoc10_SetHootKeyList004BBFDA);//005490BA  |. E8 A108F3FF    CALL age2_x1.00479960                    ; \age2_x1.00479960
+
+	////004BC667   . 5E             POP ESI
+	setHook((void*)0x054918C, Aoc10_SetHootKeyList004BC0AC);//0054918C  |. E8 DF06F3FF    CALL age2_x1.00479870
+	//item when clicking
+	setHook((void*)0x0549F6C, Aoc10_SetHootKeyList004BCE8C);//00549F6C  |. E8 BFF8F2FF    CALL age2_x1.00479830
+	setHook((void*)0x0549E6C, Aoc10_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
+	setHook((void*)0x0549CCC, Aoc10_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
+	//6739=X,  5800=Steppe Lancer Stable: 0x8,
+	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
+	setHook((void*)0x0549E0C, AOC10_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
+
+	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
+	//004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
+	setHook((void*)0x0549F5C, Aoc10_SetHootKeyList004BCE7C);//00549F5C  |. E8 CFF8F2FF    CALL age2_x1.00479830
+	setHook((void*)0x05499EC, Aoc10_SetHootKeyListGoToKrepost004BC90C);//005499EC  |. E8 3FFEF2FF    CALL age2_x1.00479830
+	//key 
+	setHook((void*)0x0549737, Aoc10_SetHootKeyListhotkey004BC657);//00549737  |. E8 041E0000    CALL age2_x1.0054B540
+	setHook((void*)0x054C2C3, Aoc10_SetHootKeyListhotkey0x04BF1E3);//0054C2C3  \> C2 0800        RETN 8                                   ;  Default case of switch 0054C24F
+	//key events
+	setHook((void*)0x054AA15, Aoc10_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+
+	////	//go to krepost and donjon
+	//////00524471   . 0F87 AF010000  JA age2_x1.00524626
+	////setHookJA((void*)0x04EC941, Aoc10_SetHootgoToKrepostDonjonJA);//004EC941  |. 0F87 AF010000  JA age2_x1.004ECAF6
+	////setHookJA((void*)0x051D1F6, SetHootgoToKrepostEvent0051D1F0JA);//004E5726   . 0F87 92050000  JA age2_x1.004E5CBE
+}
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 {
 	Aoc10Widescreen(wideScreenCentred);
@@ -4836,4 +6212,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed)
 	Aoc10_250pop();
 	Aoc10_FixRecordingExploreStateBug();
 	FixStatisticsDisplayAoc10();
+	Aoc10_hotkeyHook();
 }
