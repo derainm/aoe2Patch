@@ -12893,7 +12893,84 @@ void  FixStatisticsDisplay()
 	writeByte(0x52142d, 0x2B);
 }
 
+//load language dll
+//0043AFF0   >-E9 BD613E7B     JMP scout.7B8211B2
+char aocc10c_lang[100] = { "language_default.dll" };
+//0043AFD4 > 68 FCF56600    PUSH age2_x1.0066F5FC;  ASCII "language_x1_p1.dll"
+//0043AFD9.FFD6           CALL ESI
+DWORD _0043BB45 = 0x043BB45;
+DWORD _0043AFF5 = 0x043AFF5;
+ 
+DWORD Aoc10C_695388 ;
+void __declspec(naked)  Aoc10C_language_dllhook()
+{
+	__asm {
+		//MOV DWORD PTR SS:[EBP+64],1
+		//JMP age2_x1_.0043BB43
+		//JNZ  __005C69F7
+		//MOV DWORD PTR SS : [EBP + 64h] , 1h
+		//JMP _005C7545
+		PUSH offset aocc10c_lang;  ASCII "language_x1_p1.dll"//age2_x1_.0066F5FC                         
+		//773711B2   68 84303777      PUSH scout.77373084; ASCII "C:\Users\m\Desktop\Age of Empires II\Age2_x1\language_default.dll"
+		CALL ESI
+		CMP EAX, EBX
+		MOV Aoc10C_695388, EAX
+		JNZ short _773711D1
+		MOV DWORD PTR SS : [EBP + 64] , 1
+		XOR EAX, EAX
+		JMP _0043BB45; age2_x1_.0043BB45
+		_773711D1:
+		LEA ECX, DWORD PTR SS : [ESP + 24h]
+		PUSH ECX
+		JMP _0043AFF5; age2_x1_.0043AFF5
 
+
+
+	};
+}
+//0043CF10.A1 88536900    MOV EAX, DWORD PTR DS : [695388]//celui là
+
+
+//005C69D9   . 8D95 A0160000  LEA EDX, DWORD PTR SS : [EBP + 16A0]
+//005C69DF   . 52             PUSH EDX; / FileName
+//005C69E0.FF15 E0416300  CALL DWORD PTR DS : [<&KERNEL32.LoadLibraryA>] ; \LoadLibraryA
+
+//005C892B   . E8 1019EBFF    CALL age2_x1.0047A240
+
+DWORD _0043CF51 = 0x043CF51;
+DWORD _005E4750 = 0x05E4750;
+DWORD _0058E820 = 0x058E820;
+ 
+void __declspec(naked)  Aoc10C_language_dllhook2()
+{
+	__asm {
+		CALL _005E4750; age2_x1_.005E4750
+		CMP BYTE PTR DS : [EAX] , 0
+		JNZ short _773711F6
+		PUSH EDI
+		PUSH ESI
+		PUSH EBX
+		PUSH Aoc10C_695388//DWORD PTR DS : [77373080]
+		CALL _0058E820; age2_x1_.0058E820
+		_773711F6:
+		JMP _0043CF51; age2_x1_.0043CF51
+
+
+	};
+}
+void Aoc10C_language_dll()
+{
+	InjectHook(0x043AFF0, Aoc10C_language_dllhook, PATCH_JUMP);//0043AFF0   >-E9 BD61F376    JMP scout.773711B2
+	InjectHook(0x043CF4C, Aoc10C_language_dllhook2, PATCH_JUMP);//0043CF4C   .-E9 8B42F376    JMP scout.773711DC
+}
+void selectAllHotkey(HMODULE hModule)
+{
+	FixStatisticsDisplay();
+	Aoc10C_language_dll();
+	hotkeyHook();
+	//LoadLibraryA("scout.dll");
+	selectAllProc(hModule);
+}
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
 
@@ -12913,11 +12990,9 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 		autoFarmAnFishTrapReseed();
 		Aoc10c_250pop();
 		Aoc10c_FixRecordingExploreStateBug();
-		FixStatisticsDisplay();
-		hotkeyHook();
-		LoadLibraryA("scout.dll");
-		selectAllProc(hModule);
+		selectAllHotkey(hModule);
 	}
+
 }
 //CTRL + F11
 //005521F3     90             NOP

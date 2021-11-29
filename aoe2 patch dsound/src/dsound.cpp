@@ -91,7 +91,7 @@ void init_dsound(HINSTANCE hInst)
 	dsound.DirectSoundCaptureCreate8 = GetProcAddress(dsound.dll, "DirectSoundCaptureCreate8");
 }
 
-int AoK20ab, AoK20, AoC10Ce, AoC10, UserPatch;//(user patch version aofe + 1.5 +1.1 .. etc)
+int AoK20ab, AoK20, AoC10Ce, AoC10, UserPatch, v16orV15Defeature;//(user patch version aofe + 1.5 +1.1 .. etc)
 
 inline bool exists_File(const std::string& name) {
 	struct stat buffer;
@@ -106,6 +106,7 @@ void init(HINSTANCE hInst)
 	AoC10 = (*(int*)0x006146F0 ==   0x0A053044);
 	//UserPatch15 = (AoC10Ce && *(int*)0x0051A3B8 == 0x002A6674);
 	UserPatch = (AoC10Ce && *(int*)0x0051A3B8 != 0x003D1446);
+	//v16orV15Defeature = (AoC10Ce && *(int*)0x05267A3 != 0x8B8E30120000);
 	//todo add aofe 
 	bool centredWideScreen = false;
 	if (AoC10Ce && !UserPatch)
@@ -114,6 +115,10 @@ void init(HINSTANCE hInst)
 		{
 			Aoc10CPatchHook(centredWideScreen, true, (HMODULE)hInst);
 		}
+	}
+	if (UserPatch)
+	{	//for aofe or 1.5 without dpamode dll v1.6 or v1.5 de feature
+		selectAllHotkey((HMODULE)hInst);
 	}
 	if (AoC10)
 	{

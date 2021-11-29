@@ -6212,7 +6212,7 @@ char aocc10_lang[100] = {"language_default.dll"};
 //0043AFD9.FFD6           CALL ESI
 DWORD _005C7545 = 0x05C7545;
 DWORD _005C69FC = 0x05C69FC;
-DWORD _695388 = 0x05C69F7;
+DWORD _695388 ;
 void __declspec(naked)  Aoc10_language_dllhook()
 {
 	__asm {
