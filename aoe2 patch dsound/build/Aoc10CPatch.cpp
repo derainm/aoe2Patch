@@ -12965,12 +12965,28 @@ void Aoc10C_language_dll()
 }
 void selectAllHotkey(HMODULE hModule)
 {
+	autoFarmAnFishTrapReseed();
 	FixStatisticsDisplay();
 	Aoc10C_language_dll();
 	hotkeyHook();
 	//LoadLibraryA("scout.dll");
 	selectAllProc(hModule);
 }
+//MQ SQ 
+//007D9000   F605 41527A00 01 TEST BYTE PTR DS : [7A5241] , 1
+//007D9007   74 0A            JE SHORT age2_x1_.007D9013
+//             Injection(0x504084, "E977A72A00");
+//Injection(0x4fccb3, "E9481C2B00");
+//Injection(0x505f54, "E9E7892A00");
+//Injection(0x506052, "E909892A00");
+//Injection(0x506068, "E913892A00");
+//Injection(0x50607d, "E91E892A00");
+//Injection(0x50636a, "E951862A00");
+//Injection(0x5070dd, "E9FE782A00");
+//Injection(0x4fdbbc, "E9BF0E2B00");
+
+
+
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
 
@@ -12987,7 +13003,7 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 		Aoc10CWidescreen(wideScreenCentred);
 		windowedMod(windowed);//todo set  the interface 1280,10244,800 % resolution
 		miniMapColor();
-		autoFarmAnFishTrapReseed();
+
 		Aoc10c_250pop();
 		Aoc10c_FixRecordingExploreStateBug();
 		selectAllHotkey(hModule);
