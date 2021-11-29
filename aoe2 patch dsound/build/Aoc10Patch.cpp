@@ -7166,7 +7166,10 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 
 							//005FF6F3   . 8B46 78        MOV EAX, DWORD PTR DS : [ESI + 78]
 							DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
-							DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+							//DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+							// 005FF71C   > 8B8E 08010000  MOV ECX,DWORD PTR DS:[ESI+108]
+							//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
+							DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x12C);
 							DWORD flagIdle2;
 							bool flagisidleres = false;
 							//0xFFFF     -1
@@ -7308,7 +7311,10 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 						//lol same as villager
 						//005FF6F3   . 8B46 78        MOV EAX,DWORD PTR DS:[ESI+78]
 						DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
-						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+						//DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+						// 005FF71C   > 8B8E 08010000  MOV ECX,DWORD PTR DS:[ESI+108]
+						//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
+						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x12C);
 						DWORD flagIdle2;
 						bool flagisidleres = false;
 						//0xFFFF     -1
