@@ -13274,7 +13274,7 @@ void __declspec(naked)  Aoc10C_MQ_Hook()
 			MOV BYTE PTR DS:[EAX+430h],0h
 			MOV ECX,DWORD PTR DS:[EDX+68h]
 			MOV WORD PTR DS:[EAX+42Eh],0h
-			MOV EDX,DWORD PTR DS:[EDI+1230h]
+			MOV EDX,DWORD PTR DS:[EDI+1230h]//selection? 
 			MOV EBX,DWORD PTR SS:[ESP+218h]
 			LEA EAX,DWORD PTR SS:[ESP+220h]
 			PUSH EDX
@@ -13282,7 +13282,7 @@ void __declspec(naked)  Aoc10C_MQ_Hook()
 			PUSH EAX
 			PUSH EBX
 			PUSH EBP
-			CALL aoc10c_007D9300// age2_x1_.007D9300
+			CALL aoc10c_007D9300// age2_x1_.007D9300//this is the sync function it think
 			_007D92E7:
 			POP EDI
 			POP ESI
@@ -13476,7 +13476,7 @@ void __declspec(naked)  Aoc10C_MQ_HookButton007D9360()
 		MOV ECX, DWORD PTR DS : [EDX + 1614h]
 		MOV EDX, DWORD PTR DS : [ECX + 4h]
 		AND EDX, EDX
-		//JLE short _007D940A
+		JLE short _007D940A
 		_007D938D:
 		MOV EDX, DWORD PTR DS : [7912A0h]
 		MOVSX EDI, BYTE PTR DS : [EAX + 6h]
@@ -13629,9 +13629,36 @@ void aoc10c_MQ()
 		//00466250   . 00             DB 00                                    ;  Index table to switch 004661D8
 		writeData(0x0466250,switcMQ,125);
 }
+void __declspec(naked)  Aoc10C_MQ_Hook_Button007D9360()
+{
+	__asm
+	{
+		//MOV ECX,DWORD PTR DS:[7912A0h]
+		//CALL Aoc10c_005E7560       ; age2_x1.005E7560
+		//LEA ECX,DWORD PTR DS:[EAX+1C4h]//eax = player
+		//MOV EAX,DWORD PTR DS:[EAX+268h]
+//
+//0052488C  |. 66:89A8 2C0400>MOV WORD PTR DS:[EAX+42C],BP
+//00524893  |. C680 30040000 >MOV BYTE PTR DS:[EAX+430],0
+//0052489A  |. 66:C780 2E0400>MOV WORD PTR DS:[EAX+42E],0
+//005248A3  |. 8B8F 30120000  MOV ECX,DWORD PTR DS:[EDI+1230]
+//005248A9  |. 8B97 1C120000  MOV EDX,DWORD PTR DS:[EDI+121C]//bacrack address from selection
+//005248AF  |. 51             PUSH ECX
+//005248B0  |. 8B4A 68        MOV ECX,DWORD PTR DS:[EDX+68]
+//005248B3  |. E8 4859F4FF    CALL age2_x1.0046A200
+
+
+	};
+}
+//0051E7AF  |> 8B5424 1C      MOV EDX,DWORD PTR SS:[ESP+1C]            ;  Case 12 of switch 0051E609
+void test()
+{
+	InjectHook(0x051E7AF, Aoc10C_MQ_Hook_Button007D9360, PATCH_JUMP);
+}
+
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
-
+	//test();
 	//LoadLibraryA("languageini.dll");
 	//slplogo();
 	//check if is not 1.0e
@@ -13649,7 +13676,7 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 		Aoc10c_250pop();
 		Aoc10c_FixRecordingExploreStateBug();
 		selectAllHotkey(hModule);
-		aoc10c_MQ();
+		//aoc10c_MQ();
 	}
 
 }
