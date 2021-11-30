@@ -13338,8 +13338,10 @@ void __declspec(naked)  Aoc10C_MQ_HookButton()
 		PUSH 0Bh
 		PUSH 25h
 		PUSH 25h
-		PUSH 1F8h
-		PUSH 157h
+/*		PUSH 1F8h
+		PUSH 157h*/	
+		PUSH 1EAh
+		PUSH 100h
 		LEA EDI, DWORD PTR DS : [_7A50D4]
 		PUSH 0h
 		PUSH 3EAh
@@ -13678,12 +13680,15 @@ DWORD _0052488A = 0x052488A;
 DWORD _0046A200 = 0x046A200;
 DWORD _0051E7AF = 0x051E7AF;
 DWORD _005248B8 = 0x05248B8;
+//DWORD _0052488A = 0x052488A;
 DWORD compterr=0x0;
 //0x0524885
 void __declspec(naked)  Aoc10C_MQ_Hook_Button007D9360()
 {
 	__asm
 	{
+		TEST BYTE PTR DS : [_7A5241] , 1h
+		je sq
 		call f_makequeue
 		//MOV ECX,DWORD PTR DS:[7912A0h]
 		//CALL Aoc10c_005E7560       ; age2_x1.005E7560
@@ -13721,6 +13726,11 @@ void __declspec(naked)  Aoc10C_MQ_Hook_Button007D9360()
 
 
 		JMP _005248B8  
+		sq:
+		MOV EAX, DWORD PTR DS : [7912A0h]
+		JMP _0052488A  
+
+
 		//loopbutton:	
 		//POP EDI
 		//POP ESI
@@ -13749,12 +13759,15 @@ void __declspec(naked)  Aoc10C_MQ_Hook_Button007D9360()
 //0051E7AF  |> 8B5424 1C      MOV EDX,DWORD PTR SS:[ESP+1C]            ;  Case 12 of switch 0051E609
 void MQSQ()
 {
+	InjectHook(0x0504084, Aoc10C_MQ_HookButton, PATCH_JUMP);//00504084   .-E9 77A72A00    JMP age2_x1.007AE800
+	InjectHook(0x4fdbbc, Aoc10C_MQ_HookButton007AEA80, PATCH_JUMP);//00504084   .-E9 77A72A00    JMP age2_x1.007AE800
+
 	InjectHook(0x0524885  , Aoc10C_MQ_Hook_Button007D9360, PATCH_JUMP);
 }
 
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
-	MQSQ();
+
 	//LoadLibraryA("languageini.dll");
 	//slplogo();
 	//check if is not 1.0e
@@ -13772,6 +13785,7 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 		Aoc10c_250pop();
 		Aoc10c_FixRecordingExploreStateBug();
 		selectAllHotkey(hModule);
+		MQSQ();
 		//aoc10c_MQ();
 	}
 
