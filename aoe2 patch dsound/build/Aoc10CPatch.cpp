@@ -12915,10 +12915,10 @@ void __declspec(naked)  Aoc10C_language_dllhook()
 		CALL ESI
 		CMP EAX, EBX
 		MOV Aoc10C_695388, EAX
-		JNZ short _773711D1
-		MOV DWORD PTR SS : [EBP + 64] , 1
+		/*JNZ short _773711D1
+		MOV DWORD PTR SS : [EBP + 64h] , 1
 		XOR EAX, EAX
-		JMP _0043BB45; age2_x1_.0043BB45
+		JMP _0043BB45; age2_x1_.0043BB45*/
 		_773711D1:
 		LEA ECX, DWORD PTR SS : [ESP + 24h]
 		PUSH ECX
