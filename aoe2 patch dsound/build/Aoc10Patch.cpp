@@ -6479,9 +6479,11 @@ void __declspec(naked)  Aoc10_GetVillagerStatusDisplayressources()
 		TEST EAX, EAX
 		JE restore
 		//00446397   > 8B8D 20180000  MOV ECX,DWORD PTR SS:[EBP+0x1820]
+		//005D1C5C   . 8B8D B4170000  MOV ECX,DWORD PTR SS:[EBP+17B4]
+
 
 		MOV Aoc10_FLAGShowPanelVilStatus, 1h
-		MOV ECX, DWORD PTR SS : [EAX + 01820h]
+		MOV ECX, DWORD PTR SS : [EAX + 017B4h]
 		TEST ECX, ECX
 		JE restore
 		MOV ECX, ESI
@@ -7173,7 +7175,7 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 							DWORD flagIdle2;
 							bool flagisidleres = false;
 							//0xFFFF     -1
-							if ((DWORD)ptr == 0xFFFFFFFF)
+							if ((DWORD)*ptr == 0xFFFFFFFF)
 							{
 								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
 								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
