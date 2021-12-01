@@ -8258,6 +8258,242 @@ void Aoc10_selectAllProc(HMODULE hModule)
 // Nop(0x042FC2C, 11);
 	CreateThread(nullptr, 0, Aoc10_hotKeyActionelectingThread, hModule, 0, nullptr);
 }
+
+
+DWORD Aoc10_ArrayBuildingSelected[40] = {};
+void Aoc10_cleanqueueeee()
+{
+	for (int i = 0; i < 40; i++)
+	{
+		Aoc10_ArrayBuildingSelected[i] = 0;
+	}
+}
+DWORD Aoc10_nbselectionnn;
+void Aoc10_makequeue()
+{
+	if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x6833D0), sizeof(UINT_PTR))
+		&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x6833D0 + 0x424), sizeof(UINT_PTR))
+		//&& !IsBadReadPtr(*(void**)(*(size_t*)0x7912A0 + 0x1C0), sizeof(UINT_PTR))
+		//&& !IsBadReadPtr(*(void**)(*(size_t*)0x7912A0 + 0x268), sizeof(UINT_PTR))
+		&& *(void**)(*(size_t*)0x6833D0 + 0x424) != NULL)
+	{
+		void* pplayer = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0);
+		if (pplayer != NULL)
+		{
+			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//get the good beging selection addrese
+			BYTE* NBSelect = (BYTE*)(void**)((size_t)pplayer + 0x268);//set select range
+			//nbselectionnn = *NBSelect;
+			void** sel_list = (void**)(lstSelect);
+			int cptbuilding = 0;
+			for (int i = 0; i < *NBSelect; i++)
+			{
+				void* master_obj = (void*)*(DWORD*)(lstSelect + i);
+				void* obj = (void*)*(DWORD*)((size_t)master_obj + 0x8);
+				int object_class = (int)*(BYTE*)((size_t)obj + 0x4);
+				if (object_class == 80)
+				{
+					*(Aoc10_ArrayBuildingSelected + cptbuilding) = (DWORD)master_obj;
+					cptbuilding++;
+					Aoc10_nbselectionnn++;
+				}
+				*sel_list++;
+			}
+		}
+	}
+}
+DWORD Aoc10_7A5241;
+DWORD Aoc10_7A50D4;
+char Aoc10_arr_SQ[10] = { "SQ" };
+char Aoc10_arr_MQ[10] = { "MQ" };
+DWORD Aoc10_00551390 = 0x04B61C0;//004B61C0  /$ 53             PUSH EBX
+DWORD Aoc10_7A50D8;
+DWORD Aoc10_7A50DC;
+DWORD Aoc10_7AF150;
+
+
+void __declspec(naked)  Aoc10_MQ_HookButton007AEB20()
+{
+	__asm {
+		MOV AL, BYTE PTR DS : [Aoc10_7A5241]
+		MOV ECX, DWORD PTR DS : [Aoc10_7A50D4]
+		MOV EDX, offset Aoc10_arr_SQ; ASCII "SQ"
+		AND AL, 1h
+		JE short _007AEB3A
+		MOV EDX, offset Aoc10_arr_MQ; ASCII "MQ"
+		_007AEB3A:
+		PUSH EDX
+		PUSH 0h
+		CALL Aoc10_00551390
+		RETN
+	}
+}
+
+
+DWORD Aoc10_00504D10 = 0x05098B4;//005098B4  |> 5F             POP EDI
+DWORD Aoc10_0050408A = 0x0508C6A;//00508C6A  |. 6A 00          PUSH 0
+DWORD Aoc10_0055FCE0 = 0x04ACC20;//004ACC20  /$ 8B81 94040000  MOV EAX,DWORD PTR DS:[ECX+494]
+//DWORD _0055D4F0 = 0x055D4F0;
+DWORD Aoc10_007AEB20 = (DWORD)Aoc10_MQ_HookButton007AEB20;
+void __declspec(naked)  Aoc10_MQ_HookButton()
+{
+	__asm {
+		PUSH 0h
+		MOV EDX, DWORD PTR DS : [ESI]
+		PUSH 0h
+		PUSH 0Bh
+		PUSH 25h
+		PUSH 25h
+		PUSH 1EAh
+		PUSH 100h
+		LEA EDI, DWORD PTR DS : [Aoc10_7A50D4]
+		PUSH 0h
+		PUSH 3EAh
+		PUSH EDI
+		PUSH ESI
+		MOV ECX, ESI
+		CALL DWORD PTR DS : [EDX + 108h]
+		TEST EAX, EAX
+		JE __00504D10
+		CALL Aoc10_007AEB20
+		MOV EAX, DWORD PTR DS : [EDI]
+		PUSH - 1h
+		PUSH 7601h
+		PUSH EAX
+		MOV ECX, ESI
+		CALL Aoc10_0055FCE0
+		PUSH 1h
+		MOV EDX, DWORD PTR DS : [ESI]
+		PUSH 0h
+		JMP Aoc10_0050408A
+
+
+		__00504D10 :
+		JMP Aoc10_00504D10
+	}
+}
+DWORD Aoc10_f_makequeue = (DWORD)Aoc10_makequeue;
+DWORD Aoc10_f_cleanqueueeee = (DWORD)Aoc10_cleanqueueeee;
+DWORD Aoc10_0052488A = 0x04ECD3A;//004ECD3A  |. 56             PUSH ESI
+DWORD Aoc10_0046A200 = 0x05A1A30;//CALL 005A1A30
+DWORD Aoc10_0051E7AF = 0x04E6CCF;//004E6CCF  |> 8B5424 1C      MOV EDX,DWORD PTR SS:[ESP+1C]            ;  Case 12 of switch 004E6B29
+DWORD Aoc10_005248B8 = 0x04ECD68;//004ECD68  |> 5F             POP EDI
+//DWORD _0052488A = 0x052488A;
+DWORD Aoc10_compterr = 0x0;
+//0x0524885
+void __declspec(naked)  Aoc10_MQ_Hook_Button007D9360()
+{
+	__asm
+	{
+		TEST BYTE PTR DS : [Aoc10_7A5241] , 1h
+		je sq
+		call Aoc10_f_makequeue
+		//MOV ECX,DWORD PTR DS:[7912A0h]
+		//CALL Aoc10c_005E7560       ; age2_x1.005E7560
+		//mov ECX,DWORD PTR DS:[EAX+1C4h]//eax = player
+		//mov nbselectionnn, ECX
+		mov Aoc10_compterr, 0h
+
+
+		loop1 :
+		MOV EAX, DWORD PTR DS : [6833D0h]
+		PUSH ESI
+		PUSH EBP
+		MOV WORD PTR DS : [EAX + 42Ch] , BP
+		MOV BYTE PTR DS : [EAX + 430h] , 0h
+		MOV WORD PTR DS : [EAX + 42Eh] , 0h
+		MOV ECX, Aoc10_compterr
+		mov ECX, Aoc10_ArrayBuildingSelected[TYPE Aoc10_ArrayBuildingSelected * ECX]
+
+		//MOV ECX,DWORD PTR DS:[EDI+1230h]
+		MOV EDX, DWORD PTR DS : [EDI + 121Ch]
+
+		PUSH ECX
+
+		MOV ECX, DWORD PTR DS : [EDX + 68h]
+
+		CALL Aoc10_0046A200
+
+		INC Aoc10_compterr
+		mov eax, Aoc10_compterr
+		CMP eax, Aoc10_nbselectionnn
+		jl loop1
+		call Aoc10_f_cleanqueueeee
+		mov Aoc10_nbselectionnn, 0h
+
+
+		JMP Aoc10_005248B8
+		sq :
+		MOV EAX, DWORD PTR DS : [6833D0h]
+		JMP Aoc10_0052488A
+ 
+	};
+}
+DWORD Aoc10_00543A40 = 0x04C4FF0;//004C4FF0  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
+//DWORD _00551390 = 0x0551390;
+char Aoc10_multiplequeue[25] = { "Multiple Queue" };
+void __declspec(naked)  Aoc10_MQ_HookButton007AEB50()
+{
+	__asm {
+		//MOV EDX, DWORD PTR DS : [7912A0h]
+		MOV EDX, DWORD PTR DS : [6833D0h]
+		MOV AL, BYTE PTR DS : [Aoc10_7A5241]
+		MOV ECX, DWORD PTR DS : [EDX + 1DCh]
+		AND AL, 1h
+		JNZ short _007AEB79
+		MOV EAX, 1h
+		PUSH offset Aoc10_arr_MQ; ASCII "MQ"
+		OR BYTE PTR DS : [Aoc10_7A5241] , 1h
+		JMP short _007AEB87
+		_007AEB79 :
+		XOR EAX, EAX
+		PUSH offset Aoc10_arr_SQ; ASCII "SQ"
+		AND BYTE PTR DS : [Aoc10_7A5241] , 0FEh
+		_007AEB87 :
+		CMP BYTE PTR DS : [EDX + 9B2h] , 0h
+		JNZ short _007AEB9D
+		PUSH EAX
+		PUSH offset Aoc10_multiplequeue; ASCII "Multiple Queue"
+		PUSH 1h
+		CALL Aoc10_00543A40
+		_007AEB9D :
+		MOV ECX, DWORD PTR DS : [Aoc10_7A50D4]
+		PUSH 0h
+		CALL Aoc10_00551390
+		RETN
+	}
+}
+//DWORD _007AEAE0 = (DWORD)Aoc10C_MQ_HookButton007AEAE0;
+DWORD Aoc10_007AEB50 = (DWORD)Aoc10_MQ_HookButton007AEB50;
+//DWORD _007AEBB0 = (DWORD)Aoc10C_MQ_HookButton007AEBB0;
+DWORD Aoc10_004FDBC2 = 0x0502823;//00502823   . 75 0B          JNZ SHORT age2_x1.00502830
+void __declspec(naked)  Aoc10_MQ_HookButton007AEA80()
+{
+	__asm {
+		CMP EBP, EDI
+		JNZ short _007AEAB1
+
+		CMP EBX, DWORD PTR DS : [Aoc10_7A50D4]
+		JNZ short _007AEAB1// _007AEAA2
+		MOV ECX, ESI
+		CALL Aoc10_007AEB50
+
+		_007AEAB1:
+		CMP EBX, DWORD PTR DS : [ESI + 0D40h]
+		JMP Aoc10_004FDBC2
+
+
+	}
+}
+void Aoc10_MQSQ()
+{
+	InjectHook(0x0508C64, Aoc10_MQ_HookButton, PATCH_JUMP);//00508C64  |. 6A 01          PUSH 1
+	InjectHook(0x050281D, Aoc10_MQ_HookButton007AEA80, PATCH_JUMP);//0050281D   > 3B9E 400D0000  CMP EBX,DWORD PTR DS:[ESI+D40]
+
+	InjectHook(0x04ECD35, Aoc10_MQ_Hook_Button007D9360, PATCH_JUMP);//004ECD35  |> A1 D0336800    MOV EAX,DWORD PTR DS:[6833D0]
+
+
+}
+
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 {
 	Aoc10Widescreen(wideScreenCentred);
@@ -8271,4 +8507,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 	Aoc10_hotkeyHook();
 	Aoc10_language_dll();
 	Aoc10_selectAllProc(hModule);
+	Aoc10_MQSQ();
 }
