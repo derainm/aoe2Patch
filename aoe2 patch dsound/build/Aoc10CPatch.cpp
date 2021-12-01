@@ -1,10 +1,10 @@
 ﻿#include "Aoc10CPatch.h"
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
-#include <assert.h>
-#include <iostream>
-#include <fstream>
-#include <string>
+//#include <assert.h>
+//#include <iostream>
+//#include <fstream>
+//#include <string>
 
 DWORD Aoc10C_H;
 DWORD Aoc10C_V;
@@ -3511,6 +3511,31 @@ void __declspec(naked) fixRecordInterfaceCentred()
 
 	}
 }
+
+//DWORD Aoc10_004D998C = 0x04D998C;
+DWORD Aoc10c_Res__X = (DWORD)GetSystemMetrics(SM_CXSCREEN);
+DWORD Aoc10c_Res__Y = (DWORD)GetSystemMetrics(SM_CYSCREEN);
+//0x041CBE6, 
+DWORD Aoc10c_0041BD2B = 0x05E38FC;//005E38FC   > 8B8D DC010000  MOV ECX,DWORD PTR SS:[EBP+1DC]
+//DWORD _getscreenEax = 0x041BD2B;
+void __declspec(naked)  Aoc10c_setScreenRes()
+{
+	__asm {
+
+		MOV EAX, DWORD PTR DS : [EBP + 28h]
+		MOV ECX, Aoc10c_Res__X
+		MOV DWORD PTR DS : [EAX + 8F4h] , ECX // 320h
+		MOV ECX, DWORD PTR DS : [EBP + 28h]
+		//MOV _getscreenEax, EAX
+		MOV EAX, Aoc10c_Res__Y
+		MOV DWORD PTR DS : [ECX + 8FCh] , EAX//258
+		MOV  Aoc10c_Res__Y, EAX
+		JMP Aoc10c_0041BD2B
+
+
+
+	}
+}
 void Aoc10CWidescreen(bool wideScreenCentred)
 {
 
@@ -3584,6 +3609,9 @@ void Aoc10CWidescreen(bool wideScreenCentred)
 		writeByte(0x051FBF6, 0xEB);
 		writeByte(0x051FBF6+1, 0x46);
 	}
+	//force to start widescreen in full screen
+	InjectHook((void*)0x05E3896, Aoc10c_setScreenRes, PATCH_JUMP);//005E3896   . B9 00040000    MOV ECX,400
+
 }
 void noStartup()
 {
@@ -3947,7 +3975,7 @@ TShape::copy(void)
 	int size;
 	size = this->size;
 	data = (uchar*)aoemalloc(size);
-	assert(data);
+	//assert(data);
 	memcpy(data, this->slp, size);
 	this->dtor();
 	this->slp = (SlpHeader*)data;
@@ -8539,8 +8567,8 @@ void ManageSelection(int i, void* player, int Playerciv)
 		}
 		return;
 	}
-	try
-	{
+	//try
+	//{
 
 
 
@@ -9354,11 +9382,11 @@ void ManageSelection(int i, void* player, int Playerciv)
 				}
 			}
 		}
-	}
-	catch (const std::exception&)
-	{
-		return;
-	}
+	//}
+	//catch (const std::exception&)
+	//{
+	//	return;
+	//}
 
 	//else
 	//printf("player is empty");
@@ -9787,24 +9815,24 @@ void __declspec(naked)  getItemId()
 	}
 }
 
-void saveInFileConfig()
-{
-	ofstream myfile("Voobly Mods\\AOC\\Patches\\v1.5 RC DE features\\config.ini");
-	if (myfile.is_open())
-	{
-		//myfile << "This is a line.\n";
-		//myfile << "This is another line.\n";
-		for (int i = 0; i < 15; i++) {
-			for (int j = 0; j < 3; j++)
-			{
-				myfile << Hotkeys[i][j] << " ";
-			}
-			myfile << "\n";
-		}
-		myfile.close();
-	}
-
-}
+//void saveInFileConfig()
+//{
+//	ofstream myfile("Voobly Mods\\AOC\\Patches\\v1.5 RC DE features\\config.ini");
+//	if (myfile.is_open())
+//	{
+//		//myfile << "This is a line.\n";
+//		//myfile << "This is another line.\n";
+//		for (int i = 0; i < 15; i++) {
+//			for (int j = 0; j < 3; j++)
+//			{
+//				myfile << Hotkeys[i][j] << " ";
+//			}
+//			myfile << "\n";
+//		}
+//		myfile.close();
+//	}
+//
+//}
 //0: Select all idle villagers(default Ctrl + .)
 //1 : Select all idle army(default Ctrl + , )
 //2 : Select all trade carts(default Ctrl + M)
@@ -13653,7 +13681,7 @@ void makequeue()
 		void* pplayer = (void*)sub_5E7560((int)*(void**)0x7912A0);
 		if (pplayer != NULL)
 		{
-			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//get the good beging selection addrese
+			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C4);//0x1C0get the good beging selection addrese
 			BYTE* NBSelect = (BYTE*)(void**)((size_t)pplayer + 0x268);//set select range
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
