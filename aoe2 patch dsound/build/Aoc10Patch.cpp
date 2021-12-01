@@ -7175,7 +7175,7 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 							DWORD flagIdle2;
 							bool flagisidleres = false;
 							//0xFFFF     -1
-							if ((DWORD)*ptr == 0xFFFFFFFF)
+							if ((DWORD)ptr == 0xFFFFFFFF)
 							{
 								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
 								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
