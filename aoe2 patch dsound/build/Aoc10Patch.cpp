@@ -1,10 +1,10 @@
 #include "Aoc10Patch.h"
 typedef uintptr_t addr;
 #include "../src/MemoryMgr.h"
-#include <assert.h>
-#include <iostream>
-#include <fstream>
-#include <string>
+//#include <assert.h>
+//#include <iostream>
+//#include <fstream>
+//#include <string>
 DWORD Aoc10_H;
 DWORD Aoc10_V;
 void Aoc10_interfaceId()
@@ -3502,6 +3502,31 @@ void __declspec(naked) AOC10_fixRecordInterfaceCentred()
 
 	}
 }
+
+//DWORD Aoc10_004D998C = 0x04D998C;
+DWORD Aoc10_Res__X = (DWORD)GetSystemMetrics(SM_CXSCREEN);
+DWORD Aoc10_Res__Y = (DWORD)GetSystemMetrics(SM_CYSCREEN); 
+//0x041CBE6, 
+DWORD Aoc10_0041BD2B = 0x041CC4C;//0041CC4C  |> 8B8D DC010000  MOV ECX,DWORD PTR SS:[EBP+1DC]
+//DWORD _getscreenEax = 0x041BD2B;
+void __declspec(naked)  Aoc10_setScreenRes()
+{
+	__asm {
+ 
+		MOV EAX, DWORD PTR DS : [EBP + 28h]
+		MOV ECX, Aoc10_Res__X
+		MOV DWORD PTR DS : [EAX + 8F4h] , ECX // 320h
+		MOV ECX, DWORD PTR DS : [EBP + 28h]
+		//MOV _getscreenEax, EAX
+		MOV EAX, Aoc10_Res__Y
+		MOV DWORD PTR DS : [ECX + 8FCh] , EAX//258
+		MOV  Aoc10_Res__Y, EAX
+		JMP Aoc10_0041BD2B
+
+
+
+	}
+}
 void Aoc10Widescreen(bool wideScreenCentred)
 {
 	//force to user interface drs instead of .ws 
@@ -3577,6 +3602,10 @@ void Aoc10Widescreen(bool wideScreenCentred)
 
 
 	}
+	//force to start widescreen in full screen
+	InjectHook((void*)0x041CBE6, Aoc10_setScreenRes, PATCH_JUMP);//0041CBE6  |. B9 00040000    MOV ECX,400
+
+
 }
 
 
@@ -3603,6 +3632,9 @@ void AOC10_nocd()
 	writeByte(0x04FFA68, 0xEB);
 	//0050A448
 	writeByte(0x04FFA68, 0xEB);
+	//00503E24   . 7D 26          JGE SHORT age2_x1.00503E4C
+	writeByte(0x0503E24, 0xEB);
+
 }
 
 DWORD Aoc10_005A3B87 = 0x0466ED7;
@@ -6940,8 +6972,8 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 		}
 		return;
 	}
-	try
-	{
+	//try
+	//{
 
 
 
@@ -7761,11 +7793,11 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 				}
 			}
 		}
-	}
-	catch (const std::exception&)
-	{
-		return;
-	}
+	//}
+	//catch (const std::exception&)
+	//{
+	//	return;
+	//}
 
 	//else
 	//printf("player is empty");
@@ -8282,7 +8314,7 @@ void Aoc10_makequeue()
 		void* pplayer = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0);
 		if (pplayer != NULL)
 		{
-			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//get the good beging selection addrese
+			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C4);//0x1C0get the good beging selection addrese
 			BYTE* NBSelect = (BYTE*)(void**)((size_t)pplayer + 0x268);//set select range
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
