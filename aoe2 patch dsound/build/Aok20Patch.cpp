@@ -9782,6 +9782,381 @@ void AOK20_MQSQ()
 	InjectHook(0x04E3EC5, AOK20_MQ_Hook_Button007D9360, PATCH_JUMP);//004E3EC5  |> A1 C4456600    MOV EAX,DWORD PTR DS:[6645C4]
 
 }
+DWORD Aok20_0052125C = 0x04E0B8C;//004E0B8C  |> 8B4C24 18      |MOV ECX,DWORD PTR SS:[ESP+18]           ;  Default case of switch 004E0ADA
+
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9000()
+{
+	__asm {
+		INC DWORD PTR SS : [ESP + 48h]
+		TEST AL, AL
+		JE __0052125C
+		INC DWORD PTR SS : [ESP + 4Ch]
+		DEC DWORD PTR SS : [ESP + 48h]
+		JMP Aok20_0052125C
+
+		__0052125C :
+		JMP Aok20_0052125C
+	};
+}
+char Aok20_007B91B0[25] = { "%s: %d" };
+DWORD Aok20_00521536 = 0x04E0E6F;//004E0E6F  |. 6A 00          |PUSH 0
+//DWORD _0061442B = 0x061442B;
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9019()
+{
+	__asm {
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		PUSH 13E2h
+		MOV EAX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EAX + 24h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOV EAX, DWORD PTR SS : [ESP + EAX * 4h + 20h]
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aok20_007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL u_005FCE14//_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP Aok20_00521536
+	};
+}
+
+DWORD Aok20_0054A510 = 0x04B6F80;//004E0CA1  |. E8 DA62FDFF    CALL empires2.004B6F80
+DWORD Aok20_0052155F = 0x04E0E9B;//004E0E9B  |> 8B4424 14      |MOV EAX,DWORD PTR SS:[ESP+14]
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9068()
+{
+	__asm {
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		PUSH 1406h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 20h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 22h]
+		TEST EAX, EAX
+		JLE short _007B90D6
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aok20_007B91B0; ASCII "%s: %d"// age2_x1_.007B91B0
+		PUSH EDX
+		CALL u_005FCE14//_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH 0h
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH EDX
+		PUSH 0h
+		LEA EAX, DWORD PTR SS : [ESP + 74h]
+		PUSH 4AEFh
+		PUSH EAX
+		PUSH 5h
+		CALL Aok20_0054A510
+		MOV ECX, DWORD PTR DS : [EDI]
+		PUSH 1h
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 14h]
+		_007B90D6 :
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		PUSH 156Ah
+		MOV EDX, DWORD PTR DS : [ECX]
+		CALL DWORD PTR DS : [EDX + 20h]
+		MOV DWORD PTR SS : [ESP + 10h] , EAX
+		MOV EAX, DWORD PTR SS : [ESP + 14h]
+		MOV ECX, DWORD PTR SS : [ESP + 10h]
+		LEA EDX, DWORD PTR SS : [ESP + 54h]
+		MOVSX EAX, WORD PTR SS : [ESP + EAX * 4h + 20h]
+		TEST EAX, EAX
+		JLE __0052155F
+		PUSH EAX
+		PUSH ECX
+		PUSH offset Aok20_007B91B0; ASCII "%s: %d"//age2_x1_.007B91B0
+		PUSH EDX
+		CALL u_005FCE14//_0061442B
+		MOV EAX, DWORD PTR DS : [ESI + 8h]
+		MOV ECX, DWORD PTR DS : [ESI + 4h]
+		MOV EDX, DWORD PTR DS : [ESI]
+		ADD ESP, 10h
+		SUB EDI, 4h
+		INC EBX
+		JMP Aok20_00521536
+
+		__0052155F :
+		JMP Aok20_0052155F
+	};
+}
+DWORD Aok20_0042FC78 = 0x05C67A8;//005C67A8   . 74 03          JE SHORT empires2.005C67AD
+
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9130()
+{
+	__asm {
+		MOV WORD PTR SS : [ESP + 24h] , DX
+		AND EBX, 0FFh
+		CMP BYTE PTR DS : [EAX + 4] , 46h
+		MOV BH, BYTE PTR DS : [EAX + 16h]
+		JB short _007B9150
+		MOVZX EDX, BYTE PTR DS : [EAX + 1B5h]
+		SHL EDX, 10h
+		OR EBX, EDX
+		_007B9150 :
+		MOV EDX, DWORD PTR DS : [EAX + 50h]
+		CMP BL, 3h
+		MOV WORD PTR SS : [ESP + 26h] , DX
+		JMP Aok20_0042FC78
+	};
+}
+DWORD Aok20_0042FCCF = 0x05C67FF;//005C67FF   > 8B4424 2C      MOV EAX,DWORD PTR SS:[ESP+2C]
+DWORD Aok20_0042FCB0 = 0x05C67E0;//005C67E0   > 8B57 04        MOV EDX,DWORD PTR DS:[EDI+4]
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9160()
+{
+	__asm {
+		CMP BL, BYTE PTR DS : [EAX + 97h]
+		JE __0042FCB0
+		CMP BH, BYTE PTR DS : [EAX + 16h]
+		JNZ short _007B91A0
+		TEST EBX, 0FFFF0000h
+		MOV CL, BYTE PTR DS : [EAX + 4h]
+		JNZ short _007B91A0
+		CMP CL, 46h
+		MOV CX, WORD PTR SS : [ESP + 2Ah]
+		JNZ short _007B91A0
+		CMP CX, WORD PTR DS : [EAX + 50h]
+		JNZ short _007B91A0
+		CMP CX, 0FFFFh
+		MOV CL, BYTE PTR DS : [EAX + 1B5h]
+		JE short _007B91A0
+		AND CL, CL
+		JE __0042FCB0
+		_007B91A0 :
+		JMP Aok20_0042FCCF
+			__0042FCB0 :
+		JMP Aok20_0042FCB0
+	};
+}
+ 
+void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B905E()
+{
+	__asm {
+		INC WORD PTR SS : [ESP + 2Eh]
+		JMP Aok20_0052125C
+	};
+}
+DWORD aok20_007B905E = (DWORD)Aok20_FixStatisticsDisplayhook007B905E;
+
+void  Aok20_FixStatisticsDisplay()
+{
+	//004E0B7E  |. 84C0           |TEST AL,AL
+	InjectHook(0x04E0B7E, Aok20_FixStatisticsDisplayhook007B9000, PATCH_JUMP);
+	//004E0E13  |> 8B0D C4456600  |MOV ECX,DWORD PTR DS:[6645C4]           ;  Case A of switch 004E0D4F
+	InjectHook(0x04E0E13, Aok20_FixStatisticsDisplayhook007B9019, PATCH_JUMP);
+	//004E0D98  |> 8B0D C4456600  |MOV ECX,DWORD PTR DS:[6645C4]           ;  Case 3 of switch 004E0D4F
+	InjectHook(0x04E0D98, Aok20_FixStatisticsDisplayhook007B9068, PATCH_JUMP);
+	//005C67A0   . 80FB 03        CMP BL,3
+	InjectHook(0x05C67A0, Aok20_FixStatisticsDisplayhook007B9130, PATCH_JUMP);
+	//005C67D8   . 3898 97000000  CMP BYTE PTR DS:[EAX+97],BL
+	InjectHook(0x05C67D8, Aok20_FixStatisticsDisplayhook007B9160, PATCH_JUMP);
+	//over write switch case
+	writeDword(0x04E0F14, aok20_007B905E);//004E0F14   . 680B4E00       DD empires2.004E0B68
+	writeDword(0x04E0FC8, aok20_007B905E);//004E0FC8   . 680B4E00       DD empires2.004E0B68
+
+ 
+
+
+	//004DB3EA  |. BF 0E000000    MOV EDI,0E
+	writeByte(0x04DB3EB, 0x10);//004E3690  |. BF 0E000000    MOV EDI,0E
+	//004DB3FD  |. 66:83FF 0E     |CMP DI,0E
+	writeByte(0x4DB400, 0x10);//004E36A3  |. 66:83FF 0E     |CMP DI,0E
+	//004DB411  |. 66:83FF 0E     |CMP DI,0E
+	writeByte(0x04DB414, 0x10);//004E36B7  |. 66:83FF 0E     |CMP DI,0E
+	//004D735D  |. B9 0F000000    MOV ECX,0F
+	writeByte(0x04D735E, 0x11);//004DF1EC  |. B9 0F000000    MOV ECX,0F
+	//004D9046  |. 83FD 0F        |CMP EBP,0F
+	writeByte(0x04D9048, 0x11);//004E0FCE  |. 83FD 0F        |CMP EBP,0F
+	//004D9EE9  |. BB 0F000000    MOV EBX,0F
+	writeByte(0x04D9EEA, 0x11);//004E20D0  |. BB 0F000000    MOV EBX,0F
+	//004DA6C7  |. BD 0F000000    MOV EBP,0F 
+	writeByte(0x04DA6C8, 0x11);//004E2907  |. BD 0F000000    MOV EBP,0F
+	//004DB4DE  |. BD 0F000000    MOV EBP,0F
+	writeByte(0x04DB4DF, 0x11);//004E3784  |. BD 0F000000    MOV EBP,0F
+	//004E06BC  |> B8 0F000000    MOV EAX,0F
+	writeByte(0x04E06BD, 0x11);//004E92AC  |> B8 0F000000    MOV EAX,0F
+	//004E0A01  |> 83FB 0F        CMP EBX,0F
+	writeByte(0x04E0A03, 0x11);//004E95F2  |> 83FB 0F        CMP EBX,0F
+	//004E0A0A  |. BE 0F000000    MOV ESI,0F
+	writeByte(0x04E0A0B, 0x11);//004E95FB  |. BE 0F000000    MOV ESI,0F
+	//004E1096  |. C74424 18 0F00>MOV DWORD PTR SS:[ESP+18],0F
+	writeByte(0x04E109A, 0x11);//004E9C72 
+	//004E17C6  |> B8 0F000000    MOV EAX,0F
+	writeByte(0x04E17C7, 0x11);//004EA40F  |> B8 0F000000    MOV EAX,0F
+	//writeByte(0x523f0b, 0x11);//0x523f0b
+	//004E359A  |. BD 0F000000    MOV EBP,0F
+	writeByte(0x04E359B, 0x11);//004EC3DA  |. BD 0F000000    MOV EBP,0F
+	//004E0EAD  |. BE 0F000000    MOV ESI,0F
+	writeByte(0x04E0EAE, 0x11);//004E9A91  |. BE 0F000000    MOV ESI,0F
+	//004E0D33  |> B9 7B040000    MOV ECX,47B
+	//481 +2 = 483    | 47B +2 = 47D
+	writeByte(0x04E0D34, 0x7D);//004E991A  |> B9 81040000    MOV ECX,481
+	//004E1311  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E1312, 0x7D);//004E9F09  |. B9 81040000    MOV ECX,481
+	//004E1419  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E141A, 0x7D);//004EA017  |. B9 81040000    MOV ECX,481
+	//004E14FD  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E14FE, 0x7D);//004EA10A  |. B9 81040000    MOV ECX,481
+	//004E15A2  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E15A3, 0x7D);//004EA1D0  |. B9 81040000    MOV ECX,481
+	//004E1704  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E1705, 0x7D);//004EA34A  |. B9 81040000    MOV ECX,481
+	//004E178E  |. B9 7B040000    MOV ECX,47B
+	writeByte(0x04E178F, 0x7D);//004EA3DA  |. B9 81040000    MOV ECX,481
+	//004DA604  |. 83EC 48        SUB ESP,48
+	writeByte(0x04DA606, 0x54); //004E2844 | . 83EC 48        SUB ESP, 48
+	//004DA624  |. 83C4 48        ADD ESP,48
+	writeByte(0x04DA626, 0x54);//004E2864  |. 83C4 48        ADD ESP,48
+	//004DB591  |. 83C4 48        ADD ESP,48;
+	writeByte(0x04DB593, 0x54);//004E3837  |. 83C4 48        ADD ESP,48
+	//004DA60A  |. 8B4C24 50      MOV ECX,DWORD PTR SS:[ESP+50]
+	writeByte(0x04DA60D, 0x5C);//004E284A  |. 8B4C24 50      MOV ECX,DWORD PTR SS:[ESP+50]
+	//004E0C25  |. 8B8D E8110000  MOV ECX,DWORD PTR SS:[EBP+11E8]
+	//11E8 + 8 = 11F0
+	writeByte(0x04E9814, 0xF0);//004E9812  |. 8B8D 00120000  MOV ECX,DWORD PTR SS:[EBP+1200]
+	//writeByte(0x04E9814 + 1, 0x12);
+	//004E0C32  |. 8B8D E8110000  MOV ECX,DWORD PTR SS:[EBP+11E8]
+	writeByte(0x04E0C34, 0xF0);//004E0C32  |. 8B8D E8110000  MOV ECX,DWORD PTR SS:[EBP+11E8]
+	//writeByte(0x04E9821 + 1, 0x12);
+	//004E0C8A  |. 8B8D E4110000  MOV ECX,DWORD PTR SS:[EBP+11E4]
+	//11E4 +8  =11EC
+	writeByte(0x04E0C8C, 0xEC);//004E9877  |. 8B8D FC110000  MOV ECX,DWORD PTR SS:[EBP+11FC]
+	//writeByte(0x04E9879 + 1, 0x12);
+	//004E0CA6  |. 8B8D E4110000  MOV ECX,DWORD PTR SS:[EBP+11E4]
+	writeByte(0x04E0CA8, 0xEC);//004E9890  |. 8B8D FC110000  MOV ECX,DWORD PTR SS:[EBP+11FC]
+	//writeByte(0x04E9892 + 1, 0x12);
+	//004E0D15  |. 8B8D E0110000  MOV ECX,DWORD PTR SS:[EBP+11E0]
+	writeByte(0x04E0D17, 0xE8);//004E98FC  |. 8B8D F8110000  MOV ECX,DWORD PTR SS:[EBP+11F8]
+	//writeByte(0x04E98FE + 1, 0x12);
+	//004E0D22  |. 8B8D E0110000  MOV ECX,DWORD PTR SS:[EBP+11E0]
+	writeByte(0x04E0D24, 0xE8);//004E9909  |. 8B8D F8110000  MOV ECX,DWORD PTR SS:[EBP+11F8]
+	//writeByte(0x04E990b + 1, 0x12);
+	//004E1230  |. 8B8F E8110000  MOV ECX,DWORD PTR DS:[EDI+11E8]
+	writeByte(0x04E1232, 0xF0);//004E9E1C  |. 8B8F 00120000  MOV ECX,DWORD PTR DS:[EDI+1200]
+	//writeByte(0x04E9E1E + 1, 0x12);
+	//004E1243  |. 8B8F E8110000  MOV ECX,DWORD PTR DS:[EDI+11E8]
+	writeByte(0x04E1245, 0xF0);//004E9E29  |. 8B8F 00120000  MOV ECX,DWORD PTR DS:[EDI+1200]
+	//writeByte(0x04E9E2b + 1, 0x12);
+	//004DC084  |> 39AE E8110000  CMP DWORD PTR DS:[ESI+11E8],EBP
+	writeByte(0x04DC086, 0xF0);//004E4466  |> 8B86 00120000  MOV EAX,DWORD PTR DS:[ESI+1200]
+	//writeByte(0x04E4468 + 1, 0x12);
+	/*//writeByte(0x51b121, 0x10);004E0A01   > 8311 0F        ADC DWORD PTR DS:[ECX],0F
+	writeByte(0x04E3691, 0x10);//004E3690  |. BF 0E000000    MOV EDI,0E
+	//writeByte(0x51b136, 0x10);
+	writeByte(0x04E36A6, 0x10);//004E36A3  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x51b14a, 0x10);
+	writeByte(0x04E36BA, 0x10);//004E36B7  |. 66:83FF 0E     |CMP DI,0E
+	//writeByte(0x516c7d, 0x11);
+	writeByte(0x04DF1Ed, 0x11);//004DF1EC  |. B9 0F000000    MOV ECX,0F
+	//writeByte(0x518a60, 0x11);
+	writeByte(0x04E0FD0, 0x11);//004E0FCE  |. 83FD 0F        |CMP EBP,0F
+	//writeByte(0x519b61, 0x11);
+	writeByte(0x04E20D1, 0x11);//004E20D0  |. BB 0F000000    MOV EBX,0F
+	//writeByte(0x51a398, 0x11);
+	writeByte(0x04E2908, 0x11);//004E2907   . BD 11000000    MOV EBP,11
+	//writeByte(0x51b215, 0x11);
+	writeByte(0x04E3785, 0x11);//004E3784   . BD 11000000    MOV EBP,11
+	//writeByte(0x520d8d, 0x11);
+	writeByte(0x04E92AD, 0x11);//004E92AC  |> B8 11000000    MOV EAX,11
+	//writeByte(0x5210d4, 0x11);
+	writeByte(0x04E95F4, 0x11);//004E95F2  |> 83FB 11        CMP EBX,11
+	//writeByte(0x5210dc, 0x11);
+	writeByte(0x04E95FC, 0x11);//004E95FB  |. BE 11000000    MOV ESI,11
+	//writeByte(0x521756, 0x11);
+	writeByte(0x04E9C76, 0x11);//004E9C72  |. C74424 10 1100>MOV DWORD PTR SS:[ESP+10],11
+	//writeByte(0x521ef0, 0x11);
+	writeByte(0x04EA410, 0x11);//004EA40F  |> B8 11000000    MOV EAX,11
+	//writeByte(0x523f0b, 0x11);
+	writeByte(0x04EC3DB, 0x11);//004EC3DA  |. BD 11000000    MOV EBP,11
+	//writeByte(0x521572, 0x11);
+	writeByte(0x04E9A92, 0x11);//004E9A91   . BE 11000000    MOV ESI,11
+	//writeByte(0x5213fb, 0x83);
+	writeByte(0x04E991B, 0x83);//004E991A   > B9 83040000    MOV ECX,483
+	//writeByte(0x5219ea, 0x83);
+	writeByte(0x04E9F0A, 0x83);//004E9F09  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521af8, 0x83);
+	writeByte(0x04EA018, 0x83);//004EA017  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521beb, 0x83);
+	writeByte(0x04EA10B, 0x83);//004EA10A  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521cb1, 0x83);
+	writeByte(0x04EA1D1, 0x83);//004EA1D0  |. B9 83040000    MOV ECX,483
+	//writeByte(0x521e2b, 0x83);*/
+	//writeByte(0x521e2b, 0x83);
+	//writeByte(0x521ebb, 0x83);
+	//writeByte(0x51a2d6, 0x54);
+	//writeByte(0x51a2f6, 0x54);004DB591   . 835448 C2 08   ADC DWORD PTR DS:[EAX+ECX*2-3E],8
+	//writeByte(0x51b2c9, 0x54);
+	//writeByte(0x51a2dd, 0x5C);
+	//004E0ACA  |. FF4424 44      |INC DWORD PTR SS:[ESP+44]
+	writeByte(0x04E0ACD, 0x50);//004E96BA   . FF4424 44      INC DWORD PTR SS:[ESP+44]
+	// 004E0E3A | . 68 2B500000 | PUSH 502B
+	writeByte(0x04E0E3B, 0x20);//004E9A21  |. 68 2B500000    |PUSH 502B
+	//004E0E28  |. 68 22500000    |PUSH 5022
+	writeByte(0x04E0E29, 0x17);//004E9A0F  |. 68 22500000    |PUSH 5022
+	//004E0B3D  |> FF4424 38      |INC DWORD PTR SS:[ESP+38]                  ;  Cases D6,103 of switch 004E0ADA
+	writeByte(0x04E0B40, 0x44);//004E972D  |> FF4424 38      |INC DWORD PTR SS:[ESP+38]               ;  Cases D6,103 of switch 004E96CA
+	//004E0E07  |. 68 20500000    |PUSH 5020
+	writeByte(0x04E0E08, 0x1D);//004E99EE  |. 68 20500000    |PUSH 5020
+	//004E0B49  |> FF4424 34      |INC DWORD PTR SS:[ESP+34]                  ;  Cases 78,162 of switch 004E0ADA
+	writeByte(0x04E0B4C, 0x40);//004E9739  |> FF4424 34      |INC DWORD PTR SS:[ESP+34]               ;  Cases 78,162 of switch 004E96CA
+	//004E0DF8  |. 68 1F500000    |PUSH 501F
+	writeByte(0x04E0DF9, 0x1C);//004E99DF  |. 68 1F500000    |PUSH 501F
+	//004E0B09  |> FF4424 48      |INC DWORD PTR SS:[ESP+48]                  ;  Cases 38,39 of switch 004E0ADA
+	writeByte(0x04E0B0C, 0x3C);//004E96F9  |> FF4424 48      |INC DWORD PTR SS:[ESP+48]               ;  Cases 38,39 of switch 004E96CA
+	//004E0DE6  |. 68 1E500000    |PUSH 501E
+	writeByte(0x04E0DE7, 0x21);//004E99CD  |. 68 1E500000    |PUSH 501E
+	//004E0B0F  |> FF4424 30      |INC DWORD PTR SS:[ESP+30]                  ;  Cases 7A,D8 of switch 004E0ADA
+	writeByte(0x04E0B12, 0x38);//004E96FF  |> FF4424 30      |INC DWORD PTR SS:[ESP+30]               ;  Cases 7A,D8 of switch 004E96CA
+	//004E0DD7  |. 68 1D500000    |PUSH 501D
+	writeByte(0x04E0DD8, 0x1B);//004E99BE  |. 68 1D500000    |PUSH 501D
+	//004E0B6E  |> FF4424 4C      |INC DWORD PTR SS:[ESP+4C]                  ;  Cases 24E,250 of switch 004E0ADA
+	writeByte(0x04E0B71, 0x34);//004E975E  |> FF4424 4C      |INC DWORD PTR SS:[ESP+4C]               ;  Cases 24E,250 of switch 004E96CA
+	//004E0DC5  |. 68 1C500000    |PUSH 501C
+	writeByte(0x04E0DC6, 0x22);//004E99AC  |. 68 1C500000    |PUSH 501C
+	//004E0B43  |> FF4424 2C      |INC DWORD PTR SS:[ESP+2C]                  ;  Cases 7B,DA of switch 004E0ADA
+	writeByte(0x04E0B46, 0x30);//004E9733  |> FF4424 2C      |INC DWORD PTR SS:[ESP+2C]               ;  Cases 7B,DA of switch 004E96CA
+	//004E0DB3  |. 68 1B500000    |PUSH 501B
+	writeByte(0x04E0DB4, 0x1A);//004E999A  |. 68 1B500000    |PUSH 501B
+	//004E0B68  |> FF4424 28      |INC DWORD PTR SS:[ESP+28]           ;  Cases 7C,DC,243,245 of switch 004E0ADA
+	writeByte(0x04E0B6B, 0x2C);//004E9758  |> FF4424 28      |INC DWORD PTR SS:[ESP+28]               ;  Cases 7C,DC,243,245 of switch 004E96CA
+	//004E0B00  |> FF4424 40      |INC DWORD PTR SS:[ESP+40]           ;  Cases 76,D4 of switch 004E0ADA
+	writeByte(0x04E0B03, 0x28);//004E96F0  |> FF4424 40      |INC DWORD PTR SS:[ESP+40]               ;  Cases 76,D4 of switch 004E96CA
+	//004E0D8C  |. 68 19500000    |PUSH 5019
+	writeByte(0x04E0D8D, 0x1F);//004E9973  |. 68 19500000    |PUSH 5019
+	//004E0B37  |> FF4424 3C      |INC DWORD PTR SS:[ESP+3C]           ;  Cases 9C,DE of switch 004E0ADA
+	writeByte(0x04E0B3A, 0x24);//004E9727  |> FF4424 3C      |INC DWORD PTR SS:[ESP+3C]               ;  Cases 9C,DE of switch 004E96CA
+	//004E0D77  |. 68 18500000    |PUSH 5018
+	writeByte(0x04E0D78, 0x1E);//004E995E  |. 68 18500000    |PUSH 5018
+	//004E0B88  |> FF4424 50      |INC DWORD PTR SS:[ESP+50]           ;  Cases 2,13 of switch 004E0AA1
+	writeByte(0x04E0B8B, 0x20);//004E9778  |> FF4424 50      |INC DWORD PTR SS:[ESP+50]               ;  Cases 2,13 of switch 004E9691
+	//004E0D65  |. 68 17500000    |PUSH 5017
+	writeByte(0x04E0D66, 0x2B);//004E994C  |. 68 17500000    |PUSH 5017
+
+
+}
 void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 {
 	widescreenAOk20(wideScreenCentred);
@@ -9805,6 +10180,7 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	Aok20_LoadLanguageId();
 	//windowedFullScreenHook();
 	AOK20_MQSQ();
+	Aok20_FixStatisticsDisplay();
 }
  
 //crash out patch
