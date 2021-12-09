@@ -13681,7 +13681,7 @@ void makequeue()
 		void* pplayer = (void*)sub_5E7560((int)*(void**)0x7912A0);
 		if (pplayer != NULL)
 		{
-			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C4);//0x1C0get the good beging selection addrese
+			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//0x1C0get the good beging selection addrese
 			BYTE* NBSelect = (BYTE*)(void**)((size_t)pplayer + 0x268);//set select range
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);

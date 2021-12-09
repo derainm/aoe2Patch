@@ -8314,7 +8314,7 @@ void Aoc10_makequeue()
 		void* pplayer = (void*)Aoc10_sub_5E7560((int)*(void**)0x6833D0);
 		if (pplayer != NULL)
 		{
-			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C4);//0x1C0get the good beging selection addrese
+			DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//0x1C0get the good beging selection addrese
 			BYTE* NBSelect = (BYTE*)(void**)((size_t)pplayer + 0x268);//set select range
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
