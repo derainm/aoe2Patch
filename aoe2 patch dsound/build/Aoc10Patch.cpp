@@ -8319,7 +8319,7 @@ void Aoc10_makequeue()
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
 			int cptbuilding = 0;
-			for (int i = 0; i < *NBSelect; i++)
+			for (int i = 0; i <= *NBSelect; i++)
 			{
 				void* master_obj = (void*)*(DWORD*)(lstSelect + i);
 				void* obj = (void*)*(DWORD*)((size_t)master_obj + 0x8);
