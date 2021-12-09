@@ -126,7 +126,7 @@ void init(HINSTANCE hInst)
 	}
 	if (AoK20)
 	{
-		Aoc20PatchHook(centredWideScreen,true);
+		Aoc20PatchHook(centredWideScreen,true,(HMODULE)hInst);
 	}	
 	if (AoK20ab)
 	{

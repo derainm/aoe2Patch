@@ -7407,22 +7407,22 @@ void __declspec(naked)  AddRMS4FD743()
 		MOV _782A20, 02A7Bh//  10875, 	"Arabia"
 		_007E0E3D :
 		MOV EDX, _782A00
-			MOV EAX, _782A10
-			MOV ECX, _782A20
-			ADD EAX, 01h
-			DEC ECX
-			MOV _782A10, EAX
-			MOV _782A20, ECX
-			PUSH EAX
-			PUSH ECX
-			MOV ECX, DWORD PTR DS : [ESI + 0AF4h]
-			DEC EDX
-			MOV _782A00, EDX
-			CALL _004B2940
-			CMP _782A00, 0h
-			JNZ _007E0E3D
-			JMP[_004FD755]
-	}
+		MOV EAX, _782A10
+		MOV ECX, _782A20
+		ADD EAX, 01h
+		DEC ECX
+		MOV _782A10, EAX
+		MOV _782A20, ECX
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [ESI + 0AF4h]
+		DEC EDX
+		MOV _782A00, EDX
+		CALL _004B2940
+		CMP _782A00, 0h
+		JNZ _007E0E3D
+		JMP[_004FD755]
+		}
 }
 //when start game 
 //0x05996AD
@@ -7460,21 +7460,21 @@ void __declspec(naked)  AddRMS506878()
 		MOV _782A20, 02A7Bh//  10875, 	"Arabia"
 		_007E102A :
 		MOV EDX, _782A00
-			MOV EAX, _782A10
-			MOV ECX, _782A20
-			ADD EAX, 01h
-			DEC ECX
-			MOV _782A10, EAX
-			MOV _782A20, ECX
-			PUSH EAX
-			PUSH ECX
-			MOV ECX, DWORD PTR DS : [ESI]
-			DEC EDX
-			MOV _782A00, EDX
-			CALL _004B2940
-			CMP _782A00, 0h
-			JNZ _007E102A
-			JMP[_0050687D]
+		MOV EAX, _782A10
+		MOV ECX, _782A20
+		ADD EAX, 01h
+		DEC ECX
+		MOV _782A10, EAX
+		MOV _782A20, ECX
+		PUSH EAX
+		PUSH ECX
+		MOV ECX, DWORD PTR DS : [ESI]
+		DEC EDX
+		MOV _782A00, EDX
+		CALL _004B2940
+		CMP _782A00, 0h
+		JNZ _007E102A
+		JMP[_0050687D]
 	}
 }
 #pragma endregion
@@ -8908,6 +8908,7 @@ DWORD Aok20_004A2160 = 0x04A2160;
 //2A78, "10 DE_Lombardia"
 //2A79, "1 !! G  A voobly"
 //2A7A, "0 Kilimanjaro"
+char _20020[]= "Select All"	  ;
 char _2A65[]= "9 DE_Hillfort"	  ;
 char _2A66[]= "8 DE_Hideout"		  ;
 char _2A67[]= "7 DE_Cross"		  ;
@@ -8934,6 +8935,47 @@ char _9C58[]="Triangle Formation" ;
 char _9C59[]="Fusion Formation"   ;
 DWORD ESI_scenario;
 DWORD EDI_scenario;
+
+//STRINGTABLE
+//LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+//{
+//  20017, 	"Mill"
+//  20019, 	"University"
+//  20020, 	"Select All"
+//}
+//
+//STRINGTABLE
+//LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+//{
+//	10853,"9 DE_Hillfort"
+//	10854,"8 DE_Hideout"
+//	10855,"7 DE_Cross"
+//	10856,"6 DE_AcropolisAok"
+//	10857,"5 BF LORD"
+//	10858,"4 Nomad"
+//	10859,"3 Green Arabia"
+//	10860,"21 ForestNothing"
+//	10861,"20 MICHI"
+//	10862,"2 ARENA"
+//	10863,"19 ES_The_Unknown"
+//	10864,"18 SHERWOOD FOREST"
+//	10865,"17 CDC_El_Dorado"
+//	10866,"16 CDC_Arina"
+//	10867,"15 BO_Scandinavia"
+//	10868,"14 HC_Chaos_Pit"
+//	10869,"13 NAC_Land_Madness
+//	10870,"12 DE_Golden_Pit"
+//	10871,"11 DE_Valley"
+//	10872,"10 DE_Lombardia"
+//	10873,"1 !! G  A voobly"
+//	10874,"0 Kilimanjaro"
+//}
+//STRINGTABLE
+//LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+//{
+//40024,"Triangle Formation"
+//40025,"Fusion Formation"
+//}
 void __declspec(naked) languageIdAok20()
 {
 	__asm
@@ -8989,6 +9031,8 @@ void __declspec(naked) languageIdAok20()
 		JE __9C58
 		cmp eax, 9C59h
 		JE __9C59
+		//cmp eax, 20020h
+		//JE __20020
 
 		CALL Aok20_00473AE0
 		JMP Aok20_004A2160
@@ -8999,6 +9043,13 @@ void __declspec(naked) languageIdAok20()
 
 		//MOV EDI, ESI
 		//LEA ESI, DWORD PTR DS : [aok20_FusinFOrmation]
+		//JMP continueproc
+		//__20020:
+		//CALL Aok20_00473AE0
+		//MOV  ESI_scenario, ESI
+		//MOV  EDI_scenario, EDI
+		//MOV EDI, ESI  
+		//LEA ESI, DWORD PTR DS : [_20020]
 		//JMP continueproc
 		__2A65 :
 		CALL Aok20_00473AE0
@@ -9255,7 +9306,12 @@ void __declspec(naked) languageIdAok20v2()
 		JE __9C58
 		cmp eax, 9C59h
 		JE __9C59
+		cmp eax, 20020
+		JE __20020
 		JMP continueproc
+		__20020:
+		LEA ECX, DWORD PTR SS : [_20020]
+			JMP normaleprocess
 		__2A65 :
 		 LEA ECX, DWORD PTR SS : [_2A65]
 		JMP normaleprocess
@@ -9654,7 +9710,7 @@ void __declspec(naked)  AOK20_MQ_HookButton007AEA80()
 }
 //0041F840  /$ 8B81 1C040000  MOV EAX,DWORD PTR DS:[ECX+41C]
 
-int  AOK20_sub_5E7560(int a)
+int  aok20_sub_5E7560(int a)
 {
 	int v1; // eax@1
 	__int16 v2; // dx@2
@@ -9668,6 +9724,10 @@ int  AOK20_sub_5E7560(int a)
 		result = 0;
 	return result;
 }
+//int __thiscall sub_41F840(int this)
+//{
+//
+//}
 
 DWORD AOK20_ArrayBuildingSelected[40] = {};
 void AOK20_cleanqueueeee()
@@ -9686,7 +9746,7 @@ void AOK20_makequeue()
 		//&& !IsBadReadPtr(*(void**)(*(size_t*)0x7912A0 + 0x268), sizeof(UINT_PTR))
 		&& *(void**)(*(size_t*)0x6645C4 + 0x41C) != NULL)
 	{
-		void* pplayer = (void*)AOK20_sub_5E7560((int)*(void**)0x6645C4);
+		void* pplayer = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4);
 		if (pplayer != NULL)
 		{
 			//DWORD* lstSelect = (DWORD*)((DWORD)pplayer + 0x1C0);//get the good beging selection addrese
@@ -10157,7 +10217,3443 @@ void  Aok20_FixStatisticsDisplay()
 
 
 }
-void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
+//0x04BE460
+DWORD HootKeyAok20_00479650 = 0x0472EF0;// 0058F490
+DWORD Aok20_004BE467 = 0x053BD17;//0053BD17  |. 0F87 8B0C0000  JA empires2.0053C9A8
+DWORD Aok20_004BF1E3 = 0x053C9A8;//0053C9A8  \> C2 0800        RETN 8                                   ;  Default case of switch 0053C971
+DWORD Aok20_0053C9AC = 0x053C9A8;//53C9AC
+void __declspec(naked)  Aok20_SetHootKeyList004BD935()
+{
+	__asm {
+			MOV EAX, DWORD PTR SS : [ESP + 4h]
+			CMP EAX, 04h//tc
+			JNZ checkmona
+			CMP DWORD PTR SS : [ESP + 8h] , 0h//2h
+			JE Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 6h//2h
+			JE Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 7h//2h
+			JE Normale
+			JMP __004BF1E3
+
+			checkmona :
+			CMP EAX, 0Ah //monastar
+			JNZ steplancer// Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 1h
+			Jg __004BF1E3//if is add item then jump default switch case
+
+			steplancer :
+			CMP EAX, 08h
+			JNZ FlamingCamel
+			CMP[ESP + 8h], 3h
+			JE __004BF1E3
+
+			FlamingCamel :
+			CMP EAX, 0Dh
+			JNZ GoToKrepost//Normale
+			CMP[ESP + 8h], 3h
+			JE __004BF1E3
+
+
+			GoToKrepost :
+			cmp EAX, 1h
+			JNZ Normale
+			CMP DWORD PTR SS : [ESP + 8h] , 42h
+			JE __004BF1E3
+			CMP DWORD PTR SS : [ESP + 8h] , 43h
+			JE __004BF1E3
+ 
+			Normale:
+			
+			CMP  DWORD PTR SS : [ESP + 4h] , 0h
+			Je __000
+			JMP Normalee
+			__000:
+			JMP Aok20_0053C9AC
+
+
+				Normalee :
+			//CMP EAX, 0Eh
+			CMP EAX, 0Dh
+			JMP Aok20_004BE467
+			__004BF1E3 :
+			JMP Aok20_004BF1E3
+	};
+}
+//004BBF33     90              NOP
+//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
+DWORD Aok20__004BBFDF = 0x0539BA4;//00539BA4  |. 68 204E0000    PUSH 4E20
+DWORD Aok20___0058F7A0 = 0x0473200;
+void __declspec(naked)  Aok20_SetHootKeyList004BBFDA()
+{
+	__asm {
+
+		CALL Aok20___0058F7A0; \age2_x1.0058F7A0
+		/*//Town center
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+		//Blacksmith
+		//PUSH 5h
+		PUSH 5h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20___0058F7A0
+		//University
+		PUSH 11h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL Aok20___0058F7A0
+		//Select ALL
+		PUSH 0Fh//15 itmes
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20___0058F7A0
+		/*//Monastery
+		PUSH 0Ch
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL _0058F7A0*/
+
+		JMP Aok20__004BBFDF
+	}
+}
+
+
+DWORD Aok20_0058F6B0 = 0x0473110;
+//00539C68  |. 8B4424 08      MOV EAX,DWORD PTR SS:[ESP+8]
+DWORD Aok20_004BC0B1 = 0x0539C68;//00549191   . 8B4424 08      MOV EAX,DWORD PTR SS:[ESP+8]
+//004BC0AC  |. E8 FF350D00    CALL age2_x1.0058F6B
+void __declspec(naked)  Aok20_SetHootKeyList004BC0AC()
+{
+	__asm {
+		CALL Aok20_0058F6B0
+		/*//Town center
+		PUSH 4E24h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+//		Black Smith
+		PUSH 4E31h
+		PUSH 0Eh
+		MOV ECX,ESI
+		CALL Aok20_0058F6B0 
+
+
+		PUSH 4E26h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F6B0
+		//University
+		PUSH 4E33h
+		PUSH 10h
+		MOV ECX, ESI
+		CALL Aok20_0058F6B0
+		//select All
+		PUSH 4E34h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F6B0
+		/*//Monastery
+		PUSH 4E2Ch
+		PUSH 12h
+		MOV ECX, ESI
+		CALL _0058F6B0*/
+		JMP Aok20_004BC0B1
+	}
+}
+//4A82->19074 reseed   4E31->20017 mill
+//004BCE8C  |. E8 DF270D00    CALL age2_x1.0058F670
+DWORD Aok20_0058F670 = 0x04730D0;
+//0053A951  |. 5E             POP ESI
+DWORD Aok20_004BCE91 = 0x053A951;//00549F71  |. 5E             POP ESI
+void __declspec(naked)  Aok20_SetHootKeyList004BCE8C()
+{
+	__asm {
+		CALL Aok20_0058F670
+		PUSH 4B7Ah
+		PUSH 1h
+		PUSH 0Eh
+		MOV ECX, ESI
+		call Aok20_0058F670
+
+
+		//black smith
+		PUSH 4A84h
+		PUSH 0
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A85h
+		PUSH 1h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A86h
+		PUSH 2h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A87h
+		PUSH 3h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A88h
+		PUSH 4h
+		PUSH 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		//University
+		PUSH 4AB6h
+		PUSH 0h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB7h
+		PUSH 1h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB8h
+		PUSH 2h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABDh
+		PUSH 3h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB9h
+		PUSH 4h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABAh
+		PUSH 5h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABBh
+		PUSH 6h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABCh
+		PUSH 7h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABEh
+		PUSH 8h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4ABFh
+		PUSH 9h
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AC0h
+		PUSH 0Ah
+		PUSH 10h//11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		//select ALL
+
+		//16784
+		PUSH 4190h
+		PUSH 0h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4191h
+		PUSH 1h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4192h
+		PUSH 2h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4193h
+		PUSH 3h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4194h
+		PUSH 4h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4195h
+		PUSH 5h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4196h
+		PUSH 6h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4197h
+		PUSH 7h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4198h
+		PUSH 8h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4199h
+		PUSH 9h
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 419Ah
+		PUSH 0Ah
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 419Bh
+		PUSH 0Bh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 419Ch
+		PUSH 0Ch
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 419Dh
+		PUSH 0Dh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 419Eh
+		PUSH 0Eh
+		PUSH 11h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		JMP Aok20_004BCE91
+
+	}
+}
+//0053A871  |. 68 564B0000    PUSH 4B56
+DWORD Aok20_004BCD91 = 0x053A871;//00549E71  |. 68 564B0000    PUSH 4B56
+
+void __declspec(naked)  Aok20_SetHootKeyList004BCD8CMonastary()
+{
+	__asm {
+		CALL Aok20_0058F670
+		//monastary
+		PUSH 4AACh
+		PUSH 2h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AADh
+		PUSH 03h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AAEh
+		PUSH 04h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AAFh
+		PUSH 05h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		/*PUSH 4AAFh
+		PUSH 05h
+		PUSH 12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670*/
+		PUSH 4AB0h
+		PUSH 06h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB1h
+		PUSH 07h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB2h
+		PUSH 08h//08h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB3h
+		PUSH 09h
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB4h
+		PUSH 0Ah
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4AB5h
+		PUSH 0Bh
+		PUSH 0Ah//12h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		JMP Aok20_004BCD91
+	}
+}
+
+//0053A711  |. 68 654A0000    PUSH 4A65
+DWORD Aok20_004BCBF1 = 0x053A711;//00549CD1   . 68 654A0000    PUSH 4A65
+void __declspec(naked)  Aok20_SetHootKeyList004BCBECTC()
+{
+	__asm {
+		CALL Aok20_0058F670
+		//town center
+		PUSH 4A89h
+		PUSH 2h
+		PUSH 04h// 0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A8Ah
+		PUSH 3h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		PUSH 4A8Bh
+		PUSH 4h
+		PUSH 04h//0Fh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		JMP Aok20_004BCBF1
+	}
+}
+//0053A821  |. 68 704A0000    PUSH 4A70
+DWORD Aok20_004BCD31 = 0x053A821;//00549E11  |. 68 704A0000    PUSH 4A70
+void __declspec(naked) Aok20_SetHootKeyList004BCD2C()
+{
+	__asm {
+		CALL Aok20_0058F670
+		//stable step lancer
+		PUSH 16A8h
+		PUSH 3h
+		PUSH 08h
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		JMP Aok20_004BCD31
+	}
+}
+//004BCE7C
+DWORD Aok20_004BCE81 = 0x0549F61;//00549F61  |. 68 824A0000    PUSH 4A82
+void __declspec(naked)  Aok20_SetHootKeyList004BCE7C()
+{
+	__asm {
+		CALL Aok20_0058F670
+		//Flaming Camel
+		PUSH 14FFh
+		PUSH 3h
+		PUSH 0Dh
+		MOV ECX, ESI
+		CALL Aok20_0058F670
+		JMP Aok20_004BCE81
+	}
+}
+//key 
+//004BC657   . E8 041E0000    CALL age2_x1.004BE460
+DWORD Aok20_004BE460 = 0x053BD10;
+DWORD Aok20_004BC65C = 0x053A1A9;//0054973C  |. 6A 00          PUSH 0
+DWORD Aok20_LTowncenter = 0x2;
+DWORD Aok20_LBlacksmith = 0x0;
+DWORD Aok20_LUniversity = 0x0;
+DWORD Aok20_LSelectAll = 0x0;
+DWORD Aok20_LMonastery = 0x2;// 0x3;
+void __declspec(naked)  Aok20_SetHootKeyListhotkey004BC657()
+{
+	__asm {
+			CALL Aok20_004BE460
+			//Town center
+			Towncenter :
+			PUSH Aok20_LTowncenter//0h
+			PUSH 04h//0Fh
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			inc Aok20_LTowncenter
+			CMP Aok20_LTowncenter, 6h
+			JNZ Towncenter
+			MOV Aok20_LTowncenter, 0h
+
+			//Blacksmith
+			Blacksmith :
+			PUSH Aok20_LBlacksmith//0h
+			PUSH 0Fh
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			inc Aok20_LBlacksmith
+			CMP Aok20_LBlacksmith, 5h
+			JNZ Blacksmith
+			MOV Aok20_LBlacksmith, 0h
+
+
+			//University
+			University:
+			PUSH Aok20_LUniversity//0h
+			PUSH 10h
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			inc Aok20_LUniversity
+			CMP Aok20_LUniversity, 11h
+			JNZ University
+			MOV Aok20_LUniversity, 0h
+
+			//Select All
+			SelectALL :
+			PUSH Aok20_LSelectAll//0h
+			PUSH 11h//id
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			inc Aok20_LSelectAll
+			CMP Aok20_LSelectAll, 0Fh//nb item
+			JNZ SelectALL
+			MOV Aok20_LSelectAll, 0h
+
+			//Monastery
+			Monastery :
+			PUSH Aok20_LMonastery//0h
+			PUSH 0Ah//12h
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			inc Aok20_LMonastery
+			CMP Aok20_LMonastery, 0Ch
+			JNZ Monastery
+			MOV Aok20_LMonastery, 2h
+			//stable
+			//stepLancer :
+			PUSH 3h
+			PUSH 08h
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			//castel
+			//FlamingCamel:
+			PUSH 3h
+			PUSH 0Dh
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			//Game commandes
+			//GoToKrepost
+			PUSH 42h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			//GoToDonjon
+			PUSH 43h
+			PUSH 01h
+			MOV ECX, ESI
+			CALL Aok20_004BE460
+			JMP Aok20_004BC65C
+	};
+
+}
+
+DWORD HootKeyAok20_rank = 0x60;
+DWORD HootKeyAok20_lang = 0x0;
+DWORD HootKeyAok20HootKeyAok20_EBX;
+
+void __declspec(naked)   Aok20_SetHootKeyListhotkey0x04BF1E3()
+{
+	__asm {
+			//Monastery:
+			cmp EAX, 0Ah
+			jnz tc//Towncenter
+			MOV HootKeyAok20_rank, 52h//54h//
+			MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			MOV  HootKeyAok20_lang, 416Dh//416Fh -2h  because it start at 2
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD HootKeyAok20_lang, EBX
+			MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD HootKeyAok20_rank, EBX// 1h
+			//PUSH 60h
+			PUSH HootKeyAok20_rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			tc:
+			cmp EAX, 04h//0Fh
+			jnz Blacksmith
+			MOV HootKeyAok20_rank, 59h
+			MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			MOV  HootKeyAok20_lang, 4178h //417Ah -2
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD HootKeyAok20_lang, EBX
+			MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD HootKeyAok20_rank, EBX//1h
+			//PUSH 60h
+			PUSH HootKeyAok20_rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			Blacksmith:
+			cmp EAX, 0Fh //10h
+			jnz University//Towncenter
+			MOV HootKeyAok20_rank, 63h
+			MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			MOV  HootKeyAok20_lang, 415Eh
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD HootKeyAok20_lang, EBX
+			MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD HootKeyAok20_rank, EBX// 1h
+			//PUSH 60h
+			PUSH HootKeyAok20_rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			University:
+			cmp EAX, 10h//11h
+			jnz  selectALL //steplancer//Towncenter
+			MOV HootKeyAok20_rank, 69h
+			MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			MOV  HootKeyAok20_lang, 4164h
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD HootKeyAok20_lang, EBX
+			MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD HootKeyAok20_rank, EBX// 1h
+			//PUSH 60h
+			PUSH HootKeyAok20_rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			selectALL:
+			cmp EAX, 11h
+			jnz steplancer
+			MOV HootKeyAok20_rank, 7Bh
+			MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			MOV  HootKeyAok20_lang, 4182h// 16784  // 4164h
+			MOV EBX, DWORD PTR DS : [ESP + 8h]
+			ADD HootKeyAok20_lang, EBX
+			MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			ADD HootKeyAok20_rank, EBX// 1h
+			//PUSH 60h
+			PUSH HootKeyAok20_rank
+			//PUSH 0h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH 0Fh
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+
+			steplancer:
+			cmp EAX, 08h
+			jnz FlamingCamel
+			PUSH 417Dh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 81h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			FlamingCamel:
+			cmp EAX, 0Dh
+			jnz GoToKrepost
+			PUSH 417Eh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 82h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			GoToKrepost:
+			cmp EAX, 1h
+			jnz defaultSwitchCase
+			CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+			JNZ GoToDonjon
+			PUSH 417Fh
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 83h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+			GoToDonjon:
+			cmp EAX, 1h
+			jnz defaultSwitchCase
+			CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+			JNZ defaultSwitchCase
+			PUSH 4180h
+			PUSH 0h
+			PUSH 0h
+			PUSH 0h
+			PUSH 84h
+			PUSH  DWORD PTR DS : [ESP + 1Ch]
+			PUSH EAX
+			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+
+
+
+
+		defaultSwitchCase:
+		RETN 8;  Default case of switch 004BF16F
+
+	};
+}
+
+//0053B3DF  |. 0F8F 21010000  JG empires2.0053B506
+DWORD Aok20_004BD93F = 0x053B3DF;//0054AA1F  |. 0F8F 05020000  JG age2_x1.0054AC2A
+DWORD Aok20_0058F3F0 = 0x0472E50;
+void __declspec(naked)  Aok20_SetHootKeyEvent004BD935()
+{
+	__asm {
+			MOV BYTE PTR SS : [ESP + 3h] , 0h
+			//tc
+			CMP EAX, 417Ah
+			JE TCLoom
+			CMP EAX, 417Bh
+			JE  TownWatch
+			CMP  EAX, 417Ch
+			JE Wheelbarrow
+			//Blacksmith
+			CMP  EAX, 415Eh
+			JE Fletching
+			CMP EAX, 415Fh
+			JE Forging
+			CMP EAX, 4160h
+			JE PaddedArcherArmor
+			CMP EAX, 4162h
+			JE ScaleBarding
+			CMP EAX, 4163h
+			JE ScaleMail
+			//University
+			CMP  EAX, 4164h
+			JE Arrowslits
+			CMP  EAX, 4165h
+			JE Ballistics
+			CMP  EAX, 4166h
+			JE BombardTower
+			CMP  EAX, 4167h
+			JE Chemistry
+			CMP  EAX, 4168h
+			JE FortifiedWall
+			CMP  EAX, 4169h
+			JE GuardTower
+			CMP  EAX, 416Ah
+			JE HeatedShot
+			CMP  EAX, 416Bh
+			JE Masonry
+			CMP  EAX, 416Ch
+			JE MurderHoles
+			CMP  EAX, 416Dh
+			JE SiegeEngineers
+			CMP  EAX, 416Eh
+			JE Treadmill
+			//Monastery
+			CMP EAX, 416Fh
+			JE Atonement
+			CMP EAX, 4170h
+			JE BlockPrinting
+			CMP EAX, 4171h
+			JE Faith
+			CMP EAX, 4172h
+			JE Fervor
+			CMP EAX, 4173h
+			JE HerbalMedicine
+			CMP EAX, 4174h
+			JE Heresy
+			CMP EAX, 4176h
+			JE Illumination
+			CMP EAX, 4177h
+			JE Redemption
+			CMP EAX, 4178h
+			JE Sanctity
+			CMP EAX, 4179h
+			JE Theocracy
+			//step lancer 
+			CMP EAX, 417Dh
+			JE steplancer
+			//Flaming Camel
+			CMP EAX, 417Eh
+			JE FlamingCamel
+			//go to krepost
+			CMP EAX, 417Fh
+			JE GoToKrepost
+			//Go To Donjon key
+			CMP EAX, 4180h
+			JE GoToDonjon
+			CMP EAX, 4180h
+			JE GoToDonjon
+			//todo
+			//16770, "V"
+			//16771, "D"
+			//16772, "S"
+			//16773, "F"
+			//16774, "X"
+			//16775, "C"
+			//16776, "A"
+			//16777, "Z"
+			//16778, "R"
+			//16779, "T"
+			//16780, "G"
+			//16781, "Y"
+			//16782, "K"
+			//16783, "D"
+			//16783, "M"
+			CMP EAX, 4182h
+			JE selectIDLEVillager
+			//normale
+			CMP EAX, 4022h
+			JMP DefaultCase
+
+			//tc
+			TCLoom :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 04h//0fh
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			TownWatch :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 04h//0Fh
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Wheelbarrow :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 04h//0Fh
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			//Black smith
+			Fletching :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 0Fh //10h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Forging :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH  0Fh //10h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			PaddedArcherArmor :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 0Fh //10h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleBarding :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH  0Fh //10h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			ScaleMail :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH  0Fh //10h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			//university
+			Arrowslits :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Ballistics :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 1h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+
+			BombardTower :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Chemistry :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			FortifiedWall :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			GuardTower :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			HeatedShot :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Masonry :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			MurderHoles :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			SiegeEngineers :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Treadmill :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah
+			PUSH 10h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			//Monastery
+			Atonement :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 2h//0h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			BlockPrinting :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 3h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Faith :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 4h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Fervor :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 5h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			HerbalMedicine :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 6h//4h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Heresy :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 7h//5h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Illumination :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 8h//6h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Redemption :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 9h//7h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Sanctity :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Ah//8h
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			Theocracy :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0Bh//0Ah
+			PUSH 0Ah//12h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			steplancer :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//steplancer
+			PUSH 08h//stable
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			FlamingCamel :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 03h//Flaming Camel
+			PUSH 0Dh//castel
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			GoToKrepost :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 042h//Go to krepost
+			PUSH 01h//game commande
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+			GoToDonjon :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 043h//Go to Donjon
+			PUSH 01h//game commande
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+
+			//select all
+			selectIDLEVillager :
+			LEA EDX, DWORD PTR SS : [ESP + 3h]
+			LEA EAX, DWORD PTR SS : [ESP + 3h]
+			PUSH EDX
+			LEA EDX, DWORD PTR SS : [ESP + 7h]
+			PUSH EAX
+			PUSH EDX
+			PUSH 0h
+			PUSH 11h//11h
+			CALL Aok20_0058F3F0
+			POP ECX
+			RETN 4h
+
+
+
+			DefaultCase:
+
+			JMP Aok20_004BD93F
+
+	};
+}
+
+
+void Aok20_hotkeyHook()
+{
+	//00539B03  |. 6A 0E          PUSH 0E
+	writeByte(0x0539B04, 0x14);//00549013  |. 6A 0F          PUSH 0F
+	// 00539B15 | . 6A 3F          PUSH 3F; / Arg2 = 0000003F
+	writeByte(0x0539B16, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
+	//set monastarysize item
+	//00539B78  |. 6A 01          PUSH 1                                   ; /Arg2 = 00000001
+	writeByte(0x0539B79, 0xC);//00549088  |. 6A 02          PUSH 2      
+	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	//extandestable loop
+	//00539B62  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	writeByte(0x0539B63, 0x4);//00549072  |. 6A 03          PUSH 3      
+	//extend castle item
+	//00539B99  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
+	writeByte(0x0539B9A, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//0053BD10  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
+	setHook((void*)0x053BD10, Aok20_SetHootKeyList004BD935);//0054B540  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
+	//00539B9F  |. E8 5C96F3FF    CALL empires2.00473200                   ; \empires2.00473200                     ; \age2_x1.0058F7A0
+	setHook((void*)0x0539B9F, Aok20_SetHootKeyList004BBFDA);//005490BA  |. E8 A108F3FF    CALL age2_x1.00479960  
+	//00539C63  |. E8 A894F3FF    CALL empires2.00473110
+	setHook((void*)0x0539C63, Aok20_SetHootKeyList004BC0AC);//0054918C  |. E8 DF06F3FF    CALL age2_x1.00479870
+	//item when clicking
+	setHook((void*)0x053A94C , Aok20_SetHootKeyList004BCE8C);//00549F6C  |. E8 BFF8F2FF    CALL age2_x1.00479830
+	setHook((void*)0x053A86C , Aok20_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
+	setHook((void*)0x053A70C, Aok20_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
+	//6739=X,  5800=Steppe Lancer Stable: 0x8,
+	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
+	setHook((void*)0x053A81C , Aok20_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
+
+	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
+	//0053A94C  |. E8 7F87F3FF    CALL empires2.004730D0
+	//setHook((void*)0x053A94C, Aok20_SetHootKeyList004BCE7C);//00549F5C  |. E8 CFF8F2FF    CALL age2_x1.00479830
+	// //0053A1AF  |. E8 5C1B0000    CALL empires2.0053BD10
+	//key 
+	setHook((void*)0x53A1A4, Aok20_SetHootKeyListhotkey004BC657);//00549737  |. E8 041E0000    CALL age2_x1.0054B540
+	//0053C9A8  \> C2 0800        RETN 8                                   ;  Default case of switch 0053C971
+	setHook((void*)0x053C9A8, Aok20_SetHootKeyListhotkey0x04BF1E3);//0054C2C3  \> C2 0800        RETN 8  
+
+		//key events
+	//0053A965  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+	//0053B3D5  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+	setHook((void*)0x053B3D5, Aok20_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+ 
+ 
+
+
+}
+//char aok20_lang[100] = { "language_default.dll" };
+////0043AFD4 > 68 FCF56600    PUSH age2_x1.0066F5FC;  ASCII "language_x1_p1.dll"
+////0043AFD9.FFD6           CALL ESI
+//DWORD aok20_005C7545 = 0x05C7545;
+//DWORD aok20_005C69FC = 0x05C69FC;
+//DWORD aok20_695388;
+//void __declspec(naked)  Aoc10_language_dllhook()
+//{
+//	__asm {
+//		//MOV DWORD PTR SS:[EBP+64],1
+//		//JMP age2_x1_.0043BB43
+//		//JNZ  __005C69F7
+//		//MOV DWORD PTR SS : [EBP + 64h] , 1h
+//		//JMP _005C7545
+//		PUSH offset aok20_lang;  ASCII "language_x1_p1.dll"//age2_x1_.0066F5FC                         
+//		CALL DWORD PTR DS : [6341E0h]//loadlibA
+//		//get pointer MOV DWORD PTR DS:[77EE94],EAX
+//		//CMP EAX,EBX
+//		MOV DWORD PTR DS : [aok20_695388] , EAX//get language pointer 
+//		//JNZ short __005C69F7
+//		//MOV DWORD PTR SS:[EBP+64h],1
+//		//JMP __005C69F7
+//
+//		//__005C69F7 :
+//		LEA EAX, DWORD PTR SS : [ESP + 24h]
+//		PUSH EAX
+//		JMP aok20_005C69FC
+//	};
+//}
+//load language dll
+ //0041C920   $ 8B4424 04      MOV EAX, DWORD PTR SS : [ESP + 4]
+//0041C924   . 8B0D 10456600  MOV ECX, DWORD PTR DS : [664510] ;  langua_1.10000000
+DWORD aok20_languageID;
+DWORD aok20_0041C92A = 0x041C92A;
+void __declspec(naked)  Aoc20_getLnaguageID()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		CMP EAX, 2A79h 
+		JE nom
+		MOV aok20_languageID, EAX
+		MOV ECX, DWORD PTR DS : [664510h]
+		JMP aok20_0041C92A
+		nom:
+		MOV aok20_languageID, EAX
+		MOV ECX, DWORD PTR DS : [664510h]
+		JMP aok20_0041C92A
+	};
+}
+DWORD handelLanguagedll;
+DWORD Aoc20_0047A240 = 0x0473AE0;
+DWORD Aoc20_005C893E = 0x041C943;
+DWORD Aoc20_005C8930 = 0x041C93D ;
+void __declspec(naked)  Aoc20_language_dllhook2()
+{
+	__asm {
+		CALL Aoc20_0047A240
+		TEST EAX, EAX
+		JNZ __005C893E
+		MOV EcX, handelLanguagedll//move pointer here
+		MOV EAX, aok20_languageID//move id language here
+ 
+		PUSH EDI
+		PUSH ESI
+		PUSH EAX
+		PUSH ECX
+
+
+		CALL Aoc20_0047A240
+		JMP Aoc20_005C8930
+		__005C893E :
+		JMP Aoc20_005C893E
+	};
+}
+DWORD aok20_languageID2;
+DWORD aok20_004A2149 = 0x04A2149;
+void __declspec(naked)  Aoc20_getLnaguageID2()
+{
+	__asm {
+		MOV EAX, DWORD PTR SS : [ESP + 4h]
+		MOV aok20_languageID2, EAX
+		PUSH ESI
+		MOV ESI, DWORD PTR SS : [ESP + 0Ch]
+		JMP aok20_004A2149
+ 
+	};
+}
+DWORD Aok20_004A216D = 0x04A216D;
+DWORD Aok20__00473AE0 = 0x0473AE0;
+DWORD Aoc20_004A2160 = 0x04A2160;
+void __declspec(naked)  Aoc20_language_dllhook3()
+{
+	__asm {
+		CALL Aok20__00473AE0
+		TEST EAX, EAX
+		JE  __005C893E
+
+
+		//JMP Aoc20_004A2160  
+		
+		MOV EDX, handelLanguagedll//move pointer here
+		MOV EAX, aok20_languageID2//move id language here
+
+		PUSH ECX
+		PUSH ESI
+		PUSH EAX
+		PUSH EDX
+
+
+		CALL Aok20__00473AE0
+		JMP Aoc20_004A2160
+	
+		__005C893E :
+		JMP Aok20_004A216D
+
+
+	};
+}
+void Aok20_language_dll()
+{
+	handelLanguagedll = (DWORD)LoadLibraryA("language_default.dll");
+	//0041C938  |. E8 A3710500    CALL empires2.00473AE0
+	InjectHook(0x041C938, Aoc20_language_dllhook2, PATCH_JUMP);
+
+	InjectHook(0x041C920 , Aoc20_getLnaguageID, PATCH_JUMP);
+	//InjectHook(0x04A2140, Aoc20_getLnaguageID2, PATCH_JUMP);
+	//InjectHook(0x04A215B, Aoc20_language_dllhook3, PATCH_JUMP);
+}
+
+float aok20_ratioLogoUnitTech = 1.0f;
+int aok20_translationX = 0;
+bool aok20_selectedIdlVillager = false;
+bool aok20_selectAllTC = false;
+bool aok20_selectAllArmy = false;
+bool aok20_selectAllSiegeWorkshop = false;
+bool aok20_selectAllMilitaryBuilding = false;
+bool aok20_selectAllArcheryRange = false;
+bool aok20_selectAllCastle = false;
+bool aok20_selectAllDonjon = false;
+bool aok20_selectAllKrepost = false;
+bool aok20_selectAllMarket = false;
+bool aok20_selectAlMonastery = false;
+bool aok20_selectAlltradeCarte = false;
+bool aok20_selectAllDock = false;
+bool aok20_selectAllBarrack = false;
+bool aok20_selectAllStable = false;
+bool aok20_deleteAllSelected = false;
+
+int aok20_cptIDLEVIllager = 0;
+int aok20_cptTCselected = 0;
+int aok20_cptArmyselected = 0;
+int aok20_cptallSiegeWorkshop = 0;
+int aok20_cptallMilitaryBuilding = 0;
+int aok20_cptallArcheryRange = 0;
+int aok20_cptallCastle = 0;
+int aok20_cptallDonjon = 0;
+int aok20_cptallKrepost = 0;
+int aok20_cptallMarket = 0;
+int aok20_cptallMonastery = 0;
+int aok20_cptalltradeCarte = 0;
+int aok20_cptallDock = 0;
+int aok20_cptallBarrack = 0;
+int aok20_cptallStable = 0;
+int aok20_countUnitDelete = 0;
+
+char aok20_strWood[50];
+char aok20_strFood[50];
+char aok20_strGold[50];
+char aok20_strStone[50];
+char aok20_strNBVillager[50];
+char aok20_strIDLE[50];
+char aok20_strCiv[100];
+char aok20_strAge[100];
+
+char aok20_strResWood[50];
+char aok20_strResFood[50];
+char aok20_strResGold[50];
+char aok20_strResStone[50];
+char aok20_strResPOP[50];
+
+DWORD aok20_flagClean = 0x0;
+int aok20_Hotkeys[15][4] =
+{
+	{0x56 , 0xA0, 0x0, 0x0}, //0: Select all idle villagers (default Ctrl+.)
+	{0x44 , 0xA0, 0x0, 0x0},    //1: Select all idle army (default Ctrl+,)
+	{0x53 , 0xA0, 0x0, 0x0},    //2: Select all trade carts (default Ctrl+M)
+	{0x46 , 0xA0, 0x0, 0x0},    //3: Select all Town Centers (default Ctrl+H)
+	{0x58 , 0xA0, 0x0, 0x0},    //4: Select all Barracks (default Ctrl+Q)
+	{0x43 , 0xA0, 0x0, 0x0},    //5: Select all Archery Ranges (default Ctrl+W)
+	{0x41 , 0xA0, 0x0, 0x0},    //6: Select all Stables (default Ctrl+E)
+	{0x5A , 0xA0, 0x0, 0x0},    //7: Select all Siege Workshops (default Ctrl+R)
+	{0x52 , 0xA0, 0x0, 0x0},    //8: Select all Docks (default Ctrl+T)
+	{0x54 , 0xA0, 0x0, 0x0},    //9: Select all Markets (default Ctrl+D)
+	{0x47 , 0xA0, 0x0, 0x0},    //10: Select all Monasteries (default Ctrl+F)
+	{0x59 , 0xA0, 0x0, 0x0},    //11: Select all Castles (default Ctrl+C)
+	{0x4B , 0xA0, 0x0, 0x0},    //12: Select all Krepost (default Ctrl+V)
+	{0x44 , 0xA0, 0x0, 0x0},    //13: Select all Donjon (default Ctrl+V)
+	{0x4D , 0xA0, 0x0, 0x0}     //14: Select all Military buildings (default Ctrl+A)
+};
+
+DWORD aok20_Pop_stats_EAX;
+DWORD aok20_Pop_stats_ECX;
+DWORD aok20_Pop_stats_EDX;
+DWORD aok20_Pop_stats_EBX;
+DWORD aok20_Pop_stats_ESP;
+DWORD aok20_Pop_stats_EBP;
+DWORD aok20_Pop_stats_ESI;
+DWORD aok20_Pop_stats_EDI;
+//DWORD _00520A96 = 0x0520A96;
+//004CCE1C   . 8B0D C4456600  MOV ECX,DWORD PTR DS:[6645C4]
+//004D47AC   . 8B0D D0336800  MOV ECX,DWORD PTR DS:[6833D0]
+
+
+DWORD aok20_00556C50 = 0x04AD800;
+////0041F840  /$ 8B81 1C040000  MOV EAX,DWORD PTR DS:[ECX+41C]
+DWORD aok20_005E7560 = 0x041F840;//0x0420970  /$ 8B81 1C040000  MOV EAX,DWORD PTR DS:[ECX+424]
+//0040485D   . 83F8 FF        CMP EAX,-1
+DWORD aok20_00602D6F = 0x0404860   ;//00404C7F   . 74 22          JE SHORT age2_x1.00404CA3
+void __declspec(naked)  aok20_cleanScreenn()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP aok20_flagClean, 1h
+		JNZ conti
+		//save register
+		MOV aok20_Pop_stats_EAX, EAX
+		MOV aok20_Pop_stats_ECX, ECX
+		MOV aok20_Pop_stats_EDX, EDX
+		MOV aok20_Pop_stats_EBX, EBX
+		MOV aok20_Pop_stats_ESP, ESP
+		MOV aok20_Pop_stats_EBP, EBP
+		MOV aok20_Pop_stats_ESI, ESI
+		MOV aok20_Pop_stats_EDI, EDI
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		//MOV ECX, DWORD PTR DS : [6833D0h]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		CALL aok20_005E7560
+		MOV ECX, EAX
+		CALL aok20_00556C50
+		MOV aok20_flagClean, 0h
+
+		//restore register
+		MOV EAX, aok20_Pop_stats_EAX
+		MOV ECX, aok20_Pop_stats_ECX
+		MOV EDX, aok20_Pop_stats_EDX
+		MOV EBX, aok20_Pop_stats_EBX
+		MOV ESP, aok20_Pop_stats_ESP
+		MOV EBP, aok20_Pop_stats_EBP
+		MOV ESI, aok20_Pop_stats_ESI
+		MOV EDI, aok20_Pop_stats_EDI
+		conti :
+		MOV EAX, DWORD PTR DS : [ESI + 18h]
+			CMP EAX, -1h
+
+
+			//JMP _00520A96
+			JMP aok20_00602D6F
+	};
+}
+//004E03C6  |. B9 09000000    MOV ECX,9
+DWORD aok20_00520A96 = 0x04E03C6;//004E8FB6  |. B9 09000000    MOV ECX,9
+//DWORD _00602D6F = 0x0602D6F;
+void __declspec(naked)   aok20_cleanScreenn2()
+{
+	__asm {
+
+
+		//cleanselection
+		CMP aok20_flagClean, 1h
+		JNZ conti
+		//save register
+		MOV aok20_Pop_stats_EAX, EAX
+		MOV aok20_Pop_stats_ECX, ECX
+		MOV aok20_Pop_stats_EDX, EDX
+		MOV aok20_Pop_stats_EBX, EBX
+		MOV aok20_Pop_stats_ESP, ESP
+		MOV aok20_Pop_stats_EBP, EBP
+		MOV aok20_Pop_stats_ESI, ESI
+		MOV aok20_Pop_stats_EDI, EDI
+		//MOV ECX, DWORD PTR DS : [7912A0h]
+		//MOV ECX, DWORD PTR DS : [6833D0h]
+		MOV ECX, DWORD PTR DS : [6645C4h]
+		CALL aok20_005E7560
+		MOV ECX, EAX
+		CALL aok20_00556C50
+		MOV aok20_flagClean, 0h
+		//restore register
+		MOV EAX, aok20_Pop_stats_EAX
+		MOV ECX, aok20_Pop_stats_ECX
+		MOV EDX, aok20_Pop_stats_EDX
+		MOV EBX, aok20_Pop_stats_EBX
+		MOV ESP, aok20_Pop_stats_ESP
+		MOV EBP, aok20_Pop_stats_EBP
+		MOV ESI, aok20_Pop_stats_ESI
+		MOV EDI, aok20_Pop_stats_EDI
+		conti :
+
+		LEA EAX, DWORD PTR SS : [ESP + 9Ch]
+
+
+			JMP aok20_00520A96
+			//JMP _00602D6F
+	};
+}
+
+//0051BF0C   . 8B0D A0127900  MOV ECX,DWORD PTR DS:[0x7912A0]
+DWORD aok20_00521110 = 0x04E0A40  ;//004E9630   $ 81EC 44020000  SUB ESP,244
+DWORD aok20_00521F29 = 0x04E1809;//004EA449  |. 8A88 14020000  MOV CL,BYTE PTR DS:[EAX+214]
+
+
+DWORD aok20_stats_EAX;
+DWORD aok20_stats_ECX;
+DWORD aok20_stats_EDX;
+DWORD aok20_stats_EBX;
+DWORD aok20_stats_ESP;
+DWORD aok20_stats_EBP;
+DWORD aok20_stats_ESI;
+DWORD aok20_stats_EDI;
+//0x0521F23
+DWORD aok20_FLAGShowPanelVilStatus = 0x0;
+
+void __declspec(naked)  aok20_GetVillagerStatusDisplayressources()
+{
+	__asm {
+			//save register
+			MOV aok20_stats_EAX, EAX
+			MOV aok20_stats_ECX, ECX
+			MOV aok20_stats_EDX, EDX
+			MOV aok20_stats_EBX, EBX
+			MOV aok20_stats_ESP, ESP
+			MOV aok20_stats_EBP, EBP
+			MOV aok20_stats_ESI, ESI
+			MOV aok20_stats_EDI, EDI
+			//CMP Starting, 1h
+			//JNZ restore
+
+
+			//MOV EAX, DWORD PTR DS : [07912A0h]
+			//MOV ECX, DWORD PTR DS : [6833D0h]
+			MOV EAX, DWORD PTR DS : [6645C4h]
+			TEST EAX, EAX
+			JE restore
+			//00446397   > 8B8D 20180000  MOV ECX,DWORD PTR SS:[EBP+0x1820]
+			//005D1C5C   . 8B8D B4170000  MOV ECX,DWORD PTR SS:[EBP+17B4]
+
+			//005CF5D0.A1 C4456600    MOV EAX, DWORD PTR DS : [6645C4]
+			//005CF5D5   . 56             PUSH ESI
+			//005CF5D6   . 57             PUSH EDI
+			//005CF5D7   . 8BF9           MOV EDI, ECX
+			//005CF5D9   . 8BB0 9C140000  MOV ESI, DWORD PTR DS : [EAX + 149C]
+
+
+			MOV aok20_FLAGShowPanelVilStatus, 1h
+			//MOV ECX, DWORD PTR SS : [EAX + 017B4h]
+			MOV Ecx, DWORD PTR DS : [6645C4h]
+			MOV Ecx, DWORD PTR DS : [Ecx + 149Ch]
+
+			TEST ECX, ECX
+			JE restore
+			MOV ECX, ESI
+			CALL aok20_00521110
+			MOV aok20_FLAGShowPanelVilStatus, 0h
+			//ECX
+			// 00521F29  |. 8A88 14020000  MOV CL,BYTE PTR DS:[EAX+0x214]
+			//loop_ :
+			// //?????
+			//////MOV EAX, DWORD PTR SS : [ECX + 50h]
+			//////TEST EAX, EAX
+			//////JE restore
+
+
+
+			restore:
+			//restaure register
+			MOV EAX, aok20_stats_EAX
+			MOV ECX, aok20_stats_ECX
+			MOV EDX, aok20_stats_EDX
+			MOV EBX, aok20_stats_EBX
+			MOV ESP, aok20_stats_ESP
+			MOV EBP, aok20_stats_EBP
+			MOV ESI, aok20_stats_ESI
+			MOV EDI, aok20_stats_EDI
+			//normale
+			//MOV EAX, DWORD PTR DS : [ESI + 0121Ch]
+			MOV EAX, DWORD PTR DS : [ESI + 1200h]
+			JMP aok20_00521F29
+	};
+}
+void Aok20_hookAokk()
+{
+
+	//00404850   . 83EC 08        SUB ESP,8
+	//0040485A   . 8B46 18        MOV EAX,DWORD PTR DS:[ESI+18]
+
+	InjectHook((void*)0x040485A, aok20_cleanScreenn, PATCH_JUMP);//00404C79   . 8B46 18        MOV EAX,DWORD PTR DS:[ESI+18]
+
+
+	////0051DD01   > 8B8E B8110000  MOV ECX,DWORD PTR DS:[ESI+11B8]
+	//004E03BF  |. 8D8424 9C00000>LEA EAX,DWORD PTR SS:[ESP+9C]
+	InjectHook((void*)0x04E03BF, aok20_cleanScreenn2, PATCH_JUMP);//case scenario and no villager we put it on score
+	//00521F23  |. 8B86 1C120000  MOV EAX,DWORD PTR DS:[ESI+0x121C]
+	//004E1803  |. 8B86 00120000  MOV EAX,DWORD PTR DS:[ESI+1200]
+	InjectHook((void*)0x04E1803, aok20_GetVillagerStatusDisplayressources, PATCH_JUMP);//004EA443  |. 8B86 1C120000  MOV EAX,DWORD PTR DS:[ESI+121C]
+
+}
+
+ 
+DWORD aok20_hki_EDX;
+
+BYTE* aok20_arrHki_EDX = {};//[176] 
+void aok20_fillHotKeyArray()
+{
+	aok20_arrHki_EDX = (BYTE*)aok20_hki_EDX;
+	//arrHki_EDX[0]=0;
+	int  aok20_cmpt = 0;
+	for (int i = 0; i <= 176; i = i + 0x0C)
+	{
+		aok20_Hotkeys[aok20_cmpt][0] = 0x0;
+		aok20_Hotkeys[aok20_cmpt][1] = 0x0;
+		aok20_Hotkeys[aok20_cmpt][2] = 0x0;
+		aok20_Hotkeys[aok20_cmpt][3] = 0x0;
+		aok20_Hotkeys[aok20_cmpt][0] = aok20_arrHki_EDX[i];
+		//CTRL-
+		if (aok20_arrHki_EDX[i + 0x8] == 0x1)
+		{
+			aok20_Hotkeys[aok20_cmpt][3] = VK_LCONTROL;
+		}
+		//ALT-
+		if (aok20_arrHki_EDX[i + 0x8 + 0x1] == 0x1)
+		{
+			aok20_Hotkeys[aok20_cmpt][2] = VK_LMENU;
+		}
+		//MAJ-
+		if (aok20_arrHki_EDX[i + 0x8 + 0x1 + 0x1] == 0x1)
+		{
+			aok20_Hotkeys[aok20_cmpt][1] = VK_LSHIFT;
+		}
+		aok20_cmpt++;
+		if (aok20_cmpt == 15)
+			break;
+	}
+
+
+
+}
+
+//00472C9A  |. E8 E1BC0400    |CALL empires2.004BE980                  ; \empires2.004BE980
+DWORD aok20_004C5A20 = 0x04BE980;
+//00472C9F  |. 83C4 0C        |ADD ESP,0C
+DWORD aok20_0058F23F = 0x0472C9F;//004793FF  |. 83C4 0C        |ADD ESP,0C
+
+void __declspec(naked)  aok20_getKeyOnHkiFile()
+{
+	__asm {
+		CMP EBX, 11h//select all hki
+		JE _hki
+		CALL aok20_004C5A20
+		JMP aok20_0058F23F
+		_hki :
+		MOV aok20_hki_EDX, EDX//pointer that will contain hotkey value
+		CALL aok20_004C5A20
+		//0058F22B   . 8B4E 0C        MOV ECX,DWORD PTR DS:[ESI+C]
+		MOV ECX, aok20_hki_EDX
+		call aok20_fillHotKeyArray
+
+
+		JMP aok20_0058F23F
+
+	}
+}
+
+DWORD aok20_idItemMenu = 0x0;
+DWORD  aok20__4_0058F490 = 0x0472EF0;
+//00504DF9   . 8B0D C4456600  MOV ECX,DWORD PTR DS:[6645C4]
+DWORD aok20_004F7C29 = 0x0504DF9;//00512239   . 8B0D D0336800  MOV ECX,DWORD PTR DS:[6833D0]
+
+void __declspec(naked)   aok20_getMenuItemid()
+{
+	__asm {
+		MOV aok20_idItemMenu, EDX
+		CALL  aok20__4_0058F490; \age2_x1_.0058F490
+		JMP aok20_004F7C29
+	}
+}
+DWORD aok20_idItem = 0x0;
+DWORD aok20_004F7C45 = 0x0504E15;//00512255   . 50             PUSH EAX
+//00447B76  |. 8B8424 E400000>MOV EAX,DWORD PTR SS:[ESP+E4]
+
+void __declspec(naked)  aok20_getItemId()
+{
+	__asm {
+		//MOV ECX, DWORD PTR SS : [EBP + 82Ch]
+		MOV ECX, DWORD PTR SS : [EBP + 828h]
+		MOV aok20_idItem, EDX
+		JMP aok20_004F7C45
+	}
+}
+//0: Select all idle villagers(default Ctrl + .)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+//13: Select all idle villagers(default Ctrl + .)
+
+//0: Select all idle villagers (default Ctrl+.)
+//1 : Select all idle army(default Ctrl + , )
+//2 : Select all trade carts(default Ctrl + M)
+//3 : Select all Town Centers(default Ctrl + H)
+//4 : Select all Barracks(default Ctrl + Q)
+//5 : Select all Archery Ranges(default Ctrl + W)
+//6 : Select all Stables(default Ctrl + E)
+//7 : Select all Siege Workshops(default Ctrl + R)
+//8 : Select all Docks(default Ctrl + T)
+//9 : Select all Markets(default Ctrl + D)
+//10 : Select all Monasteries(default Ctrl + F)
+//11 : Select all Castles(default Ctrl + C)
+//12 : Select all Krepost(default Ctrl + V)
+//13 : Select all Donjon(default Ctrl + V)
+//14 : Select all Military buildings(default Ctrl + A)
+int aok20_getRealId(int id)
+{
+	switch (id)
+	{
+	case 0:
+		return 5;//5 : Select all Archery Ranges(default Ctrl + W)
+		break;
+	case 1:
+		return 4;//4 : Select all Barracks(default Ctrl + Q)
+		break;
+	case 2:
+		return 11;//11 : Select all Castles(default Ctrl + C)
+		break;
+	case 3:
+		return 8;//8 : Select all Docks(default Ctrl + T)
+		break;
+	case 4:
+		return 13;//13 : Select all Donjon(default Ctrl + V)
+		break;
+	case 5:
+		return 1;//1 : Select all idle army(default Ctrl + , )
+		break;
+	case 6:
+		return 12;//12 : Select all Krepost(default Ctrl + V)
+		break;
+	case 7:
+		return 9;//9 : Select all Markets(default Ctrl + D)
+		break;
+	case 8:
+		return 14;//14 : Select all Military buildings(default Ctrl + A)
+		break;
+	case 9:
+		return 10;//10 : Select all Monasteries(default Ctrl + F)
+		break;
+	case 10:
+		return 7;//7 : Select all Siege Workshops(default Ctrl + R)
+		break;
+	case 11:
+		return 6;//6 : Select all Stables(default Ctrl + E)
+		break;
+	case 12:
+		return 3;//3 : Select all Town Centers(default Ctrl + H)
+		break;
+	case 13:
+		return 2;//2 : Select all trade carts(default Ctrl + M)
+		break;
+	case 14:
+		return 0;//0: Select all idle villagers (default Ctrl+.)
+		break;
+	default:
+		return 100;
+		break;
+	}
+
+}
+DWORD aok20_key = 0x0;
+void aok20_updateHoteKey()
+{
+	int i = aok20_getRealId((int)aok20_idItem);
+	aok20_Hotkeys[i][0] = 0x0;
+	aok20_Hotkeys[i][1] = 0x0;
+	aok20_Hotkeys[i][2] = 0x0;
+	aok20_Hotkeys[i][0] = aok20_key; //au moins une touch de racoursie 
+	if (GetAsyncKeyState(VK_LCONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_CONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_CONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU))
+	{
+		aok20_Hotkeys[i][1] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		aok20_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU))
+	{
+		aok20_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_LSHIFT;
+	}
+	if (GetAsyncKeyState(VK_RSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_RSHIFT;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_CONTROL;
+		aok20_Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_LCONTROL;
+		aok20_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_LMENU) && GetAsyncKeyState(VK_CONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_CONTROL;
+		aok20_Hotkeys[i][2] = VK_LMENU;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LCONTROL))
+	{
+		aok20_Hotkeys[i][1] = VK_LCONTROL;
+		aok20_Hotkeys[i][2] = VK_MENU;
+	}
+
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_LSHIFT;
+		aok20_Hotkeys[i][2] = VK_MENU;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_LSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_LSHIFT;
+		aok20_Hotkeys[i][2] = VK_LCONTROL;
+	}
+	if (GetAsyncKeyState(VK_MENU) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_MENU;
+		aok20_Hotkeys[i][2] = VK_RSHIFT;
+	}
+	if (GetAsyncKeyState(VK_LCONTROL) && GetAsyncKeyState(VK_RSHIFT))
+	{
+		aok20_Hotkeys[i][1] = VK_LCONTROL;
+		aok20_Hotkeys[i][2] = VK_RSHIFT;
+	}
+	//if (GetAsyncKeyState(VK_SCROLL))
+	//{
+	//    Hotkeys[i][1] = VK_SCROLL;
+	//} 
+	//if (GetAsyncKeyState(VK_MBUTTON))
+	//{
+	//    Hotkeys[i][1] = VK_MBUTTON;
+	//}
+	//if (GetAsyncKeyState(VK_XBUTTON1))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON1;
+	//}    
+	//if (GetAsyncKeyState(VK_XBUTTON2))
+	//{
+	//    Hotkeys[i][1] = VK_XBUTTON2;
+	//}
+
+
+	//if (GetAsyncKeyState(WM_MOUSEHWHEEL) )
+	//{
+	//    Hotkeys[i][2] = WM_MOUSEHWHEEL;
+	//}
+	//if (GetAsyncKeyState(WM_MOUSEWHEEL))
+
+
+	//Hotkeys[i][2]=0;
+
+	////////saveInFileConfig();
+}
+DWORD aok20__updateHoteKey = (DWORD)aok20_updateHoteKey;
+DWORD aok20_EAXKEY;
+DWORD aok20_ECXKEY;
+DWORD aok20_EDXKEY;
+DWORD aok20_005478B0 = 0x04BD490;
+//00504E20   . 8B8D 28080000  MOV ECX,DWORD PTR SS:[EBP+828]
+DWORD aok20_004F7C50 = 0x0504E20;//00512260   . 8B8D 2C080000  MOV ECX,DWORD PTR SS:[EBP+82C]
+
+
+//0x04F7C4B
+void __declspec(naked)  aok20_getKeyInput()
+{
+	__asm {
+		CMP  aok20_idItemMenu, 011h
+		JNZ normale
+		//MOV flagClean,1h
+		MOV aok20_key, EBX
+		MOV aok20_EAXKEY, EAX
+		MOV aok20_ECXKEY, ECX
+		MOV aok20_EDXKEY, EDX
+
+		call aok20__updateHoteKey
+		MOV ECX, aok20_ECXKEY
+		MOV EDX, aok20_EDXKEY
+		MOV EAX, aok20_EAXKEY
+		//MOV flagClean,0
+		normale :
+		CALL aok20_005478B0
+			JMP aok20_004F7C50
+	}
+}
+
+
+void  AOK20_keyInputHook()
+{
+	//loadhotkey hki
+	//00472C9A  |. E8 E1BC0400    |CALL empires2.004BE980                  ; \empires2.004BE980
+	InjectHook((void*)0x0472C9A, aok20_getKeyOnHkiFile, PATCH_JUMP);//004793FA  |. E8 21C60400    |CALL age2_x1.004C5A20                   ; \age2_x1.004C5A20
+
+	//update ket
+	//00504DF4   . E8 F7E0F6FF    CALL empires2.00472EF0                   ; \empires2.00472EF0
+	InjectHook((void*)0x0504DF4, aok20_getMenuItemid, PATCH_JUMP);//00512234   . E8 1774F6FF    CALL age2_x1.00479650                    ; \age2_x1.00479650
+	//00504E0F   . 8B8D 28080000  MOV ECX,DWORD PTR SS:[EBP+828]
+	InjectHook((void*)0x0504E0F, aok20_getItemId, PATCH_JUMP);//0051224F   . 8B8D 2C080000  MOV ECX,DWORD PTR SS:[EBP+82C]
+	//00504E1B   . E8 7086FBFF    CALL empires2.004BD490
+	InjectHook((void*)0x0504E1B, aok20_getKeyInput, PATCH_JUMP);//0051225B   . E8 2021FBFF    CALL age2_x1.004C4380
+
+
+
+
+}
+
+DWORD aok20_TradeUnite;
+DWORD aok20_Repairman;
+DWORD aok20_Builder;
+DWORD aok20_StoneMiner;
+DWORD aok20_GoldMiner;
+DWORD aok20_Lumberjack;
+DWORD aok20_sheperds;
+DWORD aok20_Hunter;
+DWORD aok20_Fishermen;
+DWORD aok20_Forage;
+DWORD aok20_Farmer;
+DWORD aok20_FishingShipp;
+DWORD aok20_IdleFishingShipps;
+DWORD aok20_IdleVillagers;
+DWORD aok20_onFOOD;
+DWORD aok20_onGOLD;
+DWORD aok20_IDLE;
+
+DWORD aok20_IndexCurrentPlayer;
+
+DWORD aok20_ma_EAX;
+DWORD aok20_ma_ECX;
+DWORD aok20_ma_EDX;
+DWORD aok20_ma_EBX;
+DWORD aok20_ma_ESP;
+DWORD aok20_ma_EBP;
+DWORD aok20_ma_ESI;
+DWORD aok20_ma_EDI;
+DWORD aok20__EAXVilStatus;
+DWORD aok20__00521403 = 0x0521403;
+DWORD aok20__GetPlayerColor;
+void aok20_ManageSelection(int i, void* player, int Playerciv)
+{
+	bool flag1 = false;
+	bool arraflag[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+	arraflag[0] = aok20_selectedIdlVillager;
+	arraflag[1] = aok20_selectAllTC;
+	arraflag[2] = aok20_selectAllArmy;
+	arraflag[3] = aok20_selectAllSiegeWorkshop;
+	arraflag[4] = aok20_selectAllMilitaryBuilding;
+	arraflag[5] = aok20_selectAllArcheryRange;
+	arraflag[6] = aok20_selectAllCastle;
+	arraflag[7] = aok20_selectAllDonjon;
+	arraflag[8] = aok20_selectAllKrepost;
+	arraflag[9] = aok20_selectAllMarket;
+	arraflag[10] = aok20_selectAlMonastery;
+	arraflag[11] = aok20_selectAlltradeCarte;
+	arraflag[12] = aok20_selectAllDock;
+	arraflag[13] = aok20_selectAllBarrack;
+	arraflag[14] = aok20_selectAllStable;
+	arraflag[15] = aok20_deleteAllSelected;
+	int cpt = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		if (arraflag[i])
+			cpt++;
+	}
+	//more than 2 same hotkey we ignore
+	flag1 = cpt >= 2;
+	if (flag1)
+	{
+		aok20_selectedIdlVillager = false;
+		aok20_selectAllTC = false;
+		aok20_selectAllArmy = false;
+		aok20_selectAllSiegeWorkshop = false;
+		aok20_selectAllMilitaryBuilding = false;
+		aok20_selectAllArcheryRange = false;
+		aok20_selectAllCastle = false;
+		aok20_selectAllDonjon = false;
+		aok20_selectAllKrepost = false;
+		aok20_selectAllMarket = false;
+		aok20_selectAlMonastery = false;
+		aok20_selectAlltradeCarte = false;
+		aok20_selectAllDock = false;
+		aok20_selectAllBarrack = false;
+		aok20_selectAllStable = false;
+		for (int i = 0; i < 15; i++)
+		{
+			arraflag[i] = false;
+		}
+		return;
+	}
+	//try
+	//{
+
+
+
+	if (player != NULL)
+	{
+		//printf("select villager \n");
+		aok20_cptIDLEVIllager = 0;
+		aok20_cptTCselected = 0;
+		aok20_cptArmyselected = 0;
+		aok20_cptallSiegeWorkshop = 0;
+		aok20_cptallMilitaryBuilding = 0;
+		aok20_cptallArcheryRange = 0;
+		aok20_cptallCastle = 0;
+		aok20_cptallDonjon = 0;
+		aok20_cptallKrepost = 0;
+		aok20_cptallMarket = 0;
+		aok20_cptallMonastery = 0;
+		aok20_cptalltradeCarte = 0;
+		aok20_cptallDock = 0;
+		aok20_cptallBarrack = 0;
+		aok20_cptallStable = 0;
+		aok20_countUnitDelete = 0;
+		//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+		//dllmain.cpp:2383.  RGE_Object_List* objects = player->objects;
+		void* objects = (void*)((size_t)player + 0x78);//this is list object address care // player->objects
+		 //objects = (void*)((size_t)objects + 0x4);// player->objects
+		//struct  __declspec(align(2)) RGE_Object_List
+		//{
+		//    int vfptr;
+		//    struct RGE_Static_Object** list;
+		//    __int16 number_of_objects;
+		//};
+
+
+		if (!IsBadReadPtr((void*)objects, sizeof(UINT_PTR)) && objects != NULL)
+		{
+
+
+			//79529E70   8B77 78          MOV ESI,DWORD PTR DS:[EDI+78]
+			//DS:[1C0168A8]=1D7E8400 ESI = 026DF820 dllmain.cpp:2383.  RGE_Object_List * objects = player->objects;
+
+			//DWORD* lstSelectAdd = (DWORD*)(void**)((size_t)player + 0x78);//player->sel_list;
+			//DWORD* lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+			//DWORD* lstSelect = (DWORD*)((DWORD)player + 0x1C0);//get the good beging selection addrese
+			DWORD* lstSelect = (DWORD*)((DWORD)player + 0x1A4);//get the good beging selection addrese
+			//79529EA1   3887 68020000    CMP BYTE PTR DS:[EDI+268],AL
+
+			//7952A881   8887 68020000    MOV BYTE PTR DS:[EDI+268],AL
+			//dllmain.cpp:2917.  *NBSelect = cptIDLEVIllager;
+			//BYTE* NBSelect = (BYTE*)(void**)((size_t)player + 0x268);//set select range
+			BYTE* NBSelect = (BYTE*)(void**)((size_t)player + 0x24C);//set select range
+			//BYTE* NBSelect = (BYTE*)(void**)((size_t)lstSelectAdd + 0xA8 + 0x7 + 0x2);//set select range
+			//Address=1C0169F0  EBX = 75690100 (KERNEL32.IsBadReadPtr) dllmain.cpp:2387.  DWORD * lstSelect = (DWORD*)((DWORD)lstSelectAdd + 0x7 + 0x2);//get the good beging selection addrese
+			//79529E90   8D9F C0010000    LEA EBX,DWORD PTR DS:[EDI+1C0]
+
+
+			void** sel_list = (void**)(lstSelect);
+
+			if (aok20_deleteAllSelected && *NBSelect != 0x0)
+			{
+				/*
+				for (int i = 0; i <= *NBSelect; i++)
+				{
+					INPUT inputs[2] = {};
+					ZeroMemory(inputs, sizeof(inputs));
+
+					inputs[0].type = INPUT_KEYBOARD;
+					inputs[0].ki.wVk = VK_DELETE;
+
+					inputs[1].type = INPUT_KEYBOARD;
+					inputs[1].ki.wVk = VK_DELETE;
+					inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+					UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+					Sleep(50);
+				}*/
+				//for (int i = 0; i <= *NBSelect; i++)
+				//{
+				//    if (countUnitDelete <= *NBSelect && ((*sel_list)->object_class == 70 || (*sel_list)->object_class == 80))
+				//    {
+				//        //you can only delete you unit ans can't delete sheep
+				//        if ((*sel_list)->owner_player == player && (*sel_list)->master_obj->object_group != 58) 
+				//        {
+				//            INPUT inputs[2] = {};
+				//            ZeroMemory(inputs, sizeof(inputs));
+
+				//            inputs[0].type = INPUT_KEYBOARD;
+				//            inputs[0].ki.wVk = VK_DELETE;
+
+				//            inputs[1].type = INPUT_KEYBOARD;
+				//            inputs[1].ki.wVk = VK_DELETE;
+				//            inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+
+				//            UINT uSent = SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
+				//            Sleep(50);
+				//            //*sel_list++;
+				//            countUnitDelete++;
+				//        }
+				//    }
+				//}
+			}
+
+
+			//std::cout << "obj list:" << std::hex << (DWORD)lstSelect << std::endl;
+			//std::cout << "obj number_of_objects:" << std::hex << (DWORD)objects->number_of_objects << std::endl;
+			//DS:[1D7E8408]=0062AX = 0000dllmain.cpp:2437.  for (int ono = 0; ono < objects->number_of_objects; ono++)
+			//79529F0D   66:3B46 08      CMP AX,WORD PTR DS:[ESI+8]
+			//__int16	2	short, short int, signed short int	-32 768 à 32 767   -> 7FFF  DWORD size it tkink
+			///*/*/*int number_of_objects = (DWORD)*(void**)((size_t)(void*)((size_t)player + 0x78) + 0x8);*/*/*/
+
+			//MOV EAX,DWORD PTR DS:[ESI+4] -> struct RGE_Static_Object** list;
+			//74884209   8B40 04          MOV EAX,DWORD PTR DS:[EAX+4]
+			 //list =(void*) *(DWORD*)(objects); //(void*)(void**)(*(size_t*)objects + 0x4);
+			if (IsBadReadPtr((void*)objects, sizeof(UINT_PTR)))
+			{
+				return;
+			}
+			void* p = (void*)*(DWORD*)((size_t)objects);
+			if (IsBadReadPtr((void*)((size_t)p + 0x4), sizeof(UINT_PTR)))
+			{
+				return;
+			}
+			void* list = (void*)*(DWORD*)((size_t)p + 0x4); //(void*)(void**)(*(size_t*)objects + 0x4);
+			if (IsBadReadPtr((void*)p, sizeof(UINT_PTR)))
+			{
+				return;
+			}
+			int number_of_objects = (int)*(DWORD*)((size_t)p + 0x8);
+			for (int ono = 0; ono < (int)number_of_objects; ono++)// objects->number_of_objects
+			{
+
+				//79529F2A   8B1488           MOV EDX,DWORD PTR DS:[EAX+ECX*4]
+				//void* obj = (void*)(void**)(*(size_t*)list + 0x4 * ono)  ;
+				void* obj = (void*)(*(DWORD*)((size_t)list + 4 * ono));
+				if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				//*(DWORD*)(*(DWORD*)(v3 + 4) + 4 * v6);
+				//std::cout << "obj number_of_objects:" << std::hex << sel_list << std::endl;
+				//printf("select villager2 \n");
+									//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+				//void* master_obj = (void*)(void**) *(DWORD*)(*(size_t*)obj + 0x8);
+				////79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+				//WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+
+				//int id = (int)*idADDR;
+
+				void* master_obj = (void*)*(DWORD*)((size_t)obj + 0x8);
+				//hotfix
+				if (IsBadReadPtr((void*)master_obj, sizeof(UINT_PTR)))
+				{
+					break;
+				}
+
+				//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+				//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+				//MOVZ
+				int id = *(WORD*)((size_t)master_obj + 0x10);//(int)*idADDRG 
+				////7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+				//int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+
+				if (aok20_flagClean == 0 && aok20_selectedIdlVillager && aok20_cptIDLEVIllager < 40 && aok20_IdleVillagers != 0x0)
+				{
+					//struct  __declspec(align(1)) RGE_Static_Object
+					//{
+					//    int vfptr;
+					//    int id;
+					//    struct RGE_Master_Static_Object* master_obj;
+					//...
+					// struct RGE_Master_Static_Object
+					//{
+					//    char field_0;
+					//    char field_1;
+					//    char field_2;
+					//    char field_3;
+					//    char master_type;//type ex: combattant
+					//    char field_5;
+					//    char field_6;
+					//    char field_7;
+					//    char* name;
+					//    __int16 string_id;
+					//    __int16 string_id2;
+					//    __int16 id;
+					//    __int16 copy_id;
+					//    __int16 save_id;
+					//    __int16 object_group;
+					// //....
+
+					//MOVZ
+
+					if (
+						id == 83 || id == 293 //normale villager
+						|| id == 123 || id == 218//lumberjack
+						|| id == 56 || id == 57//fisherman   
+						|| id == 124 || id == 220 || id == 1493//stone miner
+						|| id == 579 || id == 581 || id == 1497//gold miner
+						|| id == 122 || id == 216 || id == 1491//hunter
+						|| id == 590 || id == 592 || id == 1498//sherperd
+						|| id == 214 || id == 259 || id == 1192 || id == 1490//farmer
+						|| id == 118 || id == 212 || id == 1192 || id == 1489//builder
+						|| id == 120 || id == 354 || id == 1496//forager
+						|| id == 156 || id == 222 || id == 1494//repairer
+						//less probability to apear so we put at the end
+						|| id == 1310 || id == 1311//fisherman    
+						|| id == 1312 || id == 1313//fisherman    
+						|| id == 1314 || id == 1315//fisherman    
+						|| id == 1316 || id == 1317//fisherman    
+						|| id == 1318 || id == 1319//fisherman    
+						|| id == 1320 || id == 1321//fisherman    
+						|| id == 1322 || id == 1323//fisherman    
+						|| id == 1324 || id == 1325//fisherman    
+						|| id == 1326 || id == 1327//fisherman    
+						|| id == 1328 || id == 1329//fisherman    
+						|| id == 1488 || id == 1499//fisherman    
+						|| id == 1500 || id == 1501//fisherman    
+						|| id == 1502 || id == 1503//fisherman    
+						|| id == 1504 || id == 1505//fisherman    
+						|| id == 1506 || id == 1507 || id == 1508//fisherman    
+						)
+					{
+
+						//005FF6F3   . 8B46 78        MOV EAX, DWORD PTR DS : [ESI + 78]
+						DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+						//DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+						//005FF71C   > 8B8E 08010000  MOV ECX,DWORD PTR DS:[ESI+108]
+						//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
+						//00408A2C   > 8B8E 30010000  MOV ECX,DWORD PTR DS:[ESI+130]
+						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x130);
+						DWORD flagIdle2;
+						bool flagisidleres = false;
+						//0xFFFF     -1
+						if ((DWORD)ptr == 0xFFFFFFFF)
+						{
+							//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+							DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+							if (flagIdle != 0)
+							{
+								//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+								//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+								flagisidleres = true;
+							}
+							if (flagIdle == 0 && !flagisidleres
+								||
+								flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+									|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+									|| flagIdle2 == 0xE))
+							{
+								if (aok20_cptIDLEVIllager == 0)
+								{
+
+									//first select need to be on double
+									//7952A2AF   C642 36 01       MOV BYTE PTR DS:[EDX+36],1
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									aok20_cptIDLEVIllager++;
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									//cptIDLEVIllager++;
+								}
+								else
+								{
+									//if (!IsBadReadPtr((void*)(*sel_list), sizeof(UINT_PTR)) && IdleVillagers != 0)
+									//obj->selected = true;
+									*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+									*sel_list = obj;
+									*sel_list++;
+									aok20_cptIDLEVIllager++;
+								}
+							}
+						}
+					}
+
+				}
+				//                // //....
+				////79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+				//                void* master_obj = (void*)(void**)(*(size_t*)obj + 0x8);
+				//                //79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+				//                WORD* idADDR = (WORD*)(void**)(*(size_t*)master_obj + 0x10);
+				if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				if (IsBadReadPtr((void*)((size_t)obj + 0x8), sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				//79529F5A   8B42 08          MOV EAX,DWORD PTR DS:[EDX+8]
+				//(*(DWORD*)((size_t)list  
+				void* master_objG = (void*)*(DWORD*)((size_t)obj + 0x8);
+				//79529F5D   0FB740 10        MOVZX EAX,WORD PTR DS:[EAX+10]
+				//WORD* idADDRG = (WORD*) *(WORD*)((size_t)master_objG + 0x10);
+				//MOVZ
+				if (IsBadReadPtr((void*)master_objG, sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				int idG = *(WORD*)((size_t)master_objG + 0x10);//(int)*idADDRG 
+				//7952A2E7   807A 4E 50       CMP BYTE PTR DS:[EDX+4E],50
+				if ((int)obj == 0x0)
+				{
+					break;
+				}
+
+				if (IsBadReadPtr((void*)obj, sizeof(UINT_PTR)))
+				{
+					break;
+				}
+				int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+				//select all tc
+				if (aok20_selectAllTC && aok20_flagClean == 0 && aok20_cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
+				{
+					if (aok20_cptTCselected == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptTCselected++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptTCselected++;
+					}
+				}
+				//master_objG
+				//7952A346   8B42 08          MOV EAX, DWORD PTR DS : [EDX + 8]
+				//7952A349   0FB740 16        MOVZX EAX, WORD PTR DS : [EAX + 16]
+				int object_group = (int)*(WORD*)(void**)((size_t)master_objG + 0x16);
+				//select all army cptArmyselected selectAllArmy
+				if (aok20_selectAllArmy && aok20_flagClean == 0 && aok20_cptArmyselected < 40 && (int)object_class == 70 //combattant
+					&& (
+						(int)object_group == 0//archer
+						|| (int)object_group == 6//infentery
+						|| (int)object_group == 12//cavalery
+						|| (int)object_group == 47//scoute
+						|| (int)object_group == 13//siege weapons
+						|| (int)object_group == 55//Balista
+						|| (int)object_group == 36//cav Archer
+						|| (int)object_group == 18//Monk
+						|| (int)object_group == 54//unpacked unit treb  no work idk
+						|| (int)object_group == 51//packed unit treb  no work idk
+						|| (int)object_group == 35//packed unit treb
+						|| (int)object_group == 23//conquistador
+						|| (int)object_group == 24//war elephants
+						|| (int)object_group == 44//hand canonner
+						)
+					)
+				{
+					//0051D3DD   > 8BCD           MOV ECX,EBP                                                          ;  Cases 2E,2F of switch 0051D1F0
+					//00528A81   . 57             PUSH EDI
+					//00528EDD   > 8B5C24 10      MOV EBX,DWORD PTR SS:[ESP+stbi__vertically_flip_on_load_local]
+					//lol same as villager
+					//005FF6F3   . 8B46 78        MOV EAX,DWORD PTR DS:[ESI+78]
+					DWORD* ptr = (DWORD*)*(void**)((size_t)obj + 0x78);
+					//DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x108);
+					// 005FF71C   > 8B8E 08010000  MOV ECX,DWORD PTR DS:[ESI+108]
+					//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
+					//00408A2C   > 8B8E 30010000  MOV ECX,DWORD PTR DS:[ESI+130]
+					DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x130);
+					DWORD flagIdle2;
+					bool flagisidleres = false;
+					//0xFFFF     -1
+					if ((DWORD)ptr == 0xFFFFFFFF)
+					{
+						//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
+						DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
+						if (flagIdle != 0)
+						{
+							//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
+							flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+							//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
+							flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+							flagisidleres = true;
+						}
+
+						if (flagIdle == 0 && !flagisidleres
+							||
+							flagisidleres && (flagIdle2 == 0x0 || flagIdle2 == 0x1
+								|| flagIdle2 == 0x2 || flagIdle2 == 0xD || flagIdle2 == 0x3
+								|| flagIdle2 == 0xE))
+						{
+							if (aok20_cptArmyselected == 0)
+							{
+								//first select need to be on double
+								//obj->selected = true;
+								*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+								*sel_list = obj;
+								*sel_list++;
+								aok20_cptArmyselected++;
+								//obj->selected = true;
+								*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+								*sel_list = obj;
+								*sel_list++;
+							}
+							else
+							{
+								//obj->selected = true;
+								*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+								*sel_list = obj;
+								*sel_list++;
+								aok20_cptArmyselected++;
+							}
+						}
+					}
+				}
+
+				//select all siege workshop
+				//idG   -> obj->master_obj->id
+				if (aok20_selectAllSiegeWorkshop && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallSiegeWorkshop < 40 &&
+					(idG == 49 || (int)idG == 150))//&& (int)obj->master_obj->hp>1
+				{
+					if (aok20_cptallSiegeWorkshop == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallSiegeWorkshop++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallSiegeWorkshop++;
+					}
+				}
+				//select all militarybuilding
+				//bool selectAllMilitaryBuilding = false; cptallMilitaryBuilding
+				//idG   -> obj->master_obj->id
+				if (aok20_selectAllMilitaryBuilding && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallMilitaryBuilding < 40 &&
+					(
+						(int)idG == 49 || (int)idG == 150//Siege workshop
+						|| (int)idG == 12 //barrack
+						|| (int)idG == 87 //Archery Range 
+						|| (int)idG == 101 //Stable 
+						|| (int)idG == 82 //castel
+						|| (int)idG == 1476 //|| (int)idG == 1453 || (int)idG == 1454 || (int)idG ==1452  //donjon
+						|| (int)idG == 1245   //krepost
+						)
+					)
+				{
+					if (aok20_cptallMilitaryBuilding == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMilitaryBuilding++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMilitaryBuilding++;
+					}
+				}
+				//no work idk why :'(
+				//////select All archery range
+				////selectAllBuilding(selectAllArcheryRange, &cptallArcheryRange, flagClean, &obj,&sel_list, 87);
+				//////select All castle
+				////selectAllBuilding(selectAllCastle, &cptallCastle, flagClean, &obj, &sel_list, 82);
+				//////select All Donjon
+				////selectAllBuilding(selectAllDonjon, &cptallDonjon, flagClean, &obj, &sel_list, 1476);
+				//////select All Krepost
+				////selectAllBuilding(selectAllKrepost,  &cptallKrepost, flagClean, &obj, &sel_list, 1245);
+				//////select All Market
+				////selectAllBuilding(selectAllMarket, &cptallMarket, flagClean,&obj, &sel_list, 84);
+				//select All archery range
+				//idG   -> obj->master_obj->id
+				if (aok20_selectAllArcheryRange && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallArcheryRange < 40 && (int)idG == 87) //Archery Range 
+				{
+					if (aok20_cptallArcheryRange == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallArcheryRange++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallArcheryRange++;
+					}
+				}
+				//idG   -> obj->master_obj->id
+				//select All castle
+				if (aok20_selectAllCastle && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallCastle < 40 && (int)idG == 82)//castel  
+				{
+					if (aok20_cptallCastle == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallCastle++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallCastle++;
+					}
+				}
+				//idG   -> obj->master_obj->id
+				//select All Donjon
+				if (aok20_selectAllDonjon && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallDonjon < 40 && (int)idG == 1476)//donjon  
+				{
+					if (aok20_cptallDonjon == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallDonjon++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallDonjon++;
+					}
+				}
+				//idG   -> obj->master_obj->id
+				//select All Krepost
+				if (aok20_selectAllKrepost && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallKrepost < 40 && (int)idG == 1245)   //krepost
+				{
+					if (aok20_cptallKrepost == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallKrepost++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallKrepost++;
+					}
+				}
+				//idG   -> obj->master_obj->id
+				//select All Market
+				if (aok20_selectAllMarket && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallMarket < 40 && (int)idG == 84)
+				{
+					if (aok20_cptallMarket == 0)
+					{
+						//first select need to be on double
+					   //obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMarket++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMarket++;
+					}
+				}
+				//select All monastery
+				if (aok20_selectAlMonastery && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallMonastery < 40 && (int)idG == 104)
+				{
+					if (aok20_cptallMonastery == 0)
+					{
+						//first select need to be on double
+					   //obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMonastery++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallMonastery++;
+					}
+				}
+				//select All trade cart
+				if (aok20_selectAlltradeCarte && aok20_flagClean == 0 && (int)object_class == 70 && aok20_cptalltradeCarte < 40 &&
+					(
+						(int)idG == 108 || (int)idG == 128 || (int)idG == 204
+
+						)
+					)
+				{
+					if (aok20_cptalltradeCarte == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptalltradeCarte++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptalltradeCarte++;
+					}
+				}
+				//select All Dock
+				if (aok20_selectAllDock && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallDock < 40 &&
+					(
+						(int)idG == 45// || (int)obj->master_obj->id == 806 
+						)
+					)
+				{
+					if (aok20_cptallDock == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallDock++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallDock++;
+					}
+				}
+				//select all barack
+				if (aok20_selectAllBarrack && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallBarrack < 40 && (int)idG == 12)//barrack
+				{
+					if (aok20_cptallBarrack == 0)
+					{
+						//first select need to be on double
+					   //obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallBarrack++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallBarrack++;
+					}
+				}
+
+				//select all stable
+				if (aok20_selectAllStable && aok20_flagClean == 0 && (int)object_class == 80 && aok20_cptallStable < 40 && (int)idG == 101)//Stable  
+				{
+					if (aok20_cptallStable == 0)
+					{
+						//first select need to be on double
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallStable++;
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+					}
+					else
+					{
+						//obj->selected = true;
+						*(BYTE*)(void**)((size_t)obj + 0x36) = 0x1;
+						*sel_list = obj;
+						*sel_list++;
+						aok20_cptallStable++;
+					}
+				}
+
+			}
+			if (aok20_selectedIdlVillager && aok20_IdleVillagers != 0 && aok20_flagClean == 0)
+				*NBSelect = aok20_cptIDLEVIllager;
+			if (aok20_selectAllTC && aok20_flagClean == 0)
+				*NBSelect = aok20_cptTCselected;
+			if (aok20_selectAllArmy && aok20_flagClean == 0)
+				*NBSelect = aok20_cptArmyselected;
+			if (aok20_selectAllSiegeWorkshop && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallSiegeWorkshop;
+			if (aok20_selectAllMilitaryBuilding && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallMilitaryBuilding;
+			if (aok20_selectAllArcheryRange && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallArcheryRange;
+			if (aok20_selectAllCastle && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallCastle;
+			if (aok20_selectAllDonjon && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallDonjon;
+			if (aok20_selectAllKrepost && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallKrepost;
+			if (aok20_selectAllMarket && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallMarket;
+			if (aok20_selectAlMonastery && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallMonastery;
+			if (aok20_selectAlltradeCarte && aok20_flagClean == 0)
+				*NBSelect = aok20_cptalltradeCarte;
+			if (aok20_selectAllDock && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallDock;
+			if (aok20_selectAllBarrack && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallBarrack;
+			if (aok20_selectAllStable && aok20_flagClean == 0)
+				*NBSelect = aok20_cptallStable;
+
+
+			//if (deleteAllSelected && flagClean == 0)
+			//    *NBSelect = 0;
+			if (aok20_flagClean == 0)
+			{
+				aok20_selectedIdlVillager = false;
+				aok20_selectAllTC = false;
+				aok20_selectAllArmy = false;
+				aok20_selectAllSiegeWorkshop = false;
+				aok20_selectAllMilitaryBuilding = false;
+				aok20_selectAllArcheryRange = false;
+				aok20_selectAllCastle = false;
+				aok20_selectAllDonjon = false;
+				aok20_selectAllKrepost = false;
+				aok20_selectAllMarket = false;
+				aok20_selectAlMonastery = false;
+				aok20_selectAlltradeCarte = false;
+				aok20_selectAllDock = false;
+				aok20_selectAllBarrack = false;
+				aok20_selectAllStable = false;
+				aok20_deleteAllSelected = false;
+			}
+		}
+	}
+	//}
+	//catch (const std::exception&)
+	//{
+	//	return;
+	//}
+
+	//else
+	//printf("player is empty");
+}
+
+//004E0D3C   . 894424 14      MOV DWORD PTR SS:[ESP+14],EAX
+DWORD aok20_00521403 = 0x04E0D3C;
+void  __declspec(naked) aok20_getVillagerMatrix()//
+{
+	__asm {
+		//      //save register
+		//MOV ma_EAX, EAX
+		//MOV ma_ECX, ECX
+		//MOV ma_EDX, EDX
+		//MOV ma_EBX, EBX
+		//MOV ma_ESP, ESP
+		//MOV ma_EBP, EBP
+		//MOV ma_ESI, ESI
+		MOV aok20_ma_EDI, EDI
+
+		//save eax
+		MOV aok20__EAXVilStatus, EAX
+		//we get only for current player
+		//CMP showOnlyCurrrentPlayerVillagerPerRessources, 1h
+		//JNZ restore
+
+		MOV EAX, DWORD PTR SS : [ESP + 50h]
+		MOV aok20_IdleVillagers, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 4Ch]
+		MOV aok20_IdleFishingShipps, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 48h]
+		MOV aok20_FishingShipp, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 44h]
+		MOV aok20_Farmer, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 40h]
+		MOV aok20_Forage, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 3Ch]
+		MOV aok20_Fishermen, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 38h]
+		MOV aok20_Hunter, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 34h]
+		MOV aok20_sheperds, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 30h]
+		MOV aok20_Lumberjack, EAX
+		//MOV EAX,0h
+		MOV AL, BYTE PTR SS : [ESP + 2Ch]//WORD PTR SS : [ESP + 2Ch]
+		MOV aok20_GoldMiner, EAX
+		//MOV EAX, 0h
+		MOV AL, BYTE PTR SS : [ESP + 2Eh]//2Ah
+		MOV aok20_StoneMiner, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 28h]
+		MOV aok20_Builder, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 24h]
+		MOV aok20_Repairman, EAX
+		MOV EAX, DWORD PTR SS : [ESP + 20h]
+		MOV aok20_TradeUnite, EAX
+
+		MOV aok20_onFOOD, 0h
+		MOV EAX, 0h
+		ADD EAX, aok20_sheperds
+		ADD EAX, aok20_Hunter
+		ADD EAX, aok20_Fishermen
+		ADD EAX, aok20_Forage
+		ADD EAX, aok20_Farmer
+		ADD EAX, aok20_FishingShipp
+		MOV aok20_onFOOD, EAX
+
+		MOV aok20_onGOLD, 0h
+		MOV EAX, 0h
+		ADD EAX, aok20_GoldMiner
+		ADD EAX, aok20_TradeUnite
+		MOV aok20_onGOLD, EAX
+
+		MOV aok20_IDLE, 0h
+		MOV EAX, 0h
+		ADD EAX, aok20_IdleVillagers
+		ADD EAX, aok20_IdleFishingShipps
+		MOV aok20_IDLE, EAX
+
+		restore :
+		//restore eax
+
+		MOV  EAX, aok20__EAXVilStatus
+
+
+
+
+
+
+
+
+			////restore register
+			//CMP ma_EAX, 0h
+			//JE __00521403
+			//MOV EAX, ma_EAX
+			//MOV ECX, ma_ECX
+			//MOV EDX, ma_EDX
+			//MOV EBX, ma_EBX
+			//MOV ESP, ma_ESP
+			//MOV EBP, ma_EBP
+			//MOV ESI, ma_ESI
+			//MOV EDI, ma_EDI
+			//////MOV ECX, 0483h
+			//MOV ECX, 0483h
+			MOV ECX, 47Dh
+			XOR EAX, EAX
+			SUB ECX, EBX
+
+			__00521403 :
+		JMP aok20_00521403//004E9923   . 894424 14      MOV DWORD PTR SS:[ESP+14],EAX
+
+
+	};
+
+}
+
+bool aok20_keydown(int key)
+{
+	Sleep(1);
+	return GetAsyncKeyState(key) & 0x8000;// (GetAsyncKeyState(translteGLFW_KEY_IntoWindows(key)) & 0x8000);
+}
+bool aok20_keypressed(int a, int b, int c, int d)
+{
+	if (a == 0 && b == 0 && c == 0 && d == 0)
+		return false;
+	else
+		return (a == 0 ? true : aok20_keydown(a)) && (b == 0 ? true : aok20_keydown(b)) && (c == 0 ? true : aok20_keydown(c)) && (d == 0 ? true : aok20_keydown(d));
+
+	//if (a > 0 && b == 0 && c == 0 && d == 0)
+	//    return keydown(a);
+	//if (a > 0 && b > 0 && c == 0 && d == 0)
+	//    return keydown(a) && keydown(b);
+	//if (a > 0 && b > 0 && c > 0 && d == 0)
+	//    return keydown(a) && keydown(b) && keydown(c);
+	//if (a > 0 && b > 0 && c > 0 && d>0)
+	//    return keydown(a) && keydown(b) && keydown(c) && keydown(c);
+	//return false;
+}
+bool aok20_isKeyPress = false;
+bool aok20_flagwaitLOAD = true;
+bool aok20_noOverlay = false;
+bool aok20_checkifsamehotkey(bool flag1, bool flag2)
+{
+	return flag1 && flag2;
+}
+bool aok20_arrayConf[15] = { false,false, false, false, false, false, false, false, false, false, false, false, false, false, false };
+
+
+void aok20_hotKeyActionelecting()
+{
+	//if (noOverlay)
+	//{
+	//    //Load positions of resource panel elements or revert to defaults
+	//    ConfigData = LoadData();
+	//    //ResetHotkeys(ConfigData);
+	//    hookAoc();
+	//}
+		//idk how to mkae optimisation array is on esp (how to  read the pointer?)
+	//005213FA   > B9 83040000    MOV ECX,0x483
+	//004E0D33   > B9 7D040000    MOV ECX,47D
+	InjectHook((void*)0x04E0D33, aok20_getVillagerMatrix, PATCH_JUMP);//004E991A   > B9 83040000    MOV ECX,483
+	bool flag = true;
+	//= ImGui::GetIO(); (void)io;
+	void* player = NULL;
+	BYTE Playerciv = NULL;
+
+	//Sleep(3000);
+
+			//TODO set a condition if key is pressed
+		//To use only when pressing key
+	//void* base_ = (void*)0x007912A0;
+	//void** BaseGame_ = (void**)base_;
+	//void* world_ = NULL;
+	void* world;// = *(void**)(*(size_t*)0x7912A0 + 0x424);
+	//void* player = get_player();
+	while (true)
+	{
+		//version = (DWORD*)0x680A18;
+		//if(*version!=0x11)          
+		//    *version = 0x11;
+		//if(BaseGame_ == NULL)
+		//BaseGame_ = (void**)base_;
+		//if (BaseGame_ != NULL && !IsBadReadPtr((void*)(*BaseGame_), sizeof(UINT_PTR)))//world_ == NULL && (*BaseGame_) != NULL)
+		//    world_ =  (void*)((size_t)BaseGame_ + 0x424); ;//MOV EAX,DWORD PTR DS:[ECX+424]
+		//else //continue;
+
+		//unsigned int* _base = (unsigned int*)*BaseGame + 0x424;
+		//unsigned int IndexCurrentPlayer = (unsigned int)*_base + 0x4C;
+
+
+		//if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x7912A0), sizeof(UINT_PTR))
+		if (!IsBadReadPtr((void*)(void**)(*(size_t*)0x6645C4), sizeof(UINT_PTR))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x6645C4 + 0x41C), sizeof(UINT_PTR))
+			//&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x7912A0 + 0x424), sizeof(UINT_PTR))
+			&& (world = *(void**)(*(size_t*)0x6645C4 + 0x41C))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x48), sizeof(UINT_PTR))
+			//&& *(void**)(*(size_t*)0x7912A0 + 0x424) != NULL)
+			&& *(void**)(*(size_t*)0x6645C4 + 0x41C) != NULL)
+		{
+			/*
+			 world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+			 //MOV DX,WORD PTR DS:[EAX+48]
+				player = get_player();
+				IndexCurrentPlayer = (int)(void*)((size_t)world + 0x94); //005E7574  |. 66:8B88 940000>MOV CX,WORD PTR DS:[EAX+94]
+
+*/
+//player = (void*)aok20_sub_5E7560((int)*(void**)0x7912A0);
+			player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4);
+			//else
+			//    //continue;
+			//EnterCriticalSection(&cs_Civ);
+			if (player != NULL && !IsBadReadPtr((void*)((size_t)player + 0x15D), sizeof(UINT_PTR)))
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+			//else
+			//{
+			//    //continue;
+			//}
+			//LeaveCriticalSection(&cs_Civ);
+
+
+
+
+			if (aok20_keypressed(aok20_Hotkeys[0][0], aok20_Hotkeys[0][1], aok20_Hotkeys[0][2], aok20_Hotkeys[0][3]))//0 Select all idle villagers
+			{
+				//printf("villager \n");
+				aok20_selectedIdlVillager = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectedIdlVillager)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[3][0], aok20_Hotkeys[3][1], aok20_Hotkeys[3][2], aok20_Hotkeys[3][3]))//3: Select all Town Centers  
+			{
+				aok20_selectAllTC = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllTC)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[1][0], aok20_Hotkeys[1][1], aok20_Hotkeys[1][2], aok20_Hotkeys[1][2]))//1: Select all idle army
+			{
+				aok20_selectAllArmy = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllArmy)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[7][0], aok20_Hotkeys[7][1], aok20_Hotkeys[7][2], aok20_Hotkeys[7][3]))//7: Select all Siege Workshops 
+			{
+				aok20_selectAllSiegeWorkshop = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllSiegeWorkshop)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+
+			if (aok20_keypressed(aok20_Hotkeys[14][0], aok20_Hotkeys[14][1], aok20_Hotkeys[14][2], aok20_Hotkeys[14][3]))////14: Select all Military buildings (default Ctrl+A)
+			{
+				aok20_selectAllMilitaryBuilding = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllMilitaryBuilding)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[5][0], aok20_Hotkeys[5][1], aok20_Hotkeys[5][2], aok20_Hotkeys[5][3]))//5: Select all Archery Ranges 
+			{
+				aok20_selectAllArcheryRange = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllArcheryRange)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[11][0], aok20_Hotkeys[11][1], aok20_Hotkeys[11][2], aok20_Hotkeys[11][3]))//11: Select all Castles 
+			{
+				aok20_selectAllCastle = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllCastle)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[13][0], aok20_Hotkeys[13][1], aok20_Hotkeys[13][2], aok20_Hotkeys[13][3]))//13: Select all Donjon 
+			{
+				aok20_selectAllDonjon = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllDonjon)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[12][0], aok20_Hotkeys[12][1], aok20_Hotkeys[12][2], aok20_Hotkeys[12][3]))//12: Select all Krepost 
+			{
+				aok20_selectAllKrepost = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllKrepost)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x424);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[9][0], aok20_Hotkeys[9][1], aok20_Hotkeys[9][2], aok20_Hotkeys[9][3]))//9: Select all Markets
+			{
+				aok20_selectAllMarket = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllMarket)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[10][0], aok20_Hotkeys[10][1], aok20_Hotkeys[10][2], aok20_Hotkeys[10][3]))//10: Select all Monasteries
+			{
+				aok20_selectAlMonastery = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAlMonastery)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[2][0], aok20_Hotkeys[2][1], aok20_Hotkeys[2][2], aok20_Hotkeys[2][3]))//2: Select all trade carts 
+			{
+				aok20_selectAlltradeCarte = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAlltradeCarte)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[8][0], aok20_Hotkeys[8][1], aok20_Hotkeys[8][2], aok20_Hotkeys[8][3]))//8: Select all Docks 
+			{
+				aok20_selectAllDock = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllDock)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[4][0], aok20_Hotkeys[4][1], aok20_Hotkeys[4][2], aok20_Hotkeys[4][3]))//4: Select all Barracks 
+			{
+				aok20_selectAllBarrack = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllBarrack)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(aok20_Hotkeys[6][0], aok20_Hotkeys[6][1], aok20_Hotkeys[6][2], aok20_Hotkeys[6][3]))//6: Select all Stables
+			{
+				aok20_selectAllStable = true;
+				aok20_flagClean = 0x1;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_selectAllStable)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			if (aok20_keypressed(VK_DELETE, VK_MENU, 0, 0))//&& (GetAsyncKeyState() || GetAsyncKeyState(VK_LSHIFT)))//Alt+delete
+			{
+				aok20_deleteAllSelected = true;
+				aok20_isKeyPress = true;
+			}
+			if (aok20_isKeyPress && aok20_deleteAllSelected)
+			{
+				world = *(void**)(*(size_t*)0x6645C4 + 0x41C);
+				player = (void*)aok20_sub_5E7560((int)*(void**)0x6645C4); //get_player();
+				Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+				aok20_ManageSelection((int)aok20_IndexCurrentPlayer, player, (int)Playerciv);
+				continue; if (aok20_flagClean == 0) aok20_isKeyPress = false;
+			}
+			/*
+			if (isKeyPress)
+			{
+					world = *(void**)(*(size_t*)0x7912A0 + 0x424);
+					player = (void*)sub_5E7560((int)*(void**)0x7912A0); //get_player();
+					Playerciv = (BYTE) * (void**)((size_t)player + 0x15D);
+					ManageSelection((int)IndexCurrentPlayer, player, (int)Playerciv);
+			}
+
+			if (flagClean == 0) isKeyPress = false;*/
+
+		}
+	}
+}
+DWORD WINAPI  aok20_hotKeyActionelectingThread(LPVOID lpReserved)
+{
+	//no need we get from .hki file now 
+	//////loadHotKey();
+	aok20_hotKeyActionelecting();
+	return 0;
+}
+void Aok20_selectAllProc(HMODULE hModule)
+{
+
+	Aok20_hookAokk();
+	AOK20_keyInputHook();
+	CreateThread(nullptr, 0, aok20_hotKeyActionelectingThread, hModule, 0, nullptr);
+}
+
+void Aoc20PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 {
 	widescreenAOk20(wideScreenCentred);
 	nocdAok20();
@@ -10177,10 +13673,13 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed)
 	gamedata20c();
 	//FixOverwriteRecording();
 	//aok20_FixDefaultRecording();
-	Aok20_LoadLanguageId();
+	Aok20_LoadLanguageId(); //no need any more we load language_default.dll 
 	//windowedFullScreenHook();
 	AOK20_MQSQ();
 	Aok20_FixStatisticsDisplay();
+	Aok20_hotkeyHook();
+	Aok20_language_dll();//menu id
+	Aok20_selectAllProc(hModule);
 }
  
 //crash out patch
