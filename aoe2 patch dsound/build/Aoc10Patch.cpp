@@ -5004,88 +5004,88 @@ void __declspec(naked)  Aoc10_SetHootKeyList004BCE8C()
 	__asm {
 		CALL Aoc10_0058F670
 
-		//black smith
-		PUSH 4A84h
-		PUSH 0
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4A85h
-		PUSH 1h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4A86h
-		PUSH 2h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4A87h
-		PUSH 3h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4A88h
-		PUSH 4h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		//University
-		PUSH 4AB6h
-		PUSH 0h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4AB7h
-		PUSH 1h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4AB8h
-		PUSH 2h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABDh
-		PUSH 3h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4AB9h
-		PUSH 4h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABAh
-		PUSH 5h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABBh
-		PUSH 6h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABCh
-		PUSH 7h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABEh
-		PUSH 8h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4ABFh
-		PUSH 9h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
-		PUSH 4AC0h
-		PUSH 0Ah
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aoc10_0058F670
+		////black smith
+		//PUSH 4A84h
+		//PUSH 0
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4A85h
+		//PUSH 1h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4A86h
+		//PUSH 2h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4A87h
+		//PUSH 3h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4A88h
+		//PUSH 4h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		////University
+		//PUSH 4AB6h
+		//PUSH 0h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4AB7h
+		//PUSH 1h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4AB8h
+		//PUSH 2h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABDh
+		//PUSH 3h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4AB9h
+		//PUSH 4h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABAh
+		//PUSH 5h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABBh
+		//PUSH 6h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABCh
+		//PUSH 7h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABEh
+		//PUSH 8h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4ABFh
+		//PUSH 9h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
+		//PUSH 4AC0h
+		//PUSH 0Ah
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aoc10_0058F670
 		//select ALL
 
 		//16784
@@ -5322,39 +5322,39 @@ void __declspec(naked)  Aoc10_SetHootKeyListhotkey004BC657()
 {
 	__asm {
 			CALL Aoc10_004BE460
-			//Town center
-			Towncenter :
-			PUSH Aoc10_LTowncenter//0h
-			PUSH 04h//0Fh
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			inc Aoc10_LTowncenter
-			CMP Aoc10_LTowncenter, 6h
-			JNZ Towncenter
-			MOV Aoc10_LTowncenter, 0h
+			////Town center
+			//Towncenter :
+			//PUSH Aoc10_LTowncenter//0h
+			//PUSH 04h//0Fh
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			//inc Aoc10_LTowncenter
+			//CMP Aoc10_LTowncenter, 6h
+			//JNZ Towncenter
+			//MOV Aoc10_LTowncenter, 0h
 
-			//Blacksmith
-			Blacksmith :
-			PUSH Aoc10_LBlacksmith//0h
-			PUSH 0Fh
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			inc Aoc10_LBlacksmith
-			CMP Aoc10_LBlacksmith, 5h
-			JNZ Blacksmith
-			MOV Aoc10_LBlacksmith, 0h
+			////Blacksmith
+			//Blacksmith :
+			//PUSH Aoc10_LBlacksmith//0h
+			//PUSH 0Fh
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			//inc Aoc10_LBlacksmith
+			//CMP Aoc10_LBlacksmith, 5h
+			//JNZ Blacksmith
+			//MOV Aoc10_LBlacksmith, 0h
 
 
-			//University
-			University:
-			PUSH Aoc10_LUniversity//0h
-			PUSH 10h
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			inc Aoc10_LUniversity
-			CMP Aoc10_LUniversity, 11h
-			JNZ University
-			MOV Aoc10_LUniversity, 0h
+			////University
+			//University:
+			//PUSH Aoc10_LUniversity//0h
+			//PUSH 10h
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			//inc Aoc10_LUniversity
+			//CMP Aoc10_LUniversity, 11h
+			//JNZ University
+			//MOV Aoc10_LUniversity, 0h
 
 			//Select All
 			SelectALL :
@@ -5367,39 +5367,39 @@ void __declspec(naked)  Aoc10_SetHootKeyListhotkey004BC657()
 			JNZ SelectALL
 			MOV Aoc10_LSelectAll, 0h
 
-			//Monastery
-			Monastery :
-			PUSH Aoc10_LMonastery//0h
-			PUSH 0Ah//12h
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			inc Aoc10_LMonastery
-			CMP Aoc10_LMonastery, 0Ch
-			JNZ Monastery
-			MOV Aoc10_LMonastery, 2h
-			//stable
-			//stepLancer :
-			PUSH 3h
-			PUSH 08h
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			//castel
-			//FlamingCamel:
-			PUSH 3h
-			PUSH 0Dh
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			//Game commandes
-			//GoToKrepost
-			PUSH 42h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
-			//GoToDonjon
-			PUSH 43h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL Aoc10_004BE460
+			////Monastery
+			//Monastery :
+			//PUSH Aoc10_LMonastery//0h
+			//PUSH 0Ah//12h
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			//inc Aoc10_LMonastery
+			//CMP Aoc10_LMonastery, 0Ch
+			//JNZ Monastery
+			//MOV Aoc10_LMonastery, 2h
+			////stable
+			////stepLancer :
+			//PUSH 3h
+			//PUSH 08h
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			////castel
+			////FlamingCamel:
+			//PUSH 3h
+			//PUSH 0Dh
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			////Game commandes
+			////GoToKrepost
+			//PUSH 42h
+			//PUSH 01h
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
+			////GoToDonjon
+			//PUSH 43h
+			//PUSH 01h
+			//MOV ECX, ESI
+			//CALL Aoc10_004BE460
 			JMP Aoc10_004BC65C
 	}
 
@@ -5412,97 +5412,97 @@ DWORD HootKeyAOC10_00479650 = 0x0479650;// 0058F490
 void __declspec(naked)   Aoc10_SetHootKeyListhotkey0x04BF1E3()
 {
 	__asm {
-		//Monastery:
-		cmp EAX, 0Ah
-		jnz tc//Towncenter
-		MOV HootKeyAOC10_rank, 52h//54h//
-		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
-		MOV  HootKeyAOC10_lang, 416Dh//416Fh -2h  because it start at 2
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD HootKeyAOC10_lang, EBX
-		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
-		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD HootKeyAOC10_rank, EBX// 1h
-		//PUSH 60h
-		PUSH HootKeyAOC10_rank
+		////Monastery:
+		//cmp EAX, 0Ah
+		//jnz tc//Towncenter
+		//MOV HootKeyAOC10_rank, 52h//54h//
+		//MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		//MOV  HootKeyAOC10_lang, 416Dh//416Fh -2h  because it start at 2
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD HootKeyAOC10_lang, EBX
+		//MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		//PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD HootKeyAOC10_rank, EBX// 1h
+		////PUSH 60h
+		//PUSH HootKeyAOC10_rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		tc:
-		cmp EAX, 04h//0Fh
-		jnz Blacksmith
-		MOV HootKeyAOC10_rank, 59h
-		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
-		MOV  HootKeyAOC10_lang, 4178h //417Ah -2
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD HootKeyAOC10_lang, EBX
-		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
-		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD HootKeyAOC10_rank, EBX//1h
-		//PUSH 60h
-		PUSH HootKeyAOC10_rank
+		//tc:
+		//cmp EAX, 04h//0Fh
+		//jnz Blacksmith
+		//MOV HootKeyAOC10_rank, 59h
+		//MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		//MOV  HootKeyAOC10_lang, 4178h //417Ah -2
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD HootKeyAOC10_lang, EBX
+		//MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		//PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD HootKeyAOC10_rank, EBX//1h
+		////PUSH 60h
+		//PUSH HootKeyAOC10_rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		Blacksmith:
-		cmp EAX, 0Fh //10h
-		jnz University//Towncenter
-		MOV HootKeyAOC10_rank, 63h
-		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
-		MOV  HootKeyAOC10_lang, 415Eh
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD HootKeyAOC10_lang, EBX
-		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
-		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD HootKeyAOC10_rank, EBX// 1h
-		//PUSH 60h
-		PUSH HootKeyAOC10_rank
+		//Blacksmith:
+		//cmp EAX, 0Fh //10h
+		//jnz University//Towncenter
+		//MOV HootKeyAOC10_rank, 63h
+		//MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		//MOV  HootKeyAOC10_lang, 415Eh
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD HootKeyAOC10_lang, EBX
+		//MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		//PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD HootKeyAOC10_rank, EBX// 1h
+		////PUSH 60h
+		//PUSH HootKeyAOC10_rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		University:
-		cmp EAX, 10h//11h
-		jnz  selectALL //steplancer//Towncenter
-		MOV HootKeyAOC10_rank, 69h
-		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
-		MOV  HootKeyAOC10_lang, 4164h
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD HootKeyAOC10_lang, EBX
-		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
-		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD HootKeyAOC10_rank, EBX// 1h
-		//PUSH 60h
-		PUSH HootKeyAOC10_rank
+		//University:
+		//cmp EAX, 10h//11h
+		//jnz  selectALL //steplancer//Towncenter
+		//MOV HootKeyAOC10_rank, 69h
+		//MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		//MOV  HootKeyAOC10_lang, 4164h
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD HootKeyAOC10_lang, EBX
+		//MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		//PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD HootKeyAOC10_rank, EBX// 1h
+		////PUSH 60h
+		//PUSH HootKeyAOC10_rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
 		selectALL:
 		cmp EAX, 11h
-		jnz steplancer
+		jnz defaultSwitchCase
 		MOV HootKeyAOC10_rank, 7Bh
 		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
 		MOV  HootKeyAOC10_lang, 4182h// 16784  // 4164h
@@ -5523,57 +5523,57 @@ void __declspec(naked)   Aoc10_SetHootKeyListhotkey0x04BF1E3()
 		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
 
-		steplancer:
-		cmp EAX, 08h
-		jnz FlamingCamel
-		PUSH 417Dh
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		PUSH 81h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//steplancer:
+		//cmp EAX, 08h
+		//jnz FlamingCamel
+		//PUSH 417Dh
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 81h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		FlamingCamel:
-		cmp EAX, 0Dh
-		jnz GoToKrepost
-		PUSH 417Eh
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		PUSH 82h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//FlamingCamel:
+		//cmp EAX, 0Dh
+		//jnz GoToKrepost
+		//PUSH 417Eh
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 82h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		GoToKrepost:
-		cmp EAX, 1h
-		jnz defaultSwitchCase
-		CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
-		JNZ GoToDonjon
-		PUSH 417Fh
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		PUSH 83h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//GoToKrepost:
+		//cmp EAX, 1h
+		//jnz defaultSwitchCase
+		//CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+		//JNZ GoToDonjon
+		//PUSH 417Fh
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 83h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		GoToDonjon:
-		cmp EAX, 1h
-		jnz defaultSwitchCase
-		CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
-		JNZ defaultSwitchCase
-		PUSH 4180h
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		PUSH 84h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//GoToDonjon:
+		//cmp EAX, 1h
+		//jnz defaultSwitchCase
+		//CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+		//JNZ defaultSwitchCase
+		//PUSH 4180h
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 0h
+		//PUSH 84h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
 
 
@@ -6191,24 +6191,24 @@ void Aoc10_hotkeyHook()
 	//setHook((void*)0x04BEEB1, SetHootKeyList004BEEB1);
 	//set item number ?
 	// 004BBF33     6A 11           PUSH 11
-	//NumHotkeyGroups
+	////NumHotkeyGroups
 	writeByte(0x0549014, 0x14);//00549013  |. 6A 0F          PUSH 0F
-	//extend game commande key to add go to krepost
-	writeByte(0x0549026, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
+	////extend game commande key to add go to krepost
+	//writeByte(0x0549026, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
 
-	//set monastarysize item
-	//004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
-	writeByte(0x0549089, 0xC);//00549088  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
-	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
-	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
-	//extandestable loop
-	//004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
-	writeByte(0x0549073, 0x4);//00549072  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
-	//extend castle item
-	//004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
-	writeByte(0x05490AA, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	////set monastarysize item
+	////004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
+	//writeByte(0x0549089, 0xC);//00549088  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
+	////004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	////	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	////extandestable loop
+	////004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
+	//writeByte(0x0549073, 0x4);//00549072  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	////extend castle item
+	////004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//writeByte(0x05490AA, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
 
-	setHook((void*)0x054B540, Aoc10_SetHootKeyList004BD935);//0054B540  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
+	//setHook((void*)0x054B540, Aoc10_SetHootKeyList004BD935);//0054B540  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
 	//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
 	setHook((void*)0x05490BA, Aoc10_SetHootKeyList004BBFDA);//005490BA  |. E8 A108F3FF    CALL age2_x1.00479960                    ; \age2_x1.00479960
 
@@ -6216,26 +6216,26 @@ void Aoc10_hotkeyHook()
 	setHook((void*)0x054918C, Aoc10_SetHootKeyList004BC0AC);//0054918C  |. E8 DF06F3FF    CALL age2_x1.00479870
 	//item when clicking
 	setHook((void*)0x0549F6C, Aoc10_SetHootKeyList004BCE8C);//00549F6C  |. E8 BFF8F2FF    CALL age2_x1.00479830
-	setHook((void*)0x0549E6C, Aoc10_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
-	setHook((void*)0x0549CCC, Aoc10_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
-	//6739=X,  5800=Steppe Lancer Stable: 0x8,
-	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
-	setHook((void*)0x0549E0C, AOC10_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
+	//setHook((void*)0x0549E6C, Aoc10_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
+	//setHook((void*)0x0549CCC, Aoc10_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
+	////6739=X,  5800=Steppe Lancer Stable: 0x8,
+	////004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
+	//setHook((void*)0x0549E0C, AOC10_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
 
-	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
-	//004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
-	setHook((void*)0x0549F5C, Aoc10_SetHootKeyList004BCE7C);//00549F5C  |. E8 CFF8F2FF    CALL age2_x1.00479830
-	setHook((void*)0x05499EC, Aoc10_SetHootKeyListGoToKrepost004BC90C);//005499EC  |. E8 3FFEF2FF    CALL age2_x1.00479830
+	////castel 417E->16766=V,14FF->5375 =Create Flaming Camel
+	////004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
+	//setHook((void*)0x0549F5C, Aoc10_SetHootKeyList004BCE7C);//00549F5C  |. E8 CFF8F2FF    CALL age2_x1.00479830
+	//setHook((void*)0x05499EC, Aoc10_SetHootKeyListGoToKrepost004BC90C);//005499EC  |. E8 3FFEF2FF    CALL age2_x1.00479830
 	//key 
 	setHook((void*)0x0549737, Aoc10_SetHootKeyListhotkey004BC657);//00549737  |. E8 041E0000    CALL age2_x1.0054B540
 	setHook((void*)0x054C2C3, Aoc10_SetHootKeyListhotkey0x04BF1E3);//0054C2C3  \> C2 0800        RETN 8                                   ;  Default case of switch 0054C24F
 	//key events
-	setHook((void*)0x054AA15, Aoc10_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+	//setHook((void*)0x054AA15, Aoc10_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
 
-	////	//go to krepost and donjon
-	//////00524471   . 0F87 AF010000  JA age2_x1.00524626
-	////setHookJA((void*)0x04EC941, Aoc10_SetHootgoToKrepostDonjonJA);//004EC941  |. 0F87 AF010000  JA age2_x1.004ECAF6
-	////setHookJA((void*)0x051D1F6, SetHootgoToKrepostEvent0051D1F0JA);//004E5726   . 0F87 92050000  JA age2_x1.004E5CBE
+	//////	//go to krepost and donjon
+	////////00524471   . 0F87 AF010000  JA age2_x1.00524626
+	//////setHookJA((void*)0x04EC941, Aoc10_SetHootgoToKrepostDonjonJA);//004EC941  |. 0F87 AF010000  JA age2_x1.004ECAF6
+	//////setHookJA((void*)0x051D1F6, SetHootgoToKrepostEvent0051D1F0JA);//004E5726   . 0F87 92050000  JA age2_x1.004E5CBE
 }
 //load language dll
 //0043AFF0   >-E9 BD613E7B     JMP scout.7B8211B2
@@ -8319,7 +8319,7 @@ void Aoc10_makequeue()
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
 			int cptbuilding = 0;
-			for (int i = 0; i <= *NBSelect; i++)
+			for (int i = 1; i <= *NBSelect; i++)
 			{
 				void* master_obj = (void*)*(DWORD*)(lstSelect + i);
 				void* obj = (void*)*(DWORD*)((size_t)master_obj + 0x8);

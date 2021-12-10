@@ -10309,88 +10309,88 @@ void __declspec(naked)  SetHootKeyList004BCE8C()
 	__asm {
 		CALL _0058F670
 
-		//black smith
-		PUSH 4A84h
-		PUSH 0
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4A85h
-		PUSH 1h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4A86h
-		PUSH 2h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4A87h
-		PUSH 3h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4A88h
-		PUSH 4h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL _0058F670
-		//University
-		PUSH 4AB6h
-		PUSH 0h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4AB7h
-		PUSH 1h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4AB8h
-		PUSH 2h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABDh
-		PUSH 3h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4AB9h
-		PUSH 4h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABAh
-		PUSH 5h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABBh
-		PUSH 6h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABCh
-		PUSH 7h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABEh
-		PUSH 8h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4ABFh
-		PUSH 9h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
-		PUSH 4AC0h
-		PUSH 0Ah
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL _0058F670
+		////black smith
+		//PUSH 4A84h
+		//PUSH 0
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4A85h
+		//PUSH 1h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4A86h
+		//PUSH 2h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4A87h
+		//PUSH 3h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4A88h
+		//PUSH 4h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL _0058F670
+		////University
+		//PUSH 4AB6h
+		//PUSH 0h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4AB7h
+		//PUSH 1h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4AB8h
+		//PUSH 2h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABDh
+		//PUSH 3h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4AB9h
+		//PUSH 4h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABAh
+		//PUSH 5h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABBh
+		//PUSH 6h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABCh
+		//PUSH 7h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABEh
+		//PUSH 8h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4ABFh
+		//PUSH 9h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
+		//PUSH 4AC0h
+		//PUSH 0Ah
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL _0058F670
 		//select ALL
 
 		//16784
@@ -10679,39 +10679,39 @@ void __declspec(naked)  SetHootKeyListhotkey004BC657()
 {
 	__asm {
 		CALL _004BE460
-		//Town center
-		Towncenter :
-		PUSH LTowncenter//0h
-			PUSH 04h//0Fh
-			MOV ECX, ESI
-			CALL _004BE460
-			inc LTowncenter
-			CMP LTowncenter, 6h
-			JNZ Towncenter
-			MOV LTowncenter, 0h
+		////Town center
+		//Towncenter :
+		//PUSH LTowncenter//0h
+		//	PUSH 04h//0Fh
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	inc LTowncenter
+		//	CMP LTowncenter, 6h
+		//	JNZ Towncenter
+		//	MOV LTowncenter, 0h
 
-			//Blacksmith
-			Blacksmith :
-		PUSH LBlacksmith//0h
-			PUSH 0Fh
-			MOV ECX, ESI
-			CALL _004BE460
-			inc LBlacksmith
-			CMP LBlacksmith, 5h
-			JNZ Blacksmith
-			MOV LBlacksmith, 0h
+		//	//Blacksmith
+		//	Blacksmith :
+		//PUSH LBlacksmith//0h
+		//	PUSH 0Fh
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	inc LBlacksmith
+		//	CMP LBlacksmith, 5h
+		//	JNZ Blacksmith
+		//	MOV LBlacksmith, 0h
 
 
-			//University
-		University:
-		PUSH LUniversity//0h
-			PUSH 10h
-			MOV ECX, ESI
-			CALL _004BE460
-			inc LUniversity
-			CMP LUniversity, 11h
-			JNZ University
-			MOV LUniversity, 0h
+		//	//University
+		//University:
+		//PUSH LUniversity//0h
+		//	PUSH 10h
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	inc LUniversity
+		//	CMP LUniversity, 11h
+		//	JNZ University
+		//	MOV LUniversity, 0h
 
 			//Select All
 			SelectALL :
@@ -10724,39 +10724,39 @@ void __declspec(naked)  SetHootKeyListhotkey004BC657()
 			JNZ SelectALL
 			MOV LSelectAll, 0h
 
-			//Monastery
-			Monastery :
-		PUSH LMonastery//0h
-			PUSH 0Ah//12h
-			MOV ECX, ESI
-			CALL _004BE460
-			inc LMonastery
-			CMP LMonastery, 0Ch
-			JNZ Monastery
-			MOV LMonastery, 2h
-			//stable
-			//stepLancer :
-			PUSH 3h
-			PUSH 08h
-			MOV ECX, ESI
-			CALL _004BE460
-			//castel
-			//FlamingCamel:
-			PUSH 3h
-			PUSH 0Dh
-			MOV ECX, ESI
-			CALL _004BE460
-			//Game commandes
-			//GoToKrepost
-			PUSH 42h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL _004BE460
-			//GoToDonjon
-			PUSH 43h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL _004BE460
+		//	//Monastery
+		//	Monastery :
+		//PUSH LMonastery//0h
+		//	PUSH 0Ah//12h
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	inc LMonastery
+		//	CMP LMonastery, 0Ch
+		//	JNZ Monastery
+		//	MOV LMonastery, 2h
+		//	//stable
+		//	//stepLancer :
+		//	PUSH 3h
+		//	PUSH 08h
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	//castel
+		//	//FlamingCamel:
+		//	PUSH 3h
+		//	PUSH 0Dh
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	//Game commandes
+		//	//GoToKrepost
+		//	PUSH 42h
+		//	PUSH 01h
+		//	MOV ECX, ESI
+		//	CALL _004BE460
+		//	//GoToDonjon
+		//	PUSH 43h
+		//	PUSH 01h
+		//	MOV ECX, ESI
+		//	CALL _004BE460
 			JMP _004BC65C
 	}
 
@@ -10780,97 +10780,97 @@ void __declspec(naked)  SetHootKeyListhotkey0x04BF1E3()
 
 
 
-		//Monastery:
-		cmp EAX, 0Ah
-		jnz tc//Towncenter
-		MOV _rank, 52h//54h//
-		MOV _EBX, EBX
-		MOV  _lang, 416Dh//416Fh -2h  because it start at 2
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD _lang, EBX
-		MOV EBX, _EBX
-		PUSH _lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD _rank, EBX// 1h
-		//PUSH 60h
-		PUSH _rank
+		////Monastery:
+		//cmp EAX, 0Ah
+		//jnz tc//Towncenter
+		//MOV _rank, 52h//54h//
+		//MOV _EBX, EBX
+		//MOV  _lang, 416Dh//416Fh -2h  because it start at 2
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD _lang, EBX
+		//MOV EBX, _EBX
+		//PUSH _lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL _0058F490; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD _rank, EBX// 1h
+		////PUSH 60h
+		//PUSH _rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL _0058F490; \age2_x1.0058F490
 
-		tc:
-		cmp EAX, 04h//0Fh
-			jnz Blacksmith
-			MOV _rank, 59h
-			MOV _EBX, EBX
-			MOV  _lang, 4178h //417Ah -2
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD _lang, EBX
-			MOV EBX, _EBX
-			PUSH _lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD _rank, EBX//1h
-			//PUSH 60h
-			PUSH _rank
-			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//tc:
+		//cmp EAX, 04h//0Fh
+		//	jnz Blacksmith
+		//	MOV _rank, 59h
+		//	MOV _EBX, EBX
+		//	MOV  _lang, 4178h //417Ah -2
+		//	MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//	ADD _lang, EBX
+		//	MOV EBX, _EBX
+		//	PUSH _lang//415Eh; / Arg7 = 00001266
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	ADD _rank, EBX//1h
+		//	//PUSH 60h
+		//	PUSH _rank
+		//	//PUSH 0h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	//PUSH 0Fh
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
-			Blacksmith:
-		cmp EAX, 0Fh //10h
-			jnz University//Towncenter
-			MOV _rank, 63h
-			MOV _EBX, EBX
-			MOV  _lang, 415Eh
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD _lang, EBX
-			MOV EBX, _EBX
-			PUSH _lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD _rank, EBX// 1h
-			//PUSH 60h
-			PUSH _rank
-			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	Blacksmith:
+		//cmp EAX, 0Fh //10h
+		//	jnz University//Towncenter
+		//	MOV _rank, 63h
+		//	MOV _EBX, EBX
+		//	MOV  _lang, 415Eh
+		//	MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//	ADD _lang, EBX
+		//	MOV EBX, _EBX
+		//	PUSH _lang//415Eh; / Arg7 = 00001266
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	ADD _rank, EBX// 1h
+		//	//PUSH 60h
+		//	PUSH _rank
+		//	//PUSH 0h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	//PUSH 0Fh
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
-			University:
-		cmp EAX, 10h//11h
-			jnz  selectALL //steplancer//Towncenter
-			MOV _rank, 69h
-			MOV _EBX, EBX
-			MOV  _lang, 4164h
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD _lang, EBX
-			MOV EBX, _EBX
-			PUSH _lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD _rank, EBX// 1h
-			//PUSH 60h
-			PUSH _rank
-			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	University:
+		//cmp EAX, 10h//11h
+		//	jnz  selectALL //steplancer//Towncenter
+		//	MOV _rank, 69h
+		//	MOV _EBX, EBX
+		//	MOV  _lang, 4164h
+		//	MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//	ADD _lang, EBX
+		//	MOV EBX, _EBX
+		//	PUSH _lang//415Eh; / Arg7 = 00001266
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	ADD _rank, EBX// 1h
+		//	//PUSH 60h
+		//	PUSH _rank
+		//	//PUSH 0h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	//PUSH 0Fh
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
 			selectALL:
 		cmp EAX, 11h
-			jnz steplancer
+			jnz defaultSwitchCase
 			MOV _rank, 7Bh
 			MOV _EBX, EBX
 			MOV  _lang, 4182h// 16784  // 4164h
@@ -10891,57 +10891,57 @@ void __declspec(naked)  SetHootKeyListhotkey0x04BF1E3()
 			CALL _0058F490; \age2_x1.0058F490
 
 
-			steplancer:
-		cmp EAX, 08h
-			jnz FlamingCamel
-			PUSH 417Dh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 81h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	steplancer:
+		//cmp EAX, 08h
+		//	jnz FlamingCamel
+		//	PUSH 417Dh
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 81h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
-			FlamingCamel:
-		cmp EAX, 0Dh
-			jnz GoToKrepost
-			PUSH 417Eh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 82h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	FlamingCamel:
+		//cmp EAX, 0Dh
+		//	jnz GoToKrepost
+		//	PUSH 417Eh
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 82h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
-			GoToKrepost:
-		cmp EAX, 1h
-			jnz defaultSwitchCase
-			CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
-			JNZ GoToDonjon
-			PUSH 417Fh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 83h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	GoToKrepost:
+		//cmp EAX, 1h
+		//	jnz defaultSwitchCase
+		//	CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+		//	JNZ GoToDonjon
+		//	PUSH 417Fh
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 83h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
-			GoToDonjon:
-		cmp EAX, 1h
-			jnz defaultSwitchCase
-			CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
-			JNZ defaultSwitchCase
-			PUSH 4180h
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 84h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	GoToDonjon:
+		//cmp EAX, 1h
+		//	jnz defaultSwitchCase
+		//	CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+		//	JNZ defaultSwitchCase
+		//	PUSH 4180h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 84h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
 
 
@@ -11735,26 +11735,26 @@ void hotkeyHook()
 	// 004BBF33     6A 11           PUSH 11
 	//NumHotkeyGroups
 	writeByte(0x04BBF34, 0x14);
-	//extend game commande key to add go to krepost
-	writeByte(0x04BBF46, 0x44);
+	////extend game commande key to add go to krepost
+	//writeByte(0x04BBF46, 0x44);
 
-	//set monastarysize item
-	//004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
-	writeByte(0x04BBFA9, 0xC);
-	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
-	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
-	//extandestable loop
-	//004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
-	writeByte(0x04BBF93, 0x4);
-	//extend castle item
-	//004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
-	writeByte(0x04BBFCA, 0x4);
-
-
+	////set monastarysize item
+	////004BBFA8 | . 6A 02          PUSH 2; / Arg2 = 00000002
+	//writeByte(0x04BBFA9, 0xC);
+	////004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	////	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	////extandestable loop
+	////004BBF92 | . 6A 03          PUSH 3; / Arg2 = 00000003
+	//writeByte(0x04BBF93, 0x4);
+	////extend castle item
+	////004BBFC9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//writeByte(0x04BBFCA, 0x4);
 
 
 
-	setHook((void*)0x04BE460, SetHootKeyList004BD935);
+
+
+	//setHook((void*)0x04BE460, SetHootKeyList004BD935);
 
 
 	//004BBFDA  |. E8 C1370D00     CALL age2_x1.0058F7A0                                ; \age2_x1.0058F7A0
@@ -11765,22 +11765,22 @@ void hotkeyHook()
 	setHook((void*)0x04BC0AC, SetHootKeyList004BC0AC);
 	//item when clicking
 	setHook((void*)0x04BCE8C, SetHootKeyList004BCE8C);
-	setHook((void*)0x04BCD8C, SetHootKeyList004BCD8CMonastary);
-	setHook((void*)0x04BCBEC, SetHootKeyList004BCBECTC);
-	//6739=X,  5800=Steppe Lancer Stable: 0x8,
-	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
-	setHook((void*)0x04BCD2C, SetHootKeyList004BCD2C);
-	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
-	//004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
-	setHook((void*)0x04BCE7C, SetHootKeyList004BCE7C);
-	setHook((void*)0x04BC90C, SetHootKeyListGoToKrepost004BC90C);
+	//setHook((void*)0x04BCD8C, SetHootKeyList004BCD8CMonastary);
+	//setHook((void*)0x04BCBEC, SetHootKeyList004BCBECTC);
+	////6739=X,  5800=Steppe Lancer Stable: 0x8,
+	////004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
+	//setHook((void*)0x04BCD2C, SetHootKeyList004BCD2C);
+	////castel 417E->16766=V,14FF->5375 =Create Flaming Camel
+	////004BCE7C  |. E8 EF270D00    CALL age2_x1.0058F670
+	//setHook((void*)0x04BCE7C, SetHootKeyList004BCE7C);
+	//setHook((void*)0x04BC90C, SetHootKeyListGoToKrepost004BC90C);
 
 	//key 
 	setHook((void*)0x04BC657, SetHootKeyListhotkey004BC657);
 	setHook((void*)0x04BF1E3, SetHootKeyListhotkey0x04BF1E3);
 
-	//key events
-	setHook((void*)0x04BD935, SetHootKeyEvent004BD935);
+	////key events
+	//setHook((void*)0x04BD935, SetHootKeyEvent004BD935);
 
 	//00447EFF | . 68 F44C0000    PUSH 4CF4
 	//go to castel
@@ -13686,7 +13686,7 @@ void makequeue()
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
 			int cptbuilding = 0;
-			for (int i = 0; i <= *NBSelect; i++)
+			for (int i = 1; i <= *NBSelect; i++)
 			{
 				void* master_obj = (void*)*(DWORD*)(lstSelect+i);
 				void* obj = (void*)*(DWORD*)((size_t)master_obj + 0x8);

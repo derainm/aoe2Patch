@@ -8908,7 +8908,7 @@ DWORD Aok20_004A2160 = 0x04A2160;
 //2A78, "10 DE_Lombardia"
 //2A79, "1 !! G  A voobly"
 //2A7A, "0 Kilimanjaro"
-char _20020[]= "Select All"	  ;
+//char _20020[]= "Select All"	  ;
 char _2A65[]= "9 DE_Hillfort"	  ;
 char _2A66[]= "8 DE_Hideout"		  ;
 char _2A67[]= "7 DE_Cross"		  ;
@@ -8933,6 +8933,9 @@ char _2A79[]= "1 !! G  A voobly"	  ;
 char _2A7A[]= "0 Kilimanjaro"	  ;
 char _9C58[]="Triangle Formation" ;
 char _9C59[]="Fusion Formation"   ;
+char _20017[]= "Mill"	   ;
+char _20019[]= "University";
+char _20020[]= "Select All";
 DWORD ESI_scenario;
 DWORD EDI_scenario;
 
@@ -9051,7 +9054,10 @@ void __declspec(naked) languageIdAok20()
 		//MOV EDI, ESI  
 		//LEA ESI, DWORD PTR DS : [_20020]
 		//JMP continueproc
-		__2A65 :
+		
+		
+
+			__2A65 :
 		CALL Aok20_00473AE0
 		MOV  ESI_scenario, ESI
 		MOV  EDI_scenario, EDI
@@ -9308,10 +9314,21 @@ void __declspec(naked) languageIdAok20v2()
 		JE __9C59
 		cmp eax, 20020
 		JE __20020
+		cmp eax, 20017
+		JE __20017
+		cmp eax, 20019
+		JE __20019
 		JMP continueproc
-		__20020:
-		LEA ECX, DWORD PTR SS : [_20020]
+		
+		__20019 :
+		LEA ECX, DWORD PTR SS : [_20019]
 			JMP normaleprocess
+		__20017 :
+		LEA ECX, DWORD PTR SS : [_20017]
+		JMP normaleprocess	
+			__20020 :
+		LEA ECX, DWORD PTR SS : [_20020]
+		JMP normaleprocess
 		__2A65 :
 		 LEA ECX, DWORD PTR SS : [_2A65]
 		JMP normaleprocess
@@ -9756,7 +9773,7 @@ void AOK20_makequeue()
 			//nbselectionnn = *NBSelect;
 			void** sel_list = (void**)(lstSelect);
 			int cptbuilding = 0;
-			for (int i = 0; i <= *NBSelect; i++)
+			for (int i = 1; i <= *NBSelect; i++)
 			{
 				void* master_obj = (void*)*(DWORD*)(lstSelect + i);
 				void* obj = (void*)*(DWORD*)((size_t)master_obj + 0x8);
@@ -9866,9 +9883,10 @@ void __declspec(naked)  Aok20_FixStatisticsDisplayhook007B9019()
 	__asm {
 		//MOV ECX, DWORD PTR DS : [7912A0h]
 		MOV ECX, DWORD PTR DS : [6645C4h]
-		PUSH 13E2h
+		PUSH 13E2h//  20021, 	"Fishing Ship"
 		MOV EAX, DWORD PTR DS : [ECX]
-		CALL DWORD PTR DS : [EAX + 24h]
+		//CALL DWORD PTR DS : [EAX + 24h]
+		CALL DWORD PTR DS : [EAX + 20h]
 		MOV DWORD PTR SS : [ESP + 10h] , EAX
 		MOV EAX, DWORD PTR SS : [ESP + 14h]
 		MOV ECX, DWORD PTR SS : [ESP + 10h]
@@ -10221,47 +10239,47 @@ void  Aok20_FixStatisticsDisplay()
 DWORD HootKeyAok20_00479650 = 0x0472EF0;// 0058F490
 DWORD Aok20_004BE467 = 0x053BD17;//0053BD17  |. 0F87 8B0C0000  JA empires2.0053C9A8
 DWORD Aok20_004BF1E3 = 0x053C9A8;//0053C9A8  \> C2 0800        RETN 8                                   ;  Default case of switch 0053C971
-DWORD Aok20_0053C9AC = 0x053C9A8;//53C9AC
+DWORD Aok20_0053C9AC = 0X053C0e3;//0x053C9A8  53C9AC
 void __declspec(naked)  Aok20_SetHootKeyList004BD935()
 {
 	__asm {
 			MOV EAX, DWORD PTR SS : [ESP + 4h]
-			CMP EAX, 04h//tc
-			JNZ checkmona
-			CMP DWORD PTR SS : [ESP + 8h] , 0h//2h
-			JE Normale
-			CMP DWORD PTR SS : [ESP + 8h] , 6h//2h
-			JE Normale
-			CMP DWORD PTR SS : [ESP + 8h] , 7h//2h
-			JE Normale
-			JMP __004BF1E3
+			//CMP EAX, 04h//tc
+			//JNZ checkmona
+			//CMP DWORD PTR SS : [ESP + 8h] , 0h//2h
+			//JE Normale
+			//CMP DWORD PTR SS : [ESP + 8h] , 6h//2h
+			//JE Normale
+			//CMP DWORD PTR SS : [ESP + 8h] , 7h//2h
+			//JE Normale
+			//JMP __004BF1E3
 
-			checkmona :
-			CMP EAX, 0Ah //monastar
-			JNZ steplancer// Normale
-			CMP DWORD PTR SS : [ESP + 8h] , 1h
-			Jg __004BF1E3//if is add item then jump default switch case
+			//checkmona :
+			//CMP EAX, 0Ah //monastar
+			//JNZ steplancer// Normale
+			//CMP DWORD PTR SS : [ESP + 8h] , 1h
+			//Jg __004BF1E3//if is add item then jump default switch case
 
-			steplancer :
-			CMP EAX, 08h
-			JNZ FlamingCamel
-			CMP[ESP + 8h], 3h
-			JE __004BF1E3
+			//steplancer :
+			//CMP EAX, 08h
+			//JNZ FlamingCamel
+			//CMP[ESP + 8h], 3h
+			//JE __004BF1E3
 
-			FlamingCamel :
-			CMP EAX, 0Dh
-			JNZ GoToKrepost//Normale
-			CMP[ESP + 8h], 3h
-			JE __004BF1E3
+			//FlamingCamel :
+			//CMP EAX, 0Dh
+			//JNZ GoToKrepost//Normale
+			//CMP[ESP + 8h], 3h
+			//JE __004BF1E3
 
 
-			GoToKrepost :
-			cmp EAX, 1h
-			JNZ Normale
-			CMP DWORD PTR SS : [ESP + 8h] , 42h
-			JE __004BF1E3
-			CMP DWORD PTR SS : [ESP + 8h] , 43h
-			JE __004BF1E3
+			//GoToKrepost :
+			//cmp EAX, 1h
+			//JNZ Normale
+			//CMP DWORD PTR SS : [ESP + 8h] , 42h
+			//JE __004BF1E3
+			//CMP DWORD PTR SS : [ESP + 8h] , 43h
+			//JE __004BF1E3
  
 			Normale:
 			
@@ -10379,89 +10397,89 @@ void __declspec(naked)  Aok20_SetHootKeyList004BCE8C()
 		call Aok20_0058F670
 
 
-		//black smith
-		PUSH 4A84h
-		PUSH 0
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4A85h
-		PUSH 1h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4A86h
-		PUSH 2h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4A87h
-		PUSH 3h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4A88h
-		PUSH 4h
-		PUSH 0Fh
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		//University
-		PUSH 4AB6h
-		PUSH 0h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4AB7h
-		PUSH 1h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4AB8h
-		PUSH 2h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABDh
-		PUSH 3h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4AB9h
-		PUSH 4h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABAh
-		PUSH 5h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABBh
-		PUSH 6h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABCh
-		PUSH 7h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABEh
-		PUSH 8h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4ABFh
-		PUSH 9h
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		PUSH 4AC0h
-		PUSH 0Ah
-		PUSH 10h//11h
-		MOV ECX, ESI
-		CALL Aok20_0058F670
-		//select ALL
+		////black smith
+		//PUSH 4A84h
+		//PUSH 0
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4A85h
+		//PUSH 1h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4A86h
+		//PUSH 2h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4A87h
+		//PUSH 3h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4A88h
+		//PUSH 4h
+		//PUSH 0Fh
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		////University
+		//PUSH 4AB6h
+		//PUSH 0h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4AB7h
+		//PUSH 1h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4AB8h
+		//PUSH 2h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABDh
+		//PUSH 3h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4AB9h
+		//PUSH 4h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABAh
+		//PUSH 5h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABBh
+		//PUSH 6h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABCh
+		//PUSH 7h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABEh
+		//PUSH 8h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4ABFh
+		//PUSH 9h
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		//PUSH 4AC0h
+		//PUSH 0Ah
+		//PUSH 10h//11h
+		//MOV ECX, ESI
+		//CALL Aok20_0058F670
+		////select ALL
 
 		//16784
 		PUSH 4190h
@@ -10678,39 +10696,39 @@ void __declspec(naked)  Aok20_SetHootKeyListhotkey004BC657()
 {
 	__asm {
 			CALL Aok20_004BE460
-			//Town center
-			Towncenter :
-			PUSH Aok20_LTowncenter//0h
-			PUSH 04h//0Fh
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			inc Aok20_LTowncenter
-			CMP Aok20_LTowncenter, 6h
-			JNZ Towncenter
-			MOV Aok20_LTowncenter, 0h
+			////Town center
+			//Towncenter :
+			//PUSH Aok20_LTowncenter//0h
+			//PUSH 04h//0Fh
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			//inc Aok20_LTowncenter
+			//CMP Aok20_LTowncenter, 6h
+			//JNZ Towncenter
+			//MOV Aok20_LTowncenter, 0h
 
-			//Blacksmith
-			Blacksmith :
-			PUSH Aok20_LBlacksmith//0h
-			PUSH 0Fh
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			inc Aok20_LBlacksmith
-			CMP Aok20_LBlacksmith, 5h
-			JNZ Blacksmith
-			MOV Aok20_LBlacksmith, 0h
+			////Blacksmith
+			//Blacksmith :
+			//PUSH Aok20_LBlacksmith//0h
+			//PUSH 0Fh
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			//inc Aok20_LBlacksmith
+			//CMP Aok20_LBlacksmith, 5h
+			//JNZ Blacksmith
+			//MOV Aok20_LBlacksmith, 0h
 
 
-			//University
-			University:
-			PUSH Aok20_LUniversity//0h
-			PUSH 10h
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			inc Aok20_LUniversity
-			CMP Aok20_LUniversity, 11h
-			JNZ University
-			MOV Aok20_LUniversity, 0h
+			////University
+			//University:
+			//PUSH Aok20_LUniversity//0h
+			//PUSH 10h
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			//inc Aok20_LUniversity
+			//CMP Aok20_LUniversity, 11h
+			//JNZ University
+			//MOV Aok20_LUniversity, 0h
 
 			//Select All
 			SelectALL :
@@ -10723,39 +10741,39 @@ void __declspec(naked)  Aok20_SetHootKeyListhotkey004BC657()
 			JNZ SelectALL
 			MOV Aok20_LSelectAll, 0h
 
-			//Monastery
-			Monastery :
-			PUSH Aok20_LMonastery//0h
-			PUSH 0Ah//12h
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			inc Aok20_LMonastery
-			CMP Aok20_LMonastery, 0Ch
-			JNZ Monastery
-			MOV Aok20_LMonastery, 2h
-			//stable
-			//stepLancer :
-			PUSH 3h
-			PUSH 08h
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			//castel
-			//FlamingCamel:
-			PUSH 3h
-			PUSH 0Dh
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			//Game commandes
-			//GoToKrepost
-			PUSH 42h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL Aok20_004BE460
-			//GoToDonjon
-			PUSH 43h
-			PUSH 01h
-			MOV ECX, ESI
-			CALL Aok20_004BE460
+			////Monastery
+			//Monastery :
+			//PUSH Aok20_LMonastery//0h
+			//PUSH 0Ah//12h
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			//inc Aok20_LMonastery
+			//CMP Aok20_LMonastery, 0Ch
+			//JNZ Monastery
+			//MOV Aok20_LMonastery, 2h
+			////stable
+			////stepLancer :
+			//PUSH 3h
+			//PUSH 08h
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			////castel
+			////FlamingCamel:
+			//PUSH 3h
+			//PUSH 0Dh
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			////Game commandes
+			////GoToKrepost
+			//PUSH 42h
+			//PUSH 01h
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
+			////GoToDonjon
+			//PUSH 43h
+			//PUSH 01h
+			//MOV ECX, ESI
+			//CALL Aok20_004BE460
 			JMP Aok20_004BC65C
 	};
 
@@ -10769,96 +10787,96 @@ void __declspec(naked)   Aok20_SetHootKeyListhotkey0x04BF1E3()
 {
 	__asm {
 			//Monastery:
-			cmp EAX, 0Ah
-			jnz tc//Towncenter
-			MOV HootKeyAok20_rank, 52h//54h//
-			MOV HootKeyAok20HootKeyAok20_EBX, EBX
-			MOV  HootKeyAok20_lang, 416Dh//416Fh -2h  because it start at 2
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD HootKeyAok20_lang, EBX
-			MOV EBX, HootKeyAok20HootKeyAok20_EBX
-			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD HootKeyAok20_rank, EBX// 1h
-			//PUSH 60h
-			PUSH HootKeyAok20_rank
+			//cmp EAX, 0Ah
+			//jnz tc//Towncenter
+			//MOV HootKeyAok20_rank, 52h//54h//
+			//MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			//MOV  HootKeyAok20_lang, 416Dh//416Fh -2h  because it start at 2
+			//MOV EBX, DWORD PTR DS : [ESP + 8h]
+			//ADD HootKeyAok20_lang, EBX
+			//MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			//PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
 			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//PUSH 0h
+			//PUSH 0h
+			//ADD HootKeyAok20_rank, EBX// 1h
+			////PUSH 60h
+			//PUSH HootKeyAok20_rank
+			////PUSH 0h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			////PUSH 0Fh
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			tc:
-			cmp EAX, 04h//0Fh
-			jnz Blacksmith
-			MOV HootKeyAok20_rank, 59h
-			MOV HootKeyAok20HootKeyAok20_EBX, EBX
-			MOV  HootKeyAok20_lang, 4178h //417Ah -2
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD HootKeyAok20_lang, EBX
-			MOV EBX, HootKeyAok20HootKeyAok20_EBX
-			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD HootKeyAok20_rank, EBX//1h
-			//PUSH 60h
-			PUSH HootKeyAok20_rank
+			//tc:
+			//cmp EAX, 04h//0Fh
+			//jnz Blacksmith
+			//MOV HootKeyAok20_rank, 59h
+			//MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			//MOV  HootKeyAok20_lang, 4178h //417Ah -2
+			//MOV EBX, DWORD PTR DS : [ESP + 8h]
+			//ADD HootKeyAok20_lang, EBX
+			//MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			//PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
 			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//PUSH 0h
+			//PUSH 0h
+			//ADD HootKeyAok20_rank, EBX//1h
+			////PUSH 60h
+			//PUSH HootKeyAok20_rank
+			////PUSH 0h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			////PUSH 0Fh
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			Blacksmith:
-			cmp EAX, 0Fh //10h
-			jnz University//Towncenter
-			MOV HootKeyAok20_rank, 63h
-			MOV HootKeyAok20HootKeyAok20_EBX, EBX
-			MOV  HootKeyAok20_lang, 415Eh
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD HootKeyAok20_lang, EBX
-			MOV EBX, HootKeyAok20HootKeyAok20_EBX
-			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD HootKeyAok20_rank, EBX// 1h
-			//PUSH 60h
-			PUSH HootKeyAok20_rank
+			//Blacksmith:
+			//cmp EAX, 0Fh //10h
+			//jnz University//Towncenter
+			//MOV HootKeyAok20_rank, 63h
+			//MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			//MOV  HootKeyAok20_lang, 415Eh
+			//MOV EBX, DWORD PTR DS : [ESP + 8h]
+			//ADD HootKeyAok20_lang, EBX
+			//MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			//PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
 			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//PUSH 0h
+			//PUSH 0h
+			//ADD HootKeyAok20_rank, EBX// 1h
+			////PUSH 60h
+			//PUSH HootKeyAok20_rank
+			////PUSH 0h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			////PUSH 0Fh
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			University:
-			cmp EAX, 10h//11h
-			jnz  selectALL //steplancer//Towncenter
-			MOV HootKeyAok20_rank, 69h
-			MOV HootKeyAok20HootKeyAok20_EBX, EBX
-			MOV  HootKeyAok20_lang, 4164h
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD HootKeyAok20_lang, EBX
-			MOV EBX, HootKeyAok20HootKeyAok20_EBX
-			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD HootKeyAok20_rank, EBX// 1h
-			//PUSH 60h
-			PUSH HootKeyAok20_rank
+			//University:
+			//cmp EAX, 10h//11h
+			//jnz  selectALL //steplancer//Towncenter
+			//MOV HootKeyAok20_rank, 69h
+			//MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			//MOV  HootKeyAok20_lang, 4164h
+			//MOV EBX, DWORD PTR DS : [ESP + 8h]
+			//ADD HootKeyAok20_lang, EBX
+			//MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			//PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
 			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//PUSH 0h
+			//PUSH 0h
+			//ADD HootKeyAok20_rank, EBX// 1h
+			////PUSH 60h
+			//PUSH HootKeyAok20_rank
+			////PUSH 0h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			////PUSH 0Fh
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
 			selectALL:
 			cmp EAX, 11h
-			jnz steplancer
+			jnz defaultSwitchCase
 			MOV HootKeyAok20_rank, 7Bh
 			MOV HootKeyAok20HootKeyAok20_EBX, EBX
 			MOV  HootKeyAok20_lang, 4182h// 16784  // 4164h
@@ -10879,57 +10897,57 @@ void __declspec(naked)   Aok20_SetHootKeyListhotkey0x04BF1E3()
 			CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
 
-			steplancer:
-			cmp EAX, 08h
-			jnz FlamingCamel
-			PUSH 417Dh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 81h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//steplancer:
+			//cmp EAX, 08h
+			//jnz FlamingCamel
+			//PUSH 417Dh
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 81h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			FlamingCamel:
-			cmp EAX, 0Dh
-			jnz GoToKrepost
-			PUSH 417Eh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 82h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//FlamingCamel:
+			//cmp EAX, 0Dh
+			//jnz GoToKrepost
+			//PUSH 417Eh
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 82h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			GoToKrepost:
-			cmp EAX, 1h
-			jnz defaultSwitchCase
-			CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
-			JNZ GoToDonjon
-			PUSH 417Fh
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 83h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//GoToKrepost:
+			//cmp EAX, 1h
+			//jnz defaultSwitchCase
+			//CMP  DWORD PTR DS : [ESP + 1Ch] , 42h
+			//JNZ GoToDonjon
+			//PUSH 417Fh
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 83h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			GoToDonjon:
-			cmp EAX, 1h
-			jnz defaultSwitchCase
-			CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
-			JNZ defaultSwitchCase
-			PUSH 4180h
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			PUSH 84h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//GoToDonjon:
+			//cmp EAX, 1h
+			//jnz defaultSwitchCase
+			//CMP  DWORD PTR DS : [ESP + 1Ch] , 43h
+			//JNZ defaultSwitchCase
+			//PUSH 4180h
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 0h
+			//PUSH 84h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
 
 
@@ -11475,19 +11493,19 @@ void Aok20_hotkeyHook()
 {
 	//00539B03  |. 6A 0E          PUSH 0E
 	writeByte(0x0539B04, 0x14);//00549013  |. 6A 0F          PUSH 0F
-	// 00539B15 | . 6A 3F          PUSH 3F; / Arg2 = 0000003F
-	writeByte(0x0539B16, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
-	//set monastarysize item
-	//00539B78  |. 6A 01          PUSH 1                                   ; /Arg2 = 00000001
-	writeByte(0x0539B79, 0xC);//00549088  |. 6A 02          PUSH 2      
-	//004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
-	//	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
-	//extandestable loop
-	//00539B62  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
-	writeByte(0x0539B63, 0x4);//00549072  |. 6A 03          PUSH 3      
-	//extend castle item
-	//00539B99  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
-	writeByte(0x0539B9A, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//// 00539B15 | . 6A 3F          PUSH 3F; / Arg2 = 0000003F
+	//writeByte(0x0539B16, 0x44);//00549025  |. 6A 42          PUSH 42                                  ; /Arg2 = 00000042
+	////set monastarysize item
+	////00539B78  |. 6A 01          PUSH 1                                   ; /Arg2 = 00000001
+	//writeByte(0x0539B79, 0xC);//00549088  |. 6A 02          PUSH 2      
+	////004BE464   . 83F8 0E        CMP EAX, 0E;  Switch(cases 0..E)
+	////	004BE467   . 0F87 760D0000  JA age2_x1.004BF1E3
+	////extandestable loop
+	////00539B62  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
+	//writeByte(0x0539B63, 0x4);//00549072  |. 6A 03          PUSH 3      
+	////extend castle item
+	////00539B99  |. 6A 02          PUSH 2                                   ; /Arg2 = 00000002
+	//writeByte(0x0539B9A, 0x4);//005490A9  |. 6A 03          PUSH 3                                   ; /Arg2 = 00000003
 	//0053BD10  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
 	setHook((void*)0x053BD10, Aok20_SetHootKeyList004BD935);//0054B540  /$ 8B4424 04      MOV EAX,DWORD PTR SS:[ESP+4]
 	//00539B9F  |. E8 5C96F3FF    CALL empires2.00473200                   ; \empires2.00473200                     ; \age2_x1.0058F7A0
@@ -11496,11 +11514,11 @@ void Aok20_hotkeyHook()
 	setHook((void*)0x0539C63, Aok20_SetHootKeyList004BC0AC);//0054918C  |. E8 DF06F3FF    CALL age2_x1.00479870
 	//item when clicking
 	setHook((void*)0x053A94C , Aok20_SetHootKeyList004BCE8C);//00549F6C  |. E8 BFF8F2FF    CALL age2_x1.00479830
-	setHook((void*)0x053A86C , Aok20_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
-	setHook((void*)0x053A70C, Aok20_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
+	//setHook((void*)0x053A86C , Aok20_SetHootKeyList004BCD8CMonastary);//00549E6C  |. E8 BFF9F2FF    CALL age2_x1.00479830
+	//setHook((void*)0x053A70C, Aok20_SetHootKeyList004BCBECTC);//00549CCC  |. E8 5FFBF2FF    CALL age2_x1.00479830
 	//6739=X,  5800=Steppe Lancer Stable: 0x8,
 	//004BCD2C  |. E8 3F290D00    CALL age2_x1.0058F670
-	setHook((void*)0x053A81C , Aok20_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
+	//setHook((void*)0x053A81C , Aok20_SetHootKeyList004BCD2C);//00549E0C  |. E8 1FFAF2FF    CALL age2_x1.00479830
 
 	//castel 417E->16766=V,14FF->5375 =Create Flaming Camel
 	//0053A94C  |. E8 7F87F3FF    CALL empires2.004730D0
@@ -11514,7 +11532,7 @@ void Aok20_hotkeyHook()
 		//key events
 	//0053A965  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
 	//0053B3D5  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
-	setHook((void*)0x053B3D5, Aok20_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
+	////setHook((void*)0x053B3D5, Aok20_SetHootKeyEvent004BD935);//0054AA15  |. C64424 03 00   MOV BYTE PTR SS:[ESP+3],0
  
  
 
@@ -11558,15 +11576,15 @@ void __declspec(naked)  Aoc20_getLnaguageID()
 {
 	__asm {
 		MOV EAX, DWORD PTR SS : [ESP + 4h]
-		CMP EAX, 2A79h 
-		JE nom
+		//CMP EAX, 2A79h 
+		//JE nom
 		MOV aok20_languageID, EAX
 		MOV ECX, DWORD PTR DS : [664510h]
 		JMP aok20_0041C92A
-		nom:
-		MOV aok20_languageID, EAX
-		MOV ECX, DWORD PTR DS : [664510h]
-		JMP aok20_0041C92A
+		//nom:
+		//MOV aok20_languageID, EAX
+		//MOV ECX, DWORD PTR DS : [664510h]
+		//JMP aok20_0041C92A
 	};
 }
 DWORD handelLanguagedll;
