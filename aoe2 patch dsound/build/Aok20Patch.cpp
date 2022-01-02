@@ -13391,6 +13391,8 @@ void aok20_hotKeyActionelecting()
 			//&& !IsBadReadPtr((void*)*(void**)(*(size_t*)0x7912A0 + 0x424), sizeof(UINT_PTR))
 			&& (world = *(void**)(*(size_t*)0x6645C4 + 0x41C))
 			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x48), sizeof(UINT_PTR))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x4C), sizeof(UINT_PTR))
+			&& !IsBadReadPtr((void*)*(void**)(*(size_t*)world + 0x94), sizeof(UINT_PTR))
 			//&& *(void**)(*(size_t*)0x7912A0 + 0x424) != NULL)
 			&& *(void**)(*(size_t*)0x6645C4 + 0x41C) != NULL)
 		{
@@ -13654,6 +13656,10 @@ void aok20_hotKeyActionelecting()
 			if (flagClean == 0) isKeyPress = false;*/
 
 		}
+		else
+		{
+			Sleep(5000);
+		}
 	}
 }
 DWORD WINAPI  aok20_hotKeyActionelectingThread(LPVOID lpReserved)
@@ -13698,6 +13704,11 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 	Aok20_hotkeyHook();
 	Aok20_language_dll();//menu id
 	Aok20_selectAllProc(hModule);
+	//00415E6C     75 4A          JNZ SHORT empires2.00415EB8
+	//fix hotkey  crash starting game ?
+	writeByte(0x0415E6C  , 0xEB);
+	writeByte(0x0415E6C + 1, 0x4A);
+
 }
  
 //crash out patch
