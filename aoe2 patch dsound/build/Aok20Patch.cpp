@@ -10874,27 +10874,27 @@ void __declspec(naked)   Aok20_SetHootKeyListhotkey0x04BF1E3()
 			//PUSH EAX
 			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
-			selectALL:
-			cmp EAX, 11h
-			jnz defaultSwitchCase
-			MOV HootKeyAok20_rank, 7Bh
-			MOV HootKeyAok20HootKeyAok20_EBX, EBX
-			MOV  HootKeyAok20_lang, 4182h// 16784  // 4164h
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD HootKeyAok20_lang, EBX
-			MOV EBX, HootKeyAok20HootKeyAok20_EBX
-			PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD HootKeyAok20_rank, EBX// 1h
-			//PUSH 60h
-			PUSH HootKeyAok20_rank
+			//selectALL:
+			//cmp EAX, 11h
+			//jnz defaultSwitchCase
+			//MOV HootKeyAok20_rank, 7Bh
+			//MOV HootKeyAok20HootKeyAok20_EBX, EBX
+			//MOV  HootKeyAok20_lang, 4182h// 16784  // 4164h
+			//MOV EBX, DWORD PTR DS : [ESP + 8h]
+			//ADD HootKeyAok20_lang, EBX
+			//MOV EBX, HootKeyAok20HootKeyAok20_EBX
+			//PUSH HootKeyAok20_lang//415Eh; / Arg7 = 00001266
 			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL HootKeyAok20_00479650; \age2_x1.0058F490
+			//PUSH 0h
+			//PUSH 0h
+			//ADD HootKeyAok20_rank, EBX// 1h
+			////PUSH 60h
+			//PUSH HootKeyAok20_rank
+			////PUSH 0h
+			//PUSH  DWORD PTR DS : [ESP + 1Ch]
+			////PUSH 0Fh
+			//PUSH EAX
+			//CALL HootKeyAok20_00479650; \age2_x1.0058F490
 
 
 			//steplancer:

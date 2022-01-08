@@ -5500,27 +5500,27 @@ void __declspec(naked)   Aoc10_SetHootKeyListhotkey0x04BF1E3()
 		//PUSH EAX
 		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
-		selectALL:
-		cmp EAX, 11h
-		jnz defaultSwitchCase
-		MOV HootKeyAOC10_rank, 7Bh
-		MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
-		MOV  HootKeyAOC10_lang, 4182h// 16784  // 4164h
-		MOV EBX, DWORD PTR DS : [ESP + 8h]
-		ADD HootKeyAOC10_lang, EBX
-		MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
-		PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
-		PUSH 0h
-		PUSH 0h
-		PUSH 0h
-		ADD HootKeyAOC10_rank, EBX// 1h
-		//PUSH 60h
-		PUSH HootKeyAOC10_rank
+		//selectALL:
+		//cmp EAX, 11h
+		//jnz defaultSwitchCase
+		//MOV HootKeyAOC10_rank, 7Bh
+		//MOV HootKeyAOC10HootKeyAOC10_EBX, EBX
+		//MOV  HootKeyAOC10_lang, 4182h// 16784  // 4164h
+		//MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//ADD HootKeyAOC10_lang, EBX
+		//MOV EBX, HootKeyAOC10HootKeyAOC10_EBX
+		//PUSH HootKeyAOC10_lang//415Eh; / Arg7 = 00001266
 		//PUSH 0h
-		PUSH  DWORD PTR DS : [ESP + 1Ch]
-		//PUSH 0Fh
-		PUSH EAX
-		CALL HootKeyAOC10_00479650; \age2_x1.0058F490
+		//PUSH 0h
+		//PUSH 0h
+		//ADD HootKeyAOC10_rank, EBX// 1h
+		////PUSH 60h
+		//PUSH HootKeyAOC10_rank
+		////PUSH 0h
+		//PUSH  DWORD PTR DS : [ESP + 1Ch]
+		////PUSH 0Fh
+		//PUSH EAX
+		//CALL HootKeyAOC10_00479650; \age2_x1.0058F490
 
 
 		//steplancer:

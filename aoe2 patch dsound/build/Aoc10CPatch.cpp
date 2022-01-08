@@ -10868,27 +10868,27 @@ void __declspec(naked)  SetHootKeyListhotkey0x04BF1E3()
 		//	PUSH EAX
 		//	CALL _0058F490; \age2_x1.0058F490
 
-			selectALL:
-		cmp EAX, 11h
-			jnz defaultSwitchCase
-			MOV _rank, 7Bh
-			MOV _EBX, EBX
-			MOV  _lang, 4182h// 16784  // 4164h
-			MOV EBX, DWORD PTR DS : [ESP + 8h]
-			ADD _lang, EBX
-			MOV EBX, _EBX
-			PUSH _lang//415Eh; / Arg7 = 00001266
-			PUSH 0h
-			PUSH 0h
-			PUSH 0h
-			ADD _rank, EBX// 1h
-			//PUSH 60h
-			PUSH _rank
-			//PUSH 0h
-			PUSH  DWORD PTR DS : [ESP + 1Ch]
-			//PUSH 0Fh
-			PUSH EAX
-			CALL _0058F490; \age2_x1.0058F490
+		//	selectALL:
+		//cmp EAX, 11h
+		//	jnz defaultSwitchCase
+		//	MOV _rank, 7Bh
+		//	MOV _EBX, EBX
+		//	MOV  _lang, 4182h// 16784  // 4164h
+		//	MOV EBX, DWORD PTR DS : [ESP + 8h]
+		//	ADD _lang, EBX
+		//	MOV EBX, _EBX
+		//	PUSH _lang//415Eh; / Arg7 = 00001266
+		//	PUSH 0h
+		//	PUSH 0h
+		//	PUSH 0h
+		//	ADD _rank, EBX// 1h
+		//	//PUSH 60h
+		//	PUSH _rank
+		//	//PUSH 0h
+		//	PUSH  DWORD PTR DS : [ESP + 1Ch]
+		//	//PUSH 0Fh
+		//	PUSH EAX
+		//	CALL _0058F490; \age2_x1.0058F490
 
 
 		//	steplancer:
