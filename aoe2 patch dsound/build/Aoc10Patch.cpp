@@ -7204,19 +7204,20 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 							// 005FF71C   > 8B8E 08010000  MOV ECX,DWORD PTR DS:[ESI+108]
 							//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
 							DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x12C);
-							DWORD flagIdle2;
+							DWORD flagIdle2Add;
+							BYTE flagIdle2;
 							bool flagisidleres = false;
 							//0xFFFF     -1
-							if ((DWORD)ptr == 0xFFFFFFFF)
+							if ((DWORD)  ptr == 0xFFFFFFFF)
 							{
 								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
 								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
 								if (flagIdle != 0)
 								{
 									//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
-									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+									flagIdle2Add = (DWORD) * (void**)((size_t)flagIdle);
 									//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
-									flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+									flagIdle2 = (BYTE) * (void**)((size_t)flagIdle2Add + 0xC);
 									flagisidleres = true;
 								}
 								if (flagIdle == 0 && !flagisidleres
