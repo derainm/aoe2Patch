@@ -114,6 +114,18 @@
     <ClInclude Include="Aoc10Patch.h" />
     <ClInclude Include="Aok20aPatch.h" />
     <ClInclude Include="Aok20Patch.h" />
+    <ClInclude Include="mgxfix.h" />
+    <ClInclude Include="zlib-1.2.3\crc32.h" />
+    <ClInclude Include="zlib-1.2.3\deflate.h" />
+    <ClInclude Include="zlib-1.2.3\inffast.h" />
+    <ClInclude Include="zlib-1.2.3\inffixed.h" />
+    <ClInclude Include="zlib-1.2.3\inflate.h" />
+    <ClInclude Include="zlib-1.2.3\inftrees.h" />
+    <ClInclude Include="zlib-1.2.3\trees.h" />
+    <ClInclude Include="zlib-1.2.3\zconf.h" />
+    <ClInclude Include="zlib-1.2.3\zconf.in.h" />
+    <ClInclude Include="zlib-1.2.3\zlib.h" />
+    <ClInclude Include="zlib-1.2.3\zutil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\dsound.cpp" />
@@ -121,6 +133,19 @@
     <ClCompile Include="Aoc10Patch.cpp" />
     <ClCompile Include="Aok20aPatch.cpp" />
     <ClCompile Include="Aok20Patch.cpp" />
+    <ClCompile Include="mgxfix.cpp" />
+    <ClCompile Include="zlib-1.2.3\adler32.c" />
+    <ClCompile Include="zlib-1.2.3\compress.c" />
+    <ClCompile Include="zlib-1.2.3\crc32.c" />
+    <ClCompile Include="zlib-1.2.3\deflate.c" />
+    <ClCompile Include="zlib-1.2.3\gzio.c" />
+    <ClCompile Include="zlib-1.2.3\infback.c" />
+    <ClCompile Include="zlib-1.2.3\inffast.c" />
+    <ClCompile Include="zlib-1.2.3\inflate.c" />
+    <ClCompile Include="zlib-1.2.3\inftrees.c" />
+    <ClCompile Include="zlib-1.2.3\trees.c" />
+    <ClCompile Include="zlib-1.2.3\uncompr.c" />
+    <ClCompile Include="zlib-1.2.3\zutil.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\dsound.def" />

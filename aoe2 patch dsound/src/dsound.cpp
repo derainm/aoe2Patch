@@ -13,6 +13,7 @@ typedef uintptr_t addr;
 #include "../build/Aok20Patch.h"
 #include "../build/Aok20aPatch.h"
 #include <TlHelp32.h>
+#include "../build/mgxfix.h"
 using namespace std;
 
 DWORD GetProcessIdByName(const char* processName) {
@@ -132,6 +133,8 @@ void init(HINSTANCE hInst)
 	{
 		Aoc20aPatchHook(centredWideScreen,true);
 	}
+	if(AoC10 || AoK20|| AoK20ab|| AoC10Ce)
+		recordFileName();
 }
 
 
@@ -140,6 +143,11 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH)
 	{
+//		if (AllocConsole()) {
+//    freopen("CONOUT$", "w", stdout);
+//    SetConsoleTitle("aoe2 debug");
+//    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+//}
 		// load dll only if voobly is closed
 		if (!GetProcessIdByName("Voobly.exe"))  
 		{
