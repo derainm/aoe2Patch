@@ -4187,11 +4187,11 @@ void __declspec(naked)  AddAutoFarmButton00527C38()
 		cmp FlagAutoFarm, 1
 		JE logoActived
 		//52 53   =  
-		PUSH 23h//034h//logoposition in slp
+		PUSH 034h//23h//logoposition in slp
 		Jmp next
 
 		logoActived :
-		PUSH 023h// 033h//logoposition in slp
+		PUSH  033h//023h//logoposition in slp
 			Jmp next
 
 
@@ -13793,6 +13793,47 @@ void MQSQ()
 	InjectHook(0x0524885  , Aoc10C_MQ_Hook_Button007D9360, PATCH_JUMP);
 }
 
+//0043AF92   . 8B55 28        MOV EDX, DWORD PTR SS : [EBP + 28]
+
+DWORD _00543370 = 0x0543370;
+DWORD _0043AFAD = 0x043AFAD;
+const char logo_mod[255] = { "icon.drs" };
+void __declspec(naked)  ADDNewDrsFilesRes()
+{
+	__asm {
+		CALL _00543370
+		MOV EDX, DWORD PTR SS : [EBP + 28h]
+		PUSH 1h
+		ADD EDX, 1467h
+		PUSH EDX
+		PUSH 0066F644h;  ASCII "tribe"
+		PUSH offset logo_mod;  ASCII "icon.drs"
+		CALL _00543370
+		ADD ESP, 10h
+		JMP _0043AFAD
+	};
+}
+
+
+void drsLoader()
+{
+	InjectHook(0x043AFA8, ADDNewDrsFilesRes, PATCH_JUMP);
+	//fix logo
+	//004E8E53   . 68 12C60000    PUSH 0C612                               ; /Arg2 = 0000C612
+	//00516FBB   . 68 12C60000    PUSH 0C612                               ; /Arg2 = 0000C612
+	//005B054A   . 68 12C60000    PUSH 0C612                               ; /Arg2 = 0000C612
+
+
+
+	//005B054A     68 3F420F00    PUSH 0F423F
+	BYTE arrLogo[5] = { 0x68,0x3F,0x42,0x0F,0x00 };
+	writeData(0x04E8E53, arrLogo, 5);
+	writeData(0x0516FBB, arrLogo, 5);
+	writeData(0x05B054A, arrLogo, 5);
+	//004E8E53     68 3F420F00    PUSH 0F423F
+
+
+}
 void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 {
 
@@ -13814,6 +13855,7 @@ void Aoc10CPatchHook(bool wideScreenCentred,bool windowed, HMODULE hModule)
 		Aoc10c_FixRecordingExploreStateBug();
 		selectAllHotkey(hModule);
 		MQSQ();
+		drsLoader();//load new logo
 		//aoc10c_MQ();
 	}
 

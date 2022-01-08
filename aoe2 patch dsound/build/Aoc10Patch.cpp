@@ -3845,11 +3845,11 @@ void __declspec(naked)  Aoc10AddAutoFarmButton004F0083()
 		cmp Aoc10_FlagAutoFarm, 1
 		JE logoActived
 		//52 53   =  
-		PUSH 23h//034h//logoposition in slp
+		PUSH 034h//23h//logoposition in slp
 		Jmp next
 
 		logoActived :
-		PUSH 023h// 033h//logoposition in slp
+		PUSH 033h//023h// logoposition in slp
 			Jmp next
 
 
@@ -8529,6 +8529,40 @@ void Aoc10_MQSQ()
 
 }
 
+DWORD Aoc10_00543370 = 0x04C5190;
+DWORD Aoc10_0043AFAD = 0x05C69D6 ;
+
+const char Aoc10_logo_mod[255] = { "icon.drs" };
+void __declspec(naked)   Aoc10_ADDNewDrsFilesRes()
+{
+	__asm {
+		CALL Aoc10_00543370
+		MOV EDX, DWORD PTR SS : [EBP + 28h]
+		PUSH 1h
+		ADD EDX, 1467h
+		PUSH EDX
+		PUSH 0066F644h;  ASCII "tribe"
+		PUSH offset Aoc10_logo_mod;  ASCII "icon.drs"
+		CALL Aoc10_00543370
+		ADD ESP, 10h
+		JMP Aoc10_0043AFAD
+	};
+}
+
+
+void drsLoaderAoc10()
+{
+	//005C69D1   . E8 BAE7EFFF    CALL age2_x1.004C5190
+	InjectHook(0x05C69D1, Aoc10_ADDNewDrsFilesRes, PATCH_JUMP);
+	//005B054A     68 3F420F00    PUSH 0F423F
+	BYTE Aoc10_arrLogo[5] = { 0x68,0x3F,0x42,0x0F,0x00 };
+	//00455B3A  |. 68 12C60000    PUSH 0C612                               ; /Arg2 = 0000C612
+	writeData(0x0455B3A, Aoc10_arrLogo, 5);
+	//004DF52B  |. 68 12C60000    |PUSH 0C612                              ; /Arg2 = 0000C612
+	writeData(0x04DF52B, Aoc10_arrLogo, 5);
+	//0051CA23  |. 68 12C60000    |PUSH 0C612                              ; /Arg2 = 0000C612
+	writeData(0x051CA23, Aoc10_arrLogo, 5);
+}
 void Aoc10PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 {
 	Aoc10Widescreen(wideScreenCentred);
@@ -8543,4 +8577,5 @@ void Aoc10PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 	Aoc10_language_dll();
 	Aoc10_selectAllProc(hModule);
 	Aoc10_MQSQ();
+	drsLoaderAoc10();
 }
