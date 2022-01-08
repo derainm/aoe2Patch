@@ -180,8 +180,8 @@ int fixrecordGame(const char* filename)//main(int argc, char *argv[])
 		d_stream.zalloc = (alloc_func)Z_NULL;
 		d_stream.zfree = (free_func)Z_NULL;
 		d_stream.opaque = (voidpf)Z_NULL;
-		//cehck the impact if we remove this
-		//d_stream.next_in = buf;
+
+		d_stream.next_in = (Bytef *) buf;
 		d_stream.avail_in = header_len;
 
 		/* initialize the internal stream state for decompression, we need to use raw inflate */
