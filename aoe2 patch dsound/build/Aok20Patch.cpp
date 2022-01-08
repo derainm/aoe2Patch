@@ -13708,6 +13708,9 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 	//fix hotkey  crash starting game ?
 	writeByte(0x0415E6C  , 0xEB);
 	writeByte(0x0415E6C + 1, 0x4A);
+	//00415EE0   . 75 7B          JNZ SHORT empires2.00415F5D
+	BYTE datttaaa[] = {0xE9 ,0x7E, 0x00 ,0x00 ,0x00 ,0x90 };
+	writeData(0x0415EDA , datttaaa, 6);
 
 }
  
