@@ -12600,7 +12600,8 @@ void aok20_ManageSelection(int i, void* player, int Playerciv)
 						//004090FC   > 8B8E 2C010000  MOV ECX,DWORD PTR DS:[ESI+12C]
 						//00408A2C   > 8B8E 30010000  MOV ECX,DWORD PTR DS:[ESI+130]
 						DWORD* ptr1 = (DWORD*)*(void**)((size_t)obj + 0x130);
-						DWORD flagIdle2;
+						DWORD flagIdle2Add;
+						BYTE flagIdle2;
 						bool flagisidleres = false;
 						//0xFFFF     -1
 						if ((DWORD)ptr == 0xFFFFFFFF)
@@ -12610,9 +12611,9 @@ void aok20_ManageSelection(int i, void* player, int Playerciv)
 							if (flagIdle != 0)
 							{
 								//00601E97  |. 8B00           MOV EAX,DWORD PTR DS:[EAX]
-								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle);
+								flagIdle2Add = (DWORD) * (void**)((size_t)flagIdle);
 								//005FF72F   . 8A46 0C        MOV AL,BYTE PTR DS:[ESI+C]
-								flagIdle2 = (DWORD) * (void**)((size_t)flagIdle2 + 0xC);
+								flagIdle2 = (BYTE) * (void**)((size_t)flagIdle2Add + 0xC);
 								flagisidleres = true;
 							}
 							if (flagIdle == 0 && !flagisidleres
@@ -13699,18 +13700,22 @@ void Aoc20PatchHook(bool wideScreenCentred, bool windowed, HMODULE hModule)
 	//aok20_FixDefaultRecording();
 	Aok20_LoadLanguageId(); //no need any more we load language_default.dll 
 	//windowedFullScreenHook();
-	AOK20_MQSQ();
-	Aok20_FixStatisticsDisplay();
-	Aok20_hotkeyHook();
-	Aok20_language_dll();//menu id
-	Aok20_selectAllProc(hModule);
-	//00415E6C     75 4A          JNZ SHORT empires2.00415EB8
-	//fix hotkey  crash starting game ?
-	writeByte(0x0415E6C  , 0xEB);
-	writeByte(0x0415E6C + 1, 0x4A);
-	//00415EE0   . 75 7B          JNZ SHORT empires2.00415F5D
-	BYTE datttaaa[] = {0xE9 ,0x7E, 0x00 ,0x00 ,0x00 ,0x90 };
-	writeData(0x0415EDA , datttaaa, 6);
+	if (true)
+	{
+		AOK20_MQSQ();
+		Aok20_FixStatisticsDisplay();
+		Aok20_hotkeyHook();
+		Aok20_language_dll();//menu id
+		Aok20_selectAllProc(hModule);
+		//00415E6C     75 4A          JNZ SHORT empires2.00415EB8
+		//fix hotkey  crash starting game ?
+		writeByte(0x0415E6C, 0xEB);
+		writeByte(0x0415E6C + 1, 0x4A);
+		//00415EE0   . 75 7B          JNZ SHORT empires2.00415F5D
+		BYTE datttaaa[] = { 0xE9 ,0x7E, 0x00 ,0x00 ,0x00 ,0x90 };
+		writeData(0x0415EDA, datttaaa, 6);
+	}
+
 
 }
  
