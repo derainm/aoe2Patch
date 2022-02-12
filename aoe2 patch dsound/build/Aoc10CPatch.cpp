@@ -8882,6 +8882,29 @@ void ManageSelection(int i, void* player, int Playerciv)
 						break;
 					}
 					int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+					if ((int)object_class == 80)
+					{
+						//CMP BYTE PTR DS : [ESI + 48h] , 2h//state
+						BYTE state = (BYTE)(void*)*(DWORD*)((size_t)obj + 0x48);
+						DWORD addrTechBuilding = (DWORD) * (void**)((size_t)obj + 0x1A0);
+
+						if (!IsBadReadPtr((void*)addrTechBuilding, sizeof(UINT_PTR)))
+						{
+							DWORD addrTechBuildingVal = (DWORD) * (void**)((size_t)addrTechBuilding + 0x8);
+
+							if (state != 2)
+							{
+								// if a building is not builded (a foundation) we ignore it
+								continue;
+							}
+							else// if state == 2 
+							{
+								//if building as a tech in queue we ignore it 
+								if (addrTechBuildingVal != 0x0)
+									continue;
+							}
+						}
+					}
 					//select all tc
 					if (selectAllTC && flagClean == 0 && cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
 					{

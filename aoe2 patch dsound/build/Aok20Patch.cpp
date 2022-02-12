@@ -12687,6 +12687,31 @@ void aok20_ManageSelection(int i, void* player, int Playerciv)
 					break;
 				}
 				int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+				if ((int)object_class == 80)
+				{
+					// //1c0 - 1A4 = 1C  -> 1A0-1C =
+					//CMP BYTE PTR DS : [ESI + 48h] , 2h//state
+					BYTE state = (BYTE)(void*)*(DWORD*)((size_t)obj + 0x48);
+					//5D17792F   8B87 BC010000    MOV EAX,DWORD PTR DS:[EDI+1BC]
+					DWORD addrTechBuilding = (DWORD) * (void**)((size_t)obj + 0x1BC);
+
+					if (!IsBadReadPtr((void*)addrTechBuilding, sizeof(UINT_PTR)))
+					{
+						DWORD addrTechBuildingVal = (DWORD) * (void**)((size_t)addrTechBuilding + 0x8);
+
+						if (state != 2)
+						{
+							// if a building is not builded (a foundation) we ignore it
+							continue;
+						}
+						else// if state == 2 
+						{
+							//if building as a tech in queue we ignore it 
+							if (addrTechBuildingVal != 0x0)
+								continue;
+						}
+					}
+				} 
 				//select all tc
 				if (aok20_selectAllTC && aok20_flagClean == 0 && aok20_cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
 				{

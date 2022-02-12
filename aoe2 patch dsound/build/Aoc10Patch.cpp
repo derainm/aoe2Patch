@@ -7208,7 +7208,7 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 							BYTE flagIdle2;
 							bool flagisidleres = false;
 							//0xFFFF     -1
-							if ((DWORD)  ptr == 0xFFFFFFFF)
+							if ((DWORD) ptr == 0xFFFFFFFF)
 							{
 								//00601E90  /$ 8B41 08        MOV EAX,DWORD PTR DS:[ECX+8]
 								DWORD flagIdle = (DWORD) * (void**)((size_t)ptr1 + 0x8);
@@ -7291,6 +7291,30 @@ void Aoc10_ManageSelection(int i, void* player, int Playerciv)
 						break;
 					}
 					int object_class = (int)*(BYTE*)((size_t)obj + 0x4E);//(void**)
+					if ((int)object_class == 80)
+					{
+						//CMP BYTE PTR DS : [ESI + 48h] , 2h//state
+						BYTE state = (BYTE)(void*)*(DWORD*)((size_t)obj + 0x48);
+						//6CCBE81F   8B87 C4010000    MOV EAX,DWORD PTR DS:[EDI+1C4]
+						DWORD addrTechBuilding = (DWORD) * (void**)((size_t)obj + 0x1C4);
+
+						if (!IsBadReadPtr((void*)addrTechBuilding, sizeof(UINT_PTR)))
+						{
+							DWORD addrTechBuildingVal = (DWORD) * (void**)((size_t)addrTechBuilding + 0x8);
+
+							if (state != 2)
+							{
+								// if a building is not builded (a foundation) we ignore it
+								continue;
+							}
+							else// if state == 2 
+							{
+								//if building as a tech in queue we ignore it 
+								if (addrTechBuildingVal != 0x0)
+									continue;
+							}
+						}
+					}
 					//select all tc
 					if (Aoc10_selectAllTC && Aoc10_flagClean == 0 && Aoc10_cptTCselected < 40 && (int)idG == 0x6D && (int)object_class == 80)
 					{
